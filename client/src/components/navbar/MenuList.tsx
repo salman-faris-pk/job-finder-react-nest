@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import {Menu,Transition} from "@headlessui/react"
+import {Menu,Transition,MenuButton,MenuItem,MenuItems} from "@headlessui/react"
 import { BiChevronDown } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { AiOutlineLogout } from "react-icons/ai";
@@ -15,7 +15,7 @@ const MenuList = ({user,onClick }:any) => {
     <div>
       <Menu as='div' className='inline-block text-left'>
         <div className='flex'>
-          <Menu.Button className='inline-flex gap-2 w-full rounded-md bg-white md:px-4 py-2 text-sm font-medium text-slate-700 hover:bg-opacity-20 '>
+          <MenuButton className='inline-flex gap-2 w-full rounded-md bg-white md:px-4 py-2 text-sm font-medium text-slate-700 hover:bg-opacity-20 '>
             <div className='leading[80px] flex flex-col items-start'>
               <p className='text-sm font-semibold '>
                 {user?.firstName ?? user?.name}
@@ -34,7 +34,7 @@ const MenuList = ({user,onClick }:any) => {
               className='h-8 w-8 text-slate-600'
               aria-hidden='true'
             />
-          </Menu.Button>
+          </MenuButton>
         </div>
 
         <Transition
@@ -46,9 +46,9 @@ const MenuList = ({user,onClick }:any) => {
           leaveFrom='transform opacity-100 scale-100'
           leaveTo='transform opacity-0 scale-95'
         >
-          <Menu.Items className='absolute z-50 right2 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg focus:outline-none '>
+          <MenuItems className='absolute z-50 right2 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg focus:outline-none '>
             <div className='p-1 '>
-              <Menu.Item>
+              <MenuItem>
                 {({ active }) => (
                   <Link
                     to={`${
@@ -68,9 +68,9 @@ const MenuList = ({user,onClick }:any) => {
                     {user?.accountType ? "User Profile" : "Company Profile"}
                   </Link>
                 )}
-              </Menu.Item>
+              </MenuItem>
 
-              <Menu.Item>
+              <MenuItem>
                 {({ active }) => (
                   <button
                     onClick={() => handleLogout()}
@@ -87,9 +87,9 @@ const MenuList = ({user,onClick }:any) => {
                     Log Out
                   </button>
                 )}
-              </Menu.Item>
+              </MenuItem>
             </div>
-          </Menu.Items>
+          </MenuItems>
         </Transition>
       </Menu>
 

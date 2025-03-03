@@ -54,8 +54,10 @@ function App() {
           path: "/job-detail/:id",
           element: <JobDetail />,
         },
+      
       ],
     },
+
     {
       path: "/about-us",
       element: <About />,
@@ -64,8 +66,7 @@ function App() {
       path: "/user-auth",
       element: <AuthPage />,
     },
-
-
+    
   ]);
 
 

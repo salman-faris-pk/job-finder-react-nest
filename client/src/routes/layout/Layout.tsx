@@ -10,8 +10,8 @@ const Layout = () => {
   return (
     <main className="bg-[#f7fdfd]">
       <Navbar />
-      {/* {user ? <Outlet /> : <Navigate to="/user-auth" state={{ from: location }} replace />} */}
-       <Outlet/>
+     
+      {user ? <Outlet /> : <Navigate to="/user-auth" state={{ from: location }} replace />}
       {user && <Footer />}
     </main>
   )
