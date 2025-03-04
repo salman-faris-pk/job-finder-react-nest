@@ -32,7 +32,7 @@ export type FooterLink = {
     email: string;
     contact: string;
     about: string;
-    profileUrl: string; // Change to JSX.Element if using react-icons
+    profileUrl: string; 
   };
   
   type JobDetail = {
@@ -51,4 +51,15 @@ export type FooterLink = {
     applicants: string[];
     vacancies: number;
     createdAt: Date;
+  };
+
+  export type Companies = {
+    _id: number;
+    name: string;
+    location: string;
+    email: string;
+    contact: string;
+    about: string;
+    profileUrl: string; 
+    jobPosts: string[]; 
   };
