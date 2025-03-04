@@ -1,5 +1,7 @@
 import Navbar from "./navbar/Navbar";
 import Footer from "./Footer";
+import JobCard from "./JobCard";
+import CustomButton from "./CustomButton";
 
 
 
@@ -7,4 +9,6 @@ import Footer from "./Footer";
 export {
     Navbar,
     Footer,
+    JobCard,
+    CustomButton
 }
