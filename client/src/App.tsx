@@ -54,19 +54,20 @@ function App() {
           path: "/job-detail/:id",
           element: <JobDetail />,
         },
+        {
+          path: "/about-us",
+          element: <About />,
+        },
+        {
+          path: "/user-auth",
+          element: <AuthPage />,
+        },
+        
       
       ],
     },
 
-    {
-      path: "/about-us",
-      element: <About />,
-    },
-    {
-      path: "/user-auth",
-      element: <AuthPage />,
-    },
-    
+   
   ]);
 
 

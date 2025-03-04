@@ -11,7 +11,7 @@ const SignUp = () => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-10">
-      <div className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl">
+      <div className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white  p-6 text-left align-middle shadow-xl">
         <h3 className="text-xl font-semibold text-gray-900">
           {isRegister ? "Create Account" : "Account Sign In"}
         </h3>

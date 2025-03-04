@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import { footerLinks } from "../utils/datas"
 import CustomButton from "./CustomButton"
 import TextInput from "./TextInput"
@@ -9,11 +9,15 @@ import { FiInstagram } from "react-icons/fi";
 
 const Footer = () => {
 
+  const location=useLocation()
+
   const date = new Date();
   const year = date.getFullYear();
 
+  const isAuthpage = location.pathname.startsWith("/user-auth");
+  
   return (
-    <footer className='text-white mp-20'>
+    <footer className={`${isAuthpage ? "hidden" : ""} text-white mp-20`}>
       
     <div className='overflow-x-hidden -mb-0.5'>
       <svg
