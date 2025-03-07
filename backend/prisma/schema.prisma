@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  firstName    String
+  lastName     String
+  email        String @unique
+  password     String
+  accountType  String @default("seeker")
+  contact      String?
+  location     String?
+  profileUrl   String?
+  cvUrl        String?
+  jobTitle     String?
+  about        String?
+  applications  JobApplication[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+
+model Companies {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  email      String @unique
+  password   String
+  contact    String?
+  location   String? 
+  about      String?
+  profileUrl String?
+  jobPosts   Job[]
+}
+
+
+model Job {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  companyId    String @db.ObjectId
+  company      Companies @relation(fields: [companyId],references: [id])
+  jobTitle     String
+  jobType      String
+  location     String
+  salary       Int
+  vacancies    Int?
+  experience   Int @default(0)
+  detail       Detail[]
+  application  JobApplication[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+}
+
+model JobApplication {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  userId   String @db.ObjectId
+  jobId    String @db.ObjectId
+  user     User @relation(fields: [userId], references: [id])
+  job      Job @relation(fields: [jobId], references: [id])
+  appliedAt  DateTime @default(now())
+}
+
+
+
+
+model Detail {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  jobId        String @db.ObjectId
+  job          Job @relation(fields: [jobId], references: [id])
+  desc         String
+  requirements String
+}
