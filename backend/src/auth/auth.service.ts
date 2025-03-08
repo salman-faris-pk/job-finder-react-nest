@@ -5,7 +5,6 @@ import { RegisterInputs } from "./dto/register.inputs"
 import { LoginInputs } from "./dto/login.inputs"
 import * as bcrypt from 'bcryptjs';
 import { AuthJwtpayload } from './types/auth-jwtPayload';
-import { Response } from "express"
 
 
 @Injectable()
@@ -25,7 +24,7 @@ export class AuthService {
         return { accessToken }
     };
 
-    async registerUser(registerDto: RegisterInputs,res:Response){
+    async registerUser(registerDto: RegisterInputs) {
        
         const {firstName,lastName,email,password}=registerDto;
 
@@ -48,28 +47,23 @@ export class AuthService {
         });
 
         const { accessToken }=await this.generatetoken(user.id);
-        res.cookie('accessToken',accessToken,{
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            maxAge: 172800000, 
-        });
-
-        return res.status(201).json({
+       
+        return {
             success: true,
             message: 'Account created successfully',
+            accessToken,  // Interceptor will store this in cookies
             user: {
-                _id: user.id,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                email: user.email,
-                accountType: user.accountType,
+              _id: user.id,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              email: user.email,
+              accountType: user.accountType,
             },
-        });
-
+          };
     };
 
 
-    async LoginUser(logindto:LoginInputs,res:Response){
+    async LoginUser(logindto:LoginInputs){
         
         const {email,password}=logindto;
 
@@ -91,15 +85,12 @@ export class AuthService {
         };
 
         const { accessToken }=await this.generatetoken(user.id);
-        res.cookie('accessToken',accessToken,{
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            maxAge: 172800000, 
-        });
+      
 
-        return res.status(200).json({
+        return {
             success: true,
             message: 'Login successfully',
+            accessToken,
             user: {
                 _id: user.id,
                 firstName: user.firstName,
@@ -107,7 +98,7 @@ export class AuthService {
                 email: user.email,
                 accountType: user.accountType,
             },
-        });
+        };
     };
 
 
@@ -123,6 +114,10 @@ export class AuthService {
         return user;  
 
     };
+
+
+
+    
 
 
     

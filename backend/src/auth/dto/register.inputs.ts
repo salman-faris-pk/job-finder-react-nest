@@ -1,13 +1,15 @@
-import { IsString, IsEmail, MinLength, Length} from "class-validator"
+import { IsString, IsEmail, MinLength,Length} from "class-validator"
 
 
 
 export class RegisterInputs {
 
     @IsString()
+    @Length(3, 15, { message: "First name must be between 3 and 15 characters" })
     firstName: string;
     
     @IsString()
+    @Length(2, 10, { message: "Last name must be between 2 and 10 characters" })
     lastName: string;
 
     
