@@ -7,6 +7,7 @@ import { LoginInputs } from "./dto/login.inputs"
 import * as bcrypt from 'bcryptjs';
 import { AuthJwtpayload } from './types/auth-jwtPayload';
 import { ConfigService } from '@nestjs/config';
+import { Response } from 'express';
 
 
 @Injectable()
@@ -106,19 +107,6 @@ export class AuthService {
     };
 
 
-    async validateJwtUser(userId:string){
-       
-         const User = await this.prisma.user.findUnique({ where: { id: userId } }) 
-              || await this.prisma.companies.findUnique({ where: { id: userId } });
-        
-              if (!User) throw new UnauthorizedException('User not found!');
-
-              const user={ id: User.id };
-              return user;
-    };
-
-
-
     async CompanyUserRegistration(compRegisDTO:CompanyRegisterDto){
 
         const{name,email,password}=compRegisDTO;
@@ -189,6 +177,28 @@ export class AuthService {
         };
 
     };
+
+
+    async Logoutuser(){
+      return {
+        success: true,
+        message: 'Logout successful',
+        clearCookie: true,
+    };
+
+    }
+
+
+    async validateJwtUser(userId:string){
+       
+        const User = await this.prisma.user.findUnique({ where: { id: userId } }) 
+             || await this.prisma.companies.findUnique({ where: { id: userId } });
+       
+             if (!User) throw new UnauthorizedException('User not found!');
+
+             const user={ id: User.id };
+             return user;
+   };
 
     
 };

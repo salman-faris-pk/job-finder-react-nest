@@ -1,10 +1,11 @@
-import { Controller, Post,Body,ValidationPipe, UsePipes, UseInterceptors, UseGuards} from '@nestjs/common';
+import { Controller, Post,Body,ValidationPipe, UsePipes, UseInterceptors, UseGuards, Res} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterInputs } from './dto/register.inputs';
 import { LoginInputs } from './dto/login.inputs';
 import { CompanyRegisterDto } from "./dto/company.register"
 import { SetCookieInterceptor } from "./interceptors/set-cookie.interceptor"
 import { ThrottlerGuard } from "@nestjs/throttler"
+import { Response } from 'express';
 
 
 @Controller('auth')
@@ -40,8 +41,14 @@ async CompanyRegistration(@Body() compRegisDTO:CompanyRegisterDto){
 @UseGuards(ThrottlerGuard)
 async CompanySignin(@Body() compLoginDTO:LoginInputs){
   return this.authService.CompanySignIn(compLoginDTO);
-
 }
 
 
+@Post('logout')
+async LogoutUser(){
+   return this.authService.Logoutuser();
 }
+
+
+
+};
