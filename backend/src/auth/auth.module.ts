@@ -6,7 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from "./strategies/jwt.strategies"
 import { SetCookieInterceptor } from "./interceptors/set-cookie.interceptor"
-
+import { ThrottlerModule } from "@nestjs/throttler"
 
 
 @Module({
@@ -21,7 +21,16 @@ import { SetCookieInterceptor } from "./interceptors/set-cookie.interceptor"
         expiresIn: configService.get<string>('JWT_EXPRIES_IN'),
       }
     })
-   })
+   }),
+
+   ThrottlerModule.forRoot({
+    throttlers: [
+      {
+        ttl: 60000, 
+        limit: 5, 
+      },
+    ],
+   }),
   ],
   controllers: [AuthController],
   providers: [AuthService,PrismaService,JwtStrategy,SetCookieInterceptor],
