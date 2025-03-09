@@ -7,11 +7,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from "./strategies/jwt.strategies"
 import { SetCookieInterceptor } from "./interceptors/set-cookie.interceptor"
 import { ThrottlerModule } from "@nestjs/throttler"
+import { PassportModule } from "@nestjs/passport"
+import { JwtAuthGuard } from "./guards/jwt-auth.guard"
 
 
 @Module({
   imports:[
    ConfigModule,
+   PassportModule.register({defaultStrategy: 'jwt'}),
    JwtModule.registerAsync({
     imports:[ConfigModule],
     inject:[ConfigService],
@@ -33,6 +36,7 @@ import { ThrottlerModule } from "@nestjs/throttler"
    }),
   ],
   controllers: [AuthController],
-  providers: [AuthService,PrismaService,JwtStrategy,SetCookieInterceptor],
+  providers: [AuthService,PrismaService,JwtStrategy,SetCookieInterceptor,JwtAuthGuard],
+  exports: [JwtAuthGuard]
 })
 export class AuthModule {}
