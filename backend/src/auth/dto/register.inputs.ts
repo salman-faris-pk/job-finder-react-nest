@@ -1,7 +1,5 @@
 import { IsString, IsEmail, MinLength,Length} from "class-validator"
 
-
-
 export class RegisterInputs {
 
     @IsString()

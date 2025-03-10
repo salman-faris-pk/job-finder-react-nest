@@ -27,6 +27,7 @@ model User {
   cvUrl        String?
   jobTitle     String?
   about        String?
+  hashedRefreshToken String?
   applications  JobApplication[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

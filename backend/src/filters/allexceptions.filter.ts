@@ -13,6 +13,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
+
+    if (response.headersSent) {
+      return; // 
+    }
+
+
     let statusCode = 500;
     let message = 'Something went wrong!';
     let success = 'failed';

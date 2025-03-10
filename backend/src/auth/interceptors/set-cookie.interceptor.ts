@@ -11,19 +11,19 @@ export class SetCookieInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       map((data) => {
-        if (data.accessToken) {
-          response.cookie('accessToken', data.accessToken, {
+        if (data.refreshToken) {
+          response.cookie('refreshToken', data.refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'none',
             maxAge: 172800000, 
           });
 
-          delete data.accessToken;  // Remove accessToken from the response data after stored into cookie
+          delete data.refreshToken;  // Remove accessToken from the response data after stored into cookie
         }
 
         if (data.clearCookie) {
-          response.clearCookie('accessToken', {
+          response.clearCookie('refreshToken', {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'none',
