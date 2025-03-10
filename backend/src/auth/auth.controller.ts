@@ -58,8 +58,8 @@ async CompanySignin(@Body() compLoginDTO:LoginInputs){
 
 @Post('logout')
 @UseGuards(JwtAuthGuard)
-async LogoutUser(){
-   return this.authService.Logoutuser();
+async SignOutUser(@Req() req:UserIdRequest){
+   return this.authService.Logoutuser(req.user.id);
 };
 
 @Get('/try')

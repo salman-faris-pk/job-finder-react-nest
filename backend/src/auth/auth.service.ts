@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable,NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from "@nestjs/jwt"
 import { RegisterInputs } from "./dto/register.inputs"
@@ -119,18 +119,6 @@ export class AuthService {
         };
     };
 
-    async refreshingToken(userId:string){
-      
-        const {accessToken,refreshToken}=await this.generatetoken(userId);
-        const hashedrefreshToken= await argon2.hash(refreshToken);
-        await this.updateHashedRefreshToken(userId,hashedrefreshToken);
-        return {
-            id:userId,
-            accessToken,
-            refreshToken
-        };
-    };
-
 
     async updateHashedRefreshTokenInCompanyReg(compId:string,hashedrefreshtoken:string){
         return this.prisma.companies.update({
@@ -138,6 +126,43 @@ export class AuthService {
             data:{ hashedRefreshToken: hashedrefreshtoken }
         });
     };
+
+    async refreshingToken(userId: string) {
+        const { accessToken, refreshToken } = await this.generatetoken(userId);
+        const hashedrefreshToken = await argon2.hash(refreshToken);
+    
+        const user = await this.prisma.user.findUnique({
+            where: { id: userId },
+        });
+            
+        if (user) {
+            const updatedUser = await this.updateHashedRefreshToken(userId, hashedrefreshToken);
+            if (updatedUser && updatedUser.hashedRefreshToken) {
+                return {
+                    id: userId,
+                    accessToken,
+                    refreshToken,
+                };
+            }
+        } else {
+            const company = await this.prisma.companies.findUnique({
+                where: { id: userId },
+            });                
+            if (company) {
+                const updatedCompany = await this.updateHashedRefreshTokenInCompanyReg(userId, hashedrefreshToken);
+                if (updatedCompany && updatedCompany.hashedRefreshToken) {
+                    return {
+                        id: userId,
+                        accessToken,
+                        refreshToken,
+                    };
+                }
+            }
+        }
+    
+        throw new Error('Failed to update refresh token: User or Company not found');
+    }
+
 
     async CompanyUserRegistration(compRegisDTO:CompanyRegisterDto){
 
@@ -217,18 +242,25 @@ export class AuthService {
 
 
 
-    async Logoutuser(){
-      return {
-        success: true,
-        message: 'Logout successful',
-        clearCookie: true,
-    };
-
+    async Logoutuser(userId: string) {
+        
+        const user = await this.prisma.user.findUnique({ where: { id: userId } });
+        if (user) {
+            await this.updateHashedRefreshToken(userId, "");
+            return { success: true, message: 'User logout successful', clearCookie: true };
+        }
+    
+        const company = await this.prisma.companies.findUnique({ where: { id: userId } });
+        if (company) {
+            await this.updateHashedRefreshTokenInCompanyReg(userId, "");
+            return { success: true, message: 'Company logout successful', clearCookie: true };
+        }
+    
+        throw new NotFoundException('User or Company not found');
     }
 
-
     async validateJwtUser(userId:string){
-       
+        
         const User = await this.prisma.user.findUnique({ where: { id: userId } }) 
              || await this.prisma.companies.findUnique({ where: { id: userId } });
        
@@ -238,20 +270,36 @@ export class AuthService {
              return user;
    };
 
+
    async validateRefreshToken(userId:string,OldrefreshToken:string){
-         const user=await this.prisma.user.findUnique({
-            where:{id:userId}
-         });
+    
+    const user = await this.prisma.user.findUnique({
+        where: { id: userId }
+    });
 
-         if (!user || !user.hashedRefreshToken){
+    if (user && user.hashedRefreshToken) {
+        const refreshTokenMatche = await argon2.verify(user.hashedRefreshToken, OldrefreshToken);
+        if (!refreshTokenMatche) {
             throw new UnauthorizedException('Invalid Refresh Token');
-         };
+        }
+        return { id: userId }; 
+    }
 
-         const refreshTokenMatches = await argon2.verify(user.hashedRefreshToken, OldrefreshToken);
+    const company = await this.prisma.companies.findUnique({
+        where: { id: userId }
+    });
 
-         if (!refreshTokenMatches) throw new UnauthorizedException('Invalid Refresh Token');
+    if (company && company.hashedRefreshToken) {
+        const refreshTokenMatches = await argon2.verify(company.hashedRefreshToken, OldrefreshToken);
+        
+        if (!refreshTokenMatches) {
+            throw new UnauthorizedException('Invalid Refresh Token');
+        }
+        return { id: userId};
+    }
 
-         return { id: userId };
+    throw new UnauthorizedException('Invalid Refresh Token');
+
    };
   
 
