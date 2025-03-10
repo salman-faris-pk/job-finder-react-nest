@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { AuthService } from '../auth.service';
-import { LoginInputs } from '../dto/login.inputs';
+
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -12,6 +12,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     });
   }
 
+  
   validate(email: string, password: string) {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

@@ -21,7 +21,7 @@ export type User ={
     email:string;
     accountType:string;
 }
-
+   
 export interface AuthenticatedRequest extends Request {
     user: User; 
 }

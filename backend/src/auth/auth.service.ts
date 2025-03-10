@@ -132,6 +132,13 @@ export class AuthService {
     };
 
 
+    async updateHashedRefreshTokenInCompanyReg(compId:string,hashedrefreshtoken:string){
+        return this.prisma.companies.update({
+            where:{ id: compId },
+            data:{ hashedRefreshToken: hashedrefreshtoken }
+        });
+    };
+
     async CompanyUserRegistration(compRegisDTO:CompanyRegisterDto){
 
         const{name,email,password}=compRegisDTO;
@@ -154,13 +161,16 @@ export class AuthService {
             }
         });
 
-        const { accessToken }=await this.generatetoken(company.id);
+        const { accessToken,refreshToken}=await this.generatetoken(company.id);
+        const hashedRefreshToken=await argon2.hash(refreshToken);
+        await this.updateHashedRefreshTokenInCompanyReg(company.id,hashedRefreshToken)
 
         return {
             success: true,
             message: "Company Account Created Successfully",
             accessToken,
-            user: {
+            refreshToken,
+            company: {
               _id: company.id,
               name: company.name,
               email: company.email,
@@ -168,7 +178,6 @@ export class AuthService {
           };
           
     };
-
 
     async CompanySignIn(compLoginDTO:LoginInputs){
         const {email,password}=compLoginDTO;
@@ -190,18 +199,22 @@ export class AuthService {
             throw new UnauthorizedException('Invalid password');
         };
 
-        const { accessToken }=await this.generatetoken(company.id)
-        
+        const { accessToken,refreshToken}=await this.generatetoken(company.id)
+        const hashedRefreshToken=await argon2.hash(refreshToken);
+        await this.updateHashedRefreshTokenInCompanyReg(company.id,hashedRefreshToken)
+
         const { password: _, ...companyDatas } = company; //removes password 
 
         return {
             success: true,
-            message: "Login SUccessfully",
+            message: "comapny Login SUccessfully",
             accessToken,
-            user: companyDatas,
+            refreshToken,
+            company: companyDatas,
         };
 
     };
+
 
 
     async Logoutuser(){
@@ -225,7 +238,7 @@ export class AuthService {
              return user;
    };
 
-   async validateRefreshToken(userId:string,refreshToken:string){
+   async validateRefreshToken(userId:string,OldrefreshToken:string){
          const user=await this.prisma.user.findUnique({
             where:{id:userId}
          });
@@ -234,7 +247,7 @@ export class AuthService {
             throw new UnauthorizedException('Invalid Refresh Token');
          };
 
-         const refreshTokenMatches = await argon2.verify(user.hashedRefreshToken, refreshToken);
+         const refreshTokenMatches = await argon2.verify(user.hashedRefreshToken, OldrefreshToken);
 
          if (!refreshTokenMatches) throw new UnauthorizedException('Invalid Refresh Token');
 

@@ -27,14 +27,13 @@ async SignUpUser(@Body() registerDto: RegisterInputs) {
 }
 
 @Post('login')
-@UsePipes(new ValidationPipe())
 @UseGuards(LocalAuthGuard) 
 async SignInUser(@Req() req: AuthenticatedRequest) {
     return this.authService.LoginUser(req.user);
 }
 
 @Post('refresh')
-@UseGuards(RefreshAuthGuard)
+@UseGuards(RefreshAuthGuard)   //first checks is refreshtoken valid or not! if valid then get a userid from this guard,if refresh token is not valid then shows error,we can set navigate to login page in froentend
 refreshToken(@Req() req:UserIdRequest) {
   return this.authService.refreshingToken(req.user.id);
 }
