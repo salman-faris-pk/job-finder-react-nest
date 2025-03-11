@@ -13,6 +13,7 @@ import jwtConfig from './config/jwt.config';
 import refreshJwtConfig from './config/refresh-jwt.config';
 import { LocalStrategy } from './strategies/local.strategy';
 import { RefreshJwtStrategy } from './strategies/refresh.strategy';
+import googleOauthConfig from './config/google-oauth.config';
 
 
 
@@ -21,6 +22,7 @@ import { RefreshJwtStrategy } from './strategies/refresh.strategy';
    JwtModule.registerAsync(jwtConfig.asProvider()),
    ConfigModule.forFeature(jwtConfig),
    ConfigModule.forFeature(refreshJwtConfig),
+   ConfigModule.forFeature(googleOauthConfig),
    ThrottlerModule.forRoot({
     throttlers: [
       {

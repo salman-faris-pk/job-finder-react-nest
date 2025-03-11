@@ -19,6 +19,7 @@ export class AuthController {
 
   constructor(private readonly authService: AuthService) {}
 
+
 @Post('register')
 @UseGuards(ThrottlerGuard)
 @UsePipes(new ValidationPipe())
@@ -62,27 +63,20 @@ async SignOutUser(@Req() req:UserIdRequest){
    return this.authService.Logoutuser(req.user.id);
 };
 
-@Get('/try')
-async justTry(@Res() res:Response) {
 
-  return res.send("<a href='http://localhost:8003/auth/google'>Login with Googel</a>")
   
-}
-
-@Get('google')
+@Get('google/login')
 @UseGuards(GoogleAuthGuard)
-async googleAuth() {
+async googleLogin() {
   //its automaticaly redirects to googles email selection page
 }
 
 @Get('google/callback')
 @UseGuards(GoogleAuthGuard)
-async googleAuthRedirect(@Req() req:AuthenticatedRequest) {
-
-  // return this.authService.GoogleAuthentication()
-  
+async googleCallback(@Req() req:AuthenticatedRequest) {
+   return this.authService.LoginUser(req.user); 
 }
 
 
-
 };
+ 

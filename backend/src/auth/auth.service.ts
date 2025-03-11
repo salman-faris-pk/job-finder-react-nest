@@ -6,7 +6,7 @@ import { CompanyRegisterDto } from "./dto/company.register"
 import { LoginInputs } from "./dto/login.inputs"
 import * as bcrypt from 'bcryptjs';
 import * as argon2 from 'argon2';
-import { AuthJwtpayload, GoogleUser, User } from './types/auth-jwtPayload';
+import { AuthJwtpayload,User } from './types/auth-jwtPayload';
 import  refreshJwtConfig from "./config/refresh-jwt.config"
 import { ConfigType } from '@nestjs/config';
 
@@ -54,7 +54,7 @@ export class AuthService {
 
     async registerUser(registerDto: RegisterInputs) {
        
-        const {firstName,lastName,email,password}=registerDto;
+        const {firstName,lastName,email,password,profileUrl}=registerDto;
 
         const userexists= await this.findByEmail(email);
 
@@ -68,6 +68,7 @@ export class AuthService {
                 firstName,
                 lastName,
                 email,
+                profileUrl,
                 password:hashedpassword
             }
         });
@@ -75,17 +76,19 @@ export class AuthService {
         const { accessToken,refreshToken}=await this.generatetoken(user.id);
         const hashedRefreshToken=await argon2.hash(refreshToken);
         await this.updateHashedRefreshToken(user.id,hashedRefreshToken)
-        
+
+         
         return {
             success: true,
             message: 'Account created successfully',
             refreshToken, // Interceptor will store this in cookies
-            accessToken,  
+            accessToken, 
             user: {
-              _id: user.id,
+              id: user.id,
               firstName: user.firstName,
               lastName: user.lastName,
               email: user.email,
+              profileUrl: user.profileUrl,
               accountType: user.accountType,
             },
           };
@@ -99,8 +102,9 @@ export class AuthService {
     };
 
     async LoginUser(user:User){
-        
+
         const { accessToken,refreshToken}=await this.generatetoken(user.id);
+        
         const hashedRefreshToken=await argon2.hash(refreshToken);
         await this.updateHashedRefreshToken(user.id,hashedRefreshToken)
 
@@ -114,6 +118,7 @@ export class AuthService {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 email: user.email,
+                profileUrl: user.profileUrl,
                 accountType: user.accountType,
             },
         };
@@ -303,48 +308,16 @@ export class AuthService {
    };
   
 
+   async validateGoogleUser(googleUser:RegisterInputs){
+    const { email }=googleUser;
 
-   async GoogleAuthentication(user:GoogleUser){
-
-      const existinggUser=await this.prisma.user.findUnique({
-        where:{email:user.email}
-      });
-
-      let loggedInUser;
-      if(existinggUser){
-        loggedInUser= existinggUser;
-
-      }else{
-         loggedInUser=await this.prisma.user.create({
-            data:{
-                firstName:user.firstName,
-                lastName:user.lastName,
-                email:user.email,
-                profileUrl: user.profileUrl,
-                password:"",
-            },
-         })
-      }
-      const accessToken=user.accessToken;
-
-      return {
-        success: true,
-        message: 'Account logined or created successfully',
-        accessToken,
-        user: {
-          _id: loggedInUser.id,
-          firstName: loggedInUser.firstName,
-          lastName: loggedInUser.lastName,
-          email: loggedInUser.email,
-          accountType: loggedInUser.accountType,
-        },
-      };
-
-   };
-
-   async validateGoogleUser(){
+    const user=await this.findByEmail(email);
+    if(user) return user;    
     
-   }
+     const regUser=await this.registerUser(googleUser);
+     if(regUser) return regUser.user;
+    
+   };
 
     
 };

@@ -1,4 +1,4 @@
-import { IsString, IsEmail, MinLength,Length} from "class-validator"
+import { IsString, IsEmail, MinLength,Length, IsUrl, IsOptional} from "class-validator"
 
 export class RegisterInputs {
 
@@ -7,14 +7,19 @@ export class RegisterInputs {
     firstName: string;
     
     @IsString()
-    @Length(2, 10, { message: "Last name must be between 2 and 10 characters" })
+    @Length(2, 12, { message: "Last name must be between 2 and 10 characters" })
     lastName: string;
 
-    
+    @IsString()
     @IsEmail({}, { message: "Please provide a valid email" })
     email:string;
 
     @IsString()
     @MinLength(6, { message: "Password length should be greater than 6 characters" })
     password:string;
+
+    @IsString()
+    @IsUrl()
+    @IsOptional()
+    profileUrl?:string;
 }

@@ -15,7 +15,6 @@ export class SetCookieInterceptor implements NestInterceptor {
           response.cookie('refreshToken', data.refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'none',
             maxAge: 172800000, 
           });
 
@@ -26,10 +25,9 @@ export class SetCookieInterceptor implements NestInterceptor {
           response.clearCookie('refreshToken', {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'none',
           });
         }
-
+      
         return data;
       }),
     );

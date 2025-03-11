@@ -1,34 +1,44 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, VerifyCallback } from 'passport-google-oauth20';
-import { ConfigService } from '@nestjs/config';
+import { Strategy, VerifyCallback,StrategyOptionsWithRequest} from 'passport-google-oauth20';
+import { ConfigService, ConfigType } from '@nestjs/config';
 import { AuthService } from '../auth.service';
+import googleOauthConfig from '../config/google-oauth.config';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
-  constructor(configService: ConfigService,
-    private readonly authService: AuthService,
+  constructor(
+    @Inject(googleOauthConfig.KEY)
+    googleConfiguration: ConfigType<typeof googleOauthConfig>,
+    private authService: AuthService,
   ) {
     super({
-      clientID: configService.get<string>('GOOGLE_CLIENT_ID') || '',
-      clientSecret: configService.get<string>('GOOGLE_CLIENT_SECRET') || '',
-      callbackURL: configService.get<string>('GOOGLE_CALLBACK_URL') || '',
-      scope: ['profile', 'email'],
-      passReqToCallback: true,
-    });
+      clientID: googleConfiguration.clinetID,
+      clientSecret: googleConfiguration.clientSecret,
+      callbackURL: googleConfiguration.callbackURL,
+      scope: ['email', 'profile'],
+    } as StrategyOptionsWithRequest);
   }
 
 
-  async validate(accessToken: string,profile: any, done: VerifyCallback): Promise<any> {
-    const { name, emails, photos } = profile;
   
-    if (!emails || emails.length === 0) {
-      return done(new Error('No email found'), false);
-    }
-  
-    console.log({ profile });
-  
-    done(null);
+  async validate(
+    accessToken: string,
+    refreshToken: string,
+    profile: any,
+    done: VerifyCallback,
+  ) {
+    // console.log({ profile });
+    const user = await this.authService.validateGoogleUser({
+      email: profile.emails[0].value,
+      firstName: profile.name.givenName,
+      lastName: profile.name.familyName,
+      profileUrl: profile.photos[0].value,
+      password: '',
+    });
+
+     // done(null, user);
+    return user;
   }
   
 }

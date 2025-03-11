@@ -6,20 +6,13 @@ export type AuthJwtpayload = {
 };
 
 
-export interface GoogleUser {
-    email: string;
-    firstName: string;
-    lastName: string;
-    profileUrl: string;
-    accessToken: string;
-}
-
 export type User ={
     id:string;
     firstName:string;
     lastName:string;
     email:string;
     accountType:string;
+    profileUrl?: string,
 }
    
 export interface AuthenticatedRequest extends Request {
