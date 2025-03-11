@@ -268,7 +268,7 @@ export class AuthService {
         
         const User = await this.prisma.user.findUnique({ where: { id: userId } }) 
              || await this.prisma.companies.findUnique({ where: { id: userId } });
-       
+      
              if (!User) throw new UnauthorizedException('User not found!');
 
              const user={ id: User.id };

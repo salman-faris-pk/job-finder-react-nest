@@ -5,7 +5,6 @@ import { LoginInputs } from './dto/login.inputs';
 import { CompanyRegisterDto } from "./dto/company.register"
 import { SetCookieInterceptor } from "./interceptors/set-cookie.interceptor"
 import { ThrottlerGuard } from "@nestjs/throttler"
-import { Response } from 'express';
 import { GoogleAuthGuard } from './guards/google-auth.guard';
 import { AuthenticatedRequest, UserIdRequest} from './types/auth-jwtPayload';
 import { LocalAuthGuard } from './guards/local-auth.guard';
