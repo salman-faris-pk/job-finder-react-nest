@@ -43,7 +43,7 @@ model Companies {
   location   String? 
   about      String?
   profileUrl String?
-  jobPosts   String[] @db.ObjectId
+  jobPosts   Job[]
   hashedRefreshToken String?
 }
 
@@ -51,6 +51,7 @@ model Companies {
 model Job {
   id           String @id @default(auto()) @map("_id") @db.ObjectId
   companyId    String @db.ObjectId
+  company      Companies @relation(fields: [companyId],references: [id])
   jobTitle     String
   jobType      String
   location     String
@@ -73,12 +74,7 @@ model JobApplication {
 }
 
 
-
-
-model Detail {
-  id           String @id @default(auto()) @map("_id") @db.ObjectId
-  jobId        String @db.ObjectId
-  job          Job @relation(fields: [jobId], references: [id])
+type Detail {
   desc         String
   requirements String
 }

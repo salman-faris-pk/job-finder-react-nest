@@ -16,13 +16,14 @@ export class CompaniesService {
    };
 
    async updateCompanyJobs(compId: string, jobId: string) {
+    
     return await this.prisma.companies.update({
       where: { id: compId },
       data: {
         jobPosts: {
-          push: jobId,
-        },
+          connect: { id: jobId }, 
       },
+    }
     });
   }
   

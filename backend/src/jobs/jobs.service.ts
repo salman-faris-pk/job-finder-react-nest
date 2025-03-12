@@ -1,7 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException,Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateJobDto } from './dtos/create-job.dto';
 import { CompaniesService } from 'src/companies/companies.service';
+import { UpdateJobDto } from './dtos/update.dto';
 
 @Injectable()
 export class JobsService {
@@ -11,7 +12,7 @@ export class JobsService {
       private readonly Companyservice:CompaniesService,
     ){}
 
-  async CreateNewJob(compId:string,jobPostDto:CreateJobDto){
+  async CreateNewJob(companyId:string,jobPostDto:CreateJobDto){
 
     const {jobTitle,jobType,location,salary,vacancies,experience,desc,requirements}=jobPostDto;
 
@@ -28,23 +29,22 @@ export class JobsService {
             salary,
             vacancies,
             experience,
-            companyId:compId,
-            detail: {
-                create: {
-                    desc,
-                    requirements
-                }
-            },
+            detail: [
+              {
+                desc,
+                requirements,
+              },
+            ],
+            company: {
+              connect: {id: companyId}
+            }
         },
-        include : {
-            detail: true
-        }
     });
-
-    await this.Companyservice.updateCompanyJobs(compId, Job.id);
-   
-     
     
+    
+    await this.Companyservice.updateCompanyJobs(companyId, Job.id);
+    
+   
    return {
     success: true,
     message: "Job Posted SUccessfully",
@@ -52,6 +52,41 @@ export class JobsService {
    };
   
   };
+
+
+  async UpdateJobById(jobId:string,updateJobDto:UpdateJobDto){
+      
+      const {  jobTitle, jobType,location,salary,vacancies,experience,desc,requirements}=updateJobDto;
+      const updatedDetail = {
+        desc: desc || "", 
+        requirements: requirements || "",
+      };
+      
+      const jobPost = await this.prisma.job.update({
+        where: { id: jobId },
+        data: {
+          jobTitle,
+          jobType,
+          location,
+          salary,
+          vacancies,
+          experience,
+          detail: {
+            set: [updatedDetail],
+          },
+        },
+       
+      });
+
+      return {
+      success: true,
+      message: "Job Post Updated SUccessfully",
+      jobPost,
+      }
+
+    };
+
+
 
 
 
