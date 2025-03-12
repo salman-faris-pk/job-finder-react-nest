@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param,Post,Put,Req, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param,Post,Put,Query,Req, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { JobsService } from './jobs.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UserIdRequest } from 'src/auth/types/auth-jwtPayload';
 import { CreateJobDto } from './dtos/create-job.dto';
 import { UpdateJobDto } from './dtos/update.dto';
+import { JobQueryDto } from './dtos/job-query.dto';
 
 @Controller('jobs')
 export class JobsController {
@@ -28,10 +29,10 @@ export class JobsController {
   }
 
 
-  // @Get('find-jobs')
-  // async GetJobPosts(){
-  //    return this.jobsService.getPostedJobs()
-  // }
+  @Get('find-jobs')
+  async GetJobPosts(@Query() query:JobQueryDto){
+     return this.jobsService.getPostedJobs(query)
+  }
 
 
 
