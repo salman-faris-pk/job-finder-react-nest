@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param,Post,Put,Query,Req, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param,Post,Put,Query,Req, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { JobsService } from './jobs.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UserIdRequest } from 'src/auth/types/auth-jwtPayload';
@@ -38,6 +38,14 @@ export class JobsController {
   async GetJobDetail(@Param('id') id:string){
      return this.jobsService.getJobDetailById(id)
   }
+
+  @Delete('delete-job/:id')
+  @UseGuards(JwtAuthGuard)
+  async DeleteJob(@Param('id') id:string){
+    return this.jobsService.DeleteJobById(id)
+   
+  }
+
 
 
 }

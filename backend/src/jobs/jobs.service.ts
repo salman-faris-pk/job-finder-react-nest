@@ -269,6 +269,43 @@ export class JobsService {
   };
 
 
+  async DeleteJobById(jobId:string){
+   
+    return await this.prisma.$transaction(async (tx) => {
+
+      const job = await tx.job.findUnique({
+        where: { id: jobId },
+        select: { companyId: true },
+      });
+  
+      if (!job) {
+        throw new NotFoundException("Job not found.");
+      }
+
+      await tx.job.delete({
+        where: { id: jobId },
+      });
+
+      await tx.companies.update({
+         where: { id: job.companyId},
+         data: {
+          jobPosts: {
+            set: (await tx.companies.findUnique({
+               where:{ id: job.companyId},
+               select: {jobPosts: true},
+            }))?.jobPosts.filter((post) => post.id !== jobId) || []
+          }
+         }
+      });
+
+      return {
+        success: true,
+        message: "Job Post Deleted Successfully.",
+      };
+
+    });
+
+};
 
 
 
