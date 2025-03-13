@@ -34,7 +34,10 @@ export class JobsController {
      return this.jobsService.getPostedJobs(query)
   }
 
-
+  @Get('job-detail/:id')
+  async GetJobDetail(@Param('id') id:string){
+     return this.jobsService.getJobDetailById(id)
+  }
 
 
 }

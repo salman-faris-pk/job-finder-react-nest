@@ -199,14 +199,74 @@ export class JobsService {
     const numOfPage = Math.ceil(totalJobs / Limit);
   
     const jobs = await queryResults;
-  
+   
     return {
       totalJobs,
       jobs,
       Page,
       numOfPage,
     };
-  }
+  };
+
+
+
+  async getJobDetailById(jobId:string){
+      
+    const job=await this.prisma.job.findUnique({
+      where:{id: jobId},
+      include: {
+        company: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            contact: true,
+            location: true,
+            about: true,
+            profileUrl: true,
+          },
+        },
+      },
+    });
+
+    if (!job) {
+      throw new NotFoundException('Job Post Not Found');
+    };
+
+    const similarJobs = await this.prisma.job.findMany({
+      where: {
+        OR: [
+          { jobTitle: { contains: job.jobTitle, mode: 'insensitive' } },
+          { jobType: { contains: job.jobType, mode: 'insensitive' } },
+        ],
+      },
+      include: {
+        company: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            contact: true,
+            location: true,
+            about: true,
+            profileUrl: true,
+          },
+        },
+      },
+      orderBy: {
+        id: 'desc',
+      },
+      take: 6, 
+    });
+
+
+    return {
+      success: true,
+      data: job,
+      similarJobs,
+    };
+
+  };
 
 
 
