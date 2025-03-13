@@ -1,12 +1,29 @@
-import { Body, Controller, NotFoundException, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Post, Put, Query, Req, UploadedFile, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CompaniesService } from './companies.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UserIdRequest } from 'src/auth/types/auth-jwtPayload';
-import { CompanyJobListBodyDto, CompanyJobListQueryDto } from './dto/company.query.dto';
+import { CompanyJobListBodyDto, CompanyJobQueryDto } from './dto/company.query.dto';
+import { CompanyUpdateDto } from './dto/update-comapny.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { memoryStorage } from 'multer';
+import { CloudinaryInterceptor } from 'src/users/interceptor/cloudinary.interceptor';
 
 @Controller('companies')
 export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
+
+
+
+  @Get('')
+  async GetCompaies(@Query() query:CompanyJobQueryDto){
+    return this.companiesService.getCompanies(query)
+  }
+
+
+  @Get(':id')
+  async GetCompanyById(@Param('id') id:string){
+    return this.companiesService.getSingleCompany(id)
+  }
 
 
   @Post('company-profile')
@@ -15,9 +32,10 @@ export class CompaniesController {
     return this.companiesService.getCompanyProfile(req.user.id)
   }
 
+
   @Post('company-joblist')
   @UseGuards(JwtAuthGuard)
-  async CompnayJobLists(@Query() query: CompanyJobListQueryDto,@Body() body: CompanyJobListBodyDto){
+  async CompnayJobLists(@Query() query: CompanyJobQueryDto,@Body() body: CompanyJobListBodyDto){
 
     const {userId}=body.user;
     if (!userId) {
@@ -26,6 +44,27 @@ export class CompaniesController {
 
     return this.companiesService.getCompanyJobslist(query,userId)
   };
+
+
+  @Put("update-company")
+  @UseGuards(JwtAuthGuard)
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+    @UseInterceptors(
+      FileInterceptor("profileUrl", { storage: memoryStorage() }),
+      CloudinaryInterceptor
+    )
+  async UpdateCompanyProfile(@Req() req:UserIdRequest,@Body() updatesData:CompanyUpdateDto,@UploadedFile() file: Express.Multer.File){
+
+    if (file && req.body.profileUrl) {
+      updatesData.profileUrl = req.body.profileUrl;
+    };
+
+    return this.companiesService.editCompanyProfile(req.user.id,updatesData)
+
+  }
+
+
+
   
 
 }

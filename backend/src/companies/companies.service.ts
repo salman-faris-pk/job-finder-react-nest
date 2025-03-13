@@ -1,19 +1,28 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CompanyJobListQueryDto } from './dto/company.query.dto';
+import { CompanyJobQueryDto } from './dto/company.query.dto';
+import { CompanyUpdateDto } from './dto/update-comapny.dto';
 
 @Injectable()
 export class CompaniesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+  ) {}
 
   async FindById(compId: string) {
     return await this.prisma.companies.findUnique({
       where: { id: compId },
       include: { jobPosts: true },
+      omit:{
+        password: true,
+        hashedRefreshToken:true,
+      }
     });
   }
 
+  
   async updateCompanyJobs(compId: string, jobId: string) {
+
     return await this.prisma.companies.update({
       where: { id: compId },
       data: {
@@ -35,7 +44,7 @@ export class CompaniesService {
       throw new NotFoundException('Company Not Found');
     }
 
-    const {password: pass_,hashedRefreshToken: hashed_,jobPosts: _,...companyDatas} = company;
+    const {jobPosts: _,...companyDatas} = company;
 
     return {
       success: true,
@@ -45,14 +54,14 @@ export class CompaniesService {
   };
 
 
-  async getCompanyJobslist(query: CompanyJobListQueryDto,compId: string) {
+  async getCompanyJobslist(query: CompanyJobQueryDto,compId: string) {
     
     const { search, sort} = query;
 
     const queryObject: any = {};
 
     if (search) {
-      queryObject.location = queryObject.location = { contains: search, mode: 'insensitive'};
+      queryObject.location = { contains: search, mode: 'insensitive'};
     };
 
     let sorting: { [key: string]: 'asc' | 'desc' } = {};
@@ -74,27 +83,131 @@ export class CompaniesService {
         orderBy: sorting,
       }
      },
+     omit: {
+      password: true,
+      hashedRefreshToken:true
+     }
    });
-   
+
    if (!company) {
     throw new NotFoundException('Company not found');
   }
 
-   const {password: pass_,hashedRefreshToken: hashed_,...companyDatas} = company;
-
-
      return {
       success: true,
-      companies: companyDatas,
+      companies: company,
      }
 
   };
 
 
+  async getCompanies(query:CompanyJobQueryDto){
+
+     const {location,search,sort,limit,page}=query;
+
+     const pageNum = Number(page) || 1;
+     const limitNum = Number(limit) || 10;
+
+     const queryObject:any = {};
+
+     if (search) {
+      queryObject.name = { contains: search, mode: 'insensitive'};
+    };
+
+    if(location){
+      queryObject.location = {contains: location, mode: 'insensitive'}
+    };
+
+    let orderBy :any = undefined;;
+    if (sort === "Newest") orderBy = { createdAt: "desc" };
+    if (sort === "Oldest") orderBy = { createdAt: "asc" };
+    if (sort === "A-Z") orderBy = { name: "asc" };
+    if (sort === "Z-A") orderBy = { name: "desc" };
+
+    
+    const total = await this.prisma.companies.count({ where: queryObject });    
+    
+    const companies=await this.prisma.companies.findMany({
+      where: queryObject,
+      orderBy,
+      take: limitNum * pageNum,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        contact:true,
+        location: true,
+        about: true,
+        profileUrl: true,
+      },
+    });
+
+    return {
+      success: true,
+      total,
+      data: companies,
+      page: pageNum,
+      numOfPage: Math.ceil(total / limitNum),
+    };
+
+  };
 
 
 
+  async getSingleCompany(id:string){
+    
+    const company = await this.prisma.companies.findUnique({
+      where: { id }, 
+      include: {
+        jobPosts: {
+          orderBy: {
+            id: 'desc',
+          },
+        },
+      },
+      omit:{
+        password:true,
+        hashedRefreshToken:true
+      }
+    });
+    
+    if (!company) {
+      throw new NotFoundException({ message: "Company Not Found", success: false });
+    };
 
+    return {
+      success: true,
+      data: company,
+    }
+
+  };
+
+
+  async editCompanyProfile(compId:string,updatesData:CompanyUpdateDto){
+
+    const Company=await this.prisma.companies.findUnique({
+      where:{id : compId}
+    });
+    if (!Company) {
+      throw new NotFoundException(`No user found with id: ${compId}`);
+    };
+
+    const company=await this.prisma.companies.update({
+      where:{id: compId},
+      data:updatesData,
+      omit:{
+        password:true,
+        hashedRefreshToken:true
+      }
+    });
+
+    return {
+      success: true,
+      message: "Company Profile Updated SUccessfully",
+      company,
+    }
+
+  };
 
 
 

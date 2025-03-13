@@ -45,6 +45,8 @@ model Companies {
   profileUrl String?
   jobPosts   Job[]
   hashedRefreshToken String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 

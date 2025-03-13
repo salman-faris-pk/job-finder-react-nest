@@ -17,25 +17,10 @@ export class JobsService {
   ) {}
 
   async CreateNewJob(companyId: string, jobPostDto: CreateJobDto) {
-    const {
-      jobTitle,
-      jobType,
-      location,
-      salary,
-      vacancies,
-      experience,
-      desc,
-      requirements,
-    } = jobPostDto;
+    const { jobTitle,jobType,location,salary,vacancies,experience,desc, requirements } = jobPostDto;
 
     if (
-      !jobTitle ||
-      !jobType ||
-      !location ||
-      !salary ||
-      !requirements ||
-      !desc
-    ) {
+      !jobTitle || !jobType || !location || !salary || !requirements || !desc || !experience) {
       throw new BadRequestException('Please Provide All Required Fields');
     }
 
@@ -66,19 +51,14 @@ export class JobsService {
       message: 'Job Posted SUccessfully',
       Job,
     };
-  }
+  };
+
+
 
   async UpdateJobById(jobId: string, updateJobDto: UpdateJobDto) {
-    const {
-      jobTitle,
-      jobType,
-      location,
-      salary,
-      vacancies,
-      experience,
-      desc,
-      requirements,
-    } = updateJobDto;
+
+    const {jobTitle,jobType,location,salary,vacancies,experience,desc,requirements,} = updateJobDto;
+    
     const updatedDetail = {
       desc: desc || '',
       requirements: requirements || '',

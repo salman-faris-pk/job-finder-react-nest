@@ -14,17 +14,20 @@ export class UsersService {
     async getUser(userId:string){
 
         const user=await this.prisma.user.findUnique({
-            where:{id:userId}
+            where:{id:userId},
+            omit:{
+                password: true,
+                hashedRefreshToken: true
+            }
         });
         if(!user){
             throw new NotFoundException('User Not Found');
         };
 
-        const { password: password_, hashedRefreshToken: token_, ...userDatas } = user;
 
         return {
             success: true,
-            user:userDatas,
+            user,
         };
     };
 
@@ -32,15 +35,19 @@ export class UsersService {
     async UpdateTheUser(userId:string, updateUserDto: Partial<UpdateUserDto>){
 
         
-        const existingUser = await this.prisma.user.findUnique({ where: { id: userId } });
+        const User = await this.prisma.user.findUnique({ where: { id: userId } });
 
-        if (!existingUser) {
+        if (!User) {
           throw new NotFoundException(`No user found with id: ${userId}`);
         };
 
         const updatedUser = await this.prisma.user.update({
             where: { id: userId },
             data: updateUserDto,
+            omit:{
+                password:true,
+                hashedRefreshToken:true,
+            }
           });
 
           return {

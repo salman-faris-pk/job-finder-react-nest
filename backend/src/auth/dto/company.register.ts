@@ -6,7 +6,7 @@ import { IsString, IsEmail, MinLength,Length} from "class-validator"
 export class CompanyRegisterDto {
 
     @IsString()
-    @Length(5, 20, { message: "comapny name must be between 5 and 20 characters" })
+    @Length(5, 20, { message: "comapany name must be between 5 and 20 characters" })
     name:string;
     
     @IsEmail({}, { message: "Please provide a valid email" })
