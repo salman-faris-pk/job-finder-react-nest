@@ -15,7 +15,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
 
     if (response.headersSent) {
-      return; // 
+      return; 
     }
 
 

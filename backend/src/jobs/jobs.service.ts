@@ -267,6 +267,7 @@ export class JobsService {
     };
 
   };
+  
 
 
   async DeleteJobById(jobId:string){
