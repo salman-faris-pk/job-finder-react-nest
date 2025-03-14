@@ -19,8 +19,8 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     if (!emailRegex.test(email)) {
         throw new UnauthorizedException('Please provide a valid email address');
     }
-    if (password.length < 6 || password.length > 15) {
-        throw new UnauthorizedException('Password must be between 6 and 15 characters long');
+    if (password.length < 6 || password.length > 30) {
+        throw new UnauthorizedException('Password must be between 6 and 30 characters long');
     }
 
     const user = this.authService.validateUser(email,password);

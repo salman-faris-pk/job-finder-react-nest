@@ -2,17 +2,56 @@ import { useState } from "react";
 import TextInput from "./TextInput";
 import CustomButton from "./CustomButton";
 import { FcGoogle } from "react-icons/fc";
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { schema } from "../utils/zodvalidation"
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+
+
+
 
 const SignUp = () => {
   const [isRegister, setIsRegister] = useState(true);
   const [accountType, setAccountType] = useState("seeker");
   const [errMsg, setErrMsg] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showCoPassword, setShowCoPassword] = useState(false);
 
-  const onSubmit = () => {};
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    watch,
+    formState: { errors },
+   } = useForm({
+    resolver: zodResolver(schema),
+    mode: "onChange",
+   });
+
+  const onSubmit = () => {
+    let URL=null;
+
+    if(isRegister){
+        if( accountType === "seeker"){
+           URL="auth/register"
+        }else{
+          URL="auth/company-register"
+        }
+    }else {
+        if( accountType === "seeker"){
+          URL="auth/login"
+        }else {
+          URL="auth/company-login"
+        }
+    };
+
+
+
+  };
 
   return (
     <div className="flex items-center justify-center">
-      <div className="w-full max-w-xl transform overflow-hidden rounded-2xl bg-white m-2  p-6 text-left align-middle shadow-md">
+       <div className="w-full max-w-xl transform overflow-hidden rounded-2xl bg-white m-2  p-6 text-left align-middle shadow-md">
         <h3 className="text-xl font-semibold text-gray-900">
           {isRegister ? "Create Account" : "Account Sign In"}
         </h3>
@@ -49,8 +88,15 @@ const SignUp = () => {
           </div>
         )}
 
-        <form className="w-full flex flex-col gap-5">
-          <TextInput name="email" label="Email Address" placeholder="email@example.com" type="email" />
+        <form className="w-full flex flex-col gap-5" onSubmit={handleSubmit(onSubmit)}>
+          <TextInput
+            name="email"
+            label="Email Address"
+            placeholder="email@example.com"
+            type="email"
+            register={register("email")}
+            error={errors.email?.message}
+          />
 
           {isRegister && (
             <div className="w-full flex gap-1 md:gap-2">
@@ -60,28 +106,69 @@ const SignUp = () => {
                   label={accountType === "seeker" ? "First Name" : "Company Name"}
                   placeholder={accountType === "seeker" ? "eg. James" : "Company name"}
                   type="text"
+                  register={register(accountType === "seeker" ? "firstName" : "name")}
+                  error={
+                    accountType === "seeker" ? errors.firstName?.message : errors.name?.message
+                  }
                 />
               </div>
 
               {accountType === "seeker" && (
                 <div className="w-1/2">
-                  <TextInput name="lastName" label="Last Name" placeholder="Wagonner" type="text" />
+                  <TextInput
+                    name="lastName"
+                    label="Last Name"
+                    placeholder="Wagonner"
+                    type="text"
+                    register={register("lastName")}
+                    error={errors.lastName?.message}
+                  />
                 </div>
               )}
             </div>
           )}
 
-          <div className="w-full flex gap-1 md:gap-2">
-            <div className={`${isRegister ? "w-1/2" : "w-full"}`}>
-              <TextInput name="password" label="Password" placeholder="Password" type="password" />
+          <div className="w-full flex gap-1 md:gap-2 relative">
+            <div className={`${isRegister ? "w-1/2" : "w-full"} relative`}>
+              <TextInput
+                name="password"
+                label="Password"
+                placeholder="Password"
+                type={showPassword ? "text" : "password"}
+                register={register("password")}
+                error={errors.password?.message}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-10 text-gray-500"
+              >
+                {showPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
+              </button>
             </div>
 
+
+             
             {isRegister && (
-              <div className="w-1/2">
-                <TextInput label="Confirm Password" placeholder="Password" type="password" />
+              <div className="w-1/2 relative">
+                <TextInput
+                  label="Confirm Password"
+                  placeholder="Password"
+                  type={showCoPassword ? "text" : "password"}
+                  register={register("cPassword")}
+                  error={errors.cPassword?.message}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowCoPassword(!showCoPassword)}
+                  className="absolute right-3 top-10 text-gray-500"
+                >
+                  {showCoPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
+                </button>
               </div>
             )}
           </div>
+
 
           {errMsg && <span role="alert" className="text-sm text-red-500 mt-0.5">{errMsg}</span>}
 

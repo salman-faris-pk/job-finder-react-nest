@@ -2,13 +2,13 @@ import { createBrowserRouter,Navigate,RouterProvider} from "react-router-dom"
 import {
   Layout,
   About,
-  AuthPage,
   Companies,
   CompanyProfile,
   FindJobs,
   JobDetail,
   UploadJob,
-  UserProfile
+  UserProfile,
+  AuthPage
 } from "./routes";
 
 
