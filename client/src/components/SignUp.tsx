@@ -1,6 +1,7 @@
 import { useState } from "react";
 import TextInput from "./TextInput";
 import CustomButton from "./CustomButton";
+import { FcGoogle } from "react-icons/fc";
 
 const SignUp = () => {
   const [isRegister, setIsRegister] = useState(true);
@@ -10,8 +11,8 @@ const SignUp = () => {
   const onSubmit = () => {};
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-10">
-      <div className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white  p-6 text-left align-middle shadow-xl">
+    <div className="flex items-center justify-center">
+      <div className="w-full max-w-xl transform overflow-hidden rounded-2xl bg-white m-2  p-6 text-left align-middle shadow-md">
         <h3 className="text-xl font-semibold text-gray-900">
           {isRegister ? "Create Account" : "Account Sign In"}
         </h3>
@@ -38,6 +39,15 @@ const SignUp = () => {
             Company Account
           </button>
         </div>
+
+        {accountType === "seeker" && (
+          <div className="w-full flex items-center justify-center py-2 mb-5">
+            <button className="flex items-center justify-center w-full gap-2 px-4 py-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-100">
+              <FcGoogle />
+              {isRegister ? "Sign up with Google" : "Sign in with Google"}
+            </button>
+          </div>
+        )}
 
         <form className="w-full flex flex-col gap-5">
           <TextInput name="email" label="Email Address" placeholder="email@example.com" type="email" />

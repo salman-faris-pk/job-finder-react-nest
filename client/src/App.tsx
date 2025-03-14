@@ -14,65 +14,38 @@ import {
 
 function App() {
 
-  const user={};
+  const user = {
+    token: true, 
+    accountType: "seeker", 
+  };
 
-  const router=createBrowserRouter([
+  const router = createBrowserRouter([
     {
       path: "/",
       element: <Layout />,
       children: [
+        { path: "/", element: <Navigate to="/find-jobs" replace /> },
+        { path: "/find-jobs", element: <FindJobs /> },
+        { path: "/companies", element: <Companies /> },
         {
-          path: "/",
-          element: <Navigate to="/find-jobs" replace />,
-        },
-        {
-          path: "/find-jobs",
-          element: <FindJobs />,
-        },
-        {
-          path: "/companies",
-          element: <Companies />,
-        },
-        {
-          path:
-            user === "seeker" ? "/user-profile" : "/user-profile/:id",
+          path: user?.accountType === "seeker" ? "/user-profile" : "/user-profile/:id",
           element: <UserProfile />,
         },
-        {
-          path: "/company-profile",
-          element: <CompanyProfile />,
-        },
-        {
-          path: "/company-profile/:id",
-          element: <CompanyProfile />,
-        },
-        {
-          path: "/upload-job",
-          element: <UploadJob />,
-        },
-        {
-          path: "/job-detail/:id",
-          element: <JobDetail />,
-        },
-        {
-          path: "/about-us",
-          element: <About />,
-        },
-        {
-          path: "/user-auth",
-          element: <AuthPage />,
-        },
-        
-      
+        { path: "/company-profile", element: <CompanyProfile /> },
+        { path: "/company-profile/:id", element: <CompanyProfile /> },
+        { path: "/upload-job", element: <UploadJob /> },
+        { path: "/job-detail/:id", element: <JobDetail /> },
       ],
     },
+    
 
-   
+    { path: "/about-us", element: <About /> },
+    { path: "/user-auth", element: <AuthPage /> },
+
   ]);
 
 
-
-  return <RouterProvider router={router} />;
+  return <RouterProvider router={router} />
 }
 
 export default App

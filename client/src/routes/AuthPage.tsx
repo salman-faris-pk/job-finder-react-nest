@@ -5,10 +5,13 @@ import Office from "../assets/office.jpg"
 
 const AuthPage = () => {
   return (
-    <div className="w-full h-screen relative bg-cover bg-center bg-no-repeat" 
-      style={{ backgroundImage: `url(${Office})`, opacity: 0.8 }}>
-      <SignUp />
+    <div className="w-full h-screen grid md:grid-cols-2">
+      <div className="h-full">
+      <img src={Office} alt="Office" className="w-full h-full object-cover" />
     </div>
+
+      <SignUp />
+  </div>
   );
 };
 
