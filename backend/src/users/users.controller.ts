@@ -19,6 +19,12 @@ export class UsersController {
     return this.usersService.getUser(req.user.id)
   }
 
+  @Get('validate-me')
+  @UseGuards(JwtAuthGuard)
+  async AuthorizedUser(@Req() req:UserIdRequest){
+    return this.usersService.AuthorisedUser(req.user.id)
+  };
+
 
   @Put('update-user')
   @UseGuards(JwtAuthGuard)

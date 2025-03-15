@@ -165,7 +165,7 @@ export class AuthService {
             }
         }
     
-        throw new Error('Failed to update refresh token: User or Company not found');
+        throw new NotFoundException('Failed to update refresh token: User or Company not found');
     }
 
 

@@ -59,4 +59,38 @@ export class UsersService {
     };
 
 
+    async AuthorisedUser(userId:string){
+
+        const user=await this.prisma.user.findUnique({
+            where:{id: userId},
+            select: {
+                id: true,
+                firstName: true,
+                accountType: true,
+                profileUrl: true,
+                email: true
+            },
+        });
+
+      
+        const company=await this.prisma.companies.findUnique({
+            where:{id: userId},
+            select: {
+                id:true,
+                name: true,
+                email:true,
+                location: true
+            }
+        });
+
+       
+        if (!user && !company) {
+            return null;
+        }
+    
+        return user ? { user } : { company };
+
+    };
+
+
 }

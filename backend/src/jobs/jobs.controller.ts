@@ -15,6 +15,8 @@ export class JobsController {
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe())
   async CreateJob(@Body() createJob:CreateJobDto,@Req() req:UserIdRequest){
+    console.log(req.user.id);
+
 
      return this.jobsService.CreateNewJob(req.user.id,createJob)
 

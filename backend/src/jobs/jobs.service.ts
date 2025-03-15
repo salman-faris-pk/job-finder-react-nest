@@ -17,6 +17,7 @@ export class JobsService {
   ) {}
 
   async CreateNewJob(companyId: string, jobPostDto: CreateJobDto) {
+    
     const { jobTitle,jobType,location,salary,vacancies,experience,desc, requirements } = jobPostDto;
 
     if (
