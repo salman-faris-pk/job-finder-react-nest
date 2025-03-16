@@ -79,8 +79,8 @@ const SignUp = () => {
   };
 
   const handleGoogleLogin=()=>{
+    window.location.href = import.meta.env.VITE_GOOGLE_URL;
     
-
   };
 
   const currentErrors = errors as Errors;

@@ -73,9 +73,13 @@ async googleLogin() {
 @Get('google/callback')
 @UseGuards(GoogleAuthGuard)
 async googleCallback(@Req() req:AuthenticatedRequest) {
-   return this.authService.LoginUser(req.user); 
-}
+  const loginResult=await  this.authService.LoginUser(req.user); 
 
+  return {
+    ...loginResult,
+    redirectUrl: process.env.FRONTEND_URL
+  };
+};
 
 };
  

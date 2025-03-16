@@ -46,6 +46,13 @@ export class SetCookieInterceptor implements NestInterceptor {
             expires: new Date(0)
           });
         };
+
+        if (data.redirectUrl) {
+          response.redirect(data.redirectUrl);
+          delete data.redirectUrl;
+          return;
+        }
+
       
         return data;
       }),
