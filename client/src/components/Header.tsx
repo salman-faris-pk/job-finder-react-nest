@@ -33,15 +33,7 @@ const SearchInput = ({ placeholder, icon, value, setValue, styles }:any) => {
 };
 
 
-const Header = ({
-  title,
-  type,
-  handleClick,
-  searchQuery,
-  setSearchQuery,
-  location,
-  setLocation,
-}:any) => {
+const Header = ({title,type,handleClick,searchQuery,setSearchQuery, location,setLocation}:any) => {
   return (
     <div className='bg-[#f7fdfd]'>
       <div
@@ -49,6 +41,8 @@ const Header = ({
           type ? "h-[500px]" : "h-[350px]"
         } flex items-center relative`}
       >
+
+        {/**title and serchBar */}
         <div className='w-full z-10'>
           <div className='mb-8'>
             <p className='text-slate-700 font-bold text-4xl'>{title}</p>
@@ -80,6 +74,7 @@ const Header = ({
             </div>
           </div>
 
+
           {type && (
             <div className='w-full lg:1/2 flex flex-wrap gap-3 md:gap-6 py-10 md:py-14'>
               {popularSearch.map((search, index) => (
@@ -93,6 +88,9 @@ const Header = ({
             </div>
           )}
         </div>
+
+
+         {/**image section */}
 
         <div className='w-1/3 h-full absolute top-24 md:-top-6 lg:-top-14 right-16 2xl:right-[18rem]'>
           <img src={HeroImage} className='object-contain' />
