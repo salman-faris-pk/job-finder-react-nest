@@ -247,7 +247,7 @@ export class AuthService {
 
 
     async Logoutuser(userId: string) {
-        
+                
         const user = await this.prisma.user.findUnique({ where: { id: userId } });
         if (user) {
             await this.updateHashedRefreshToken(userId, "");
@@ -261,7 +261,8 @@ export class AuthService {
         }
     
         throw new NotFoundException('User or Company not found');
-    }
+    };
+
 
     async validateJwtUser(userId:string){
         

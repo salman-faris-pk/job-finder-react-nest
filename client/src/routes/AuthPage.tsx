@@ -1,21 +1,26 @@
 import SignUp from "../components/SignUp";
 import Office from "../assets/office.jpg"
 import { Navigate, useLocation } from "react-router-dom";
+import { useSelector } from "../redux/store";
+import { Bgloader } from "../components";
 
 
 
 const AuthPage = () => {
 
-  const user = {
-    token: false, 
-  };
+  const {user,loading}=useSelector((state)=> state.user)
   const location = useLocation();
 
   let from = location?.state?.from?.pathname || "/";
+  
+  if(loading){
+    return <Bgloader/>
+  }
 
-  if (user.token) {
+  if (user?.id) {
     return <Navigate to={from} replace />;
   };
+
 
   return (
     <div className="w-full h-screen grid md:grid-cols-2">

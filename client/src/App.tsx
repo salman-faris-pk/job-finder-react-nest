@@ -11,14 +11,22 @@ import {
   AuthPage
 } from "./routes";
 import { Toaster } from "sonner";
+import { useEffect } from "react";
+import { fetchUser } from "./redux/userSlice";
+import { useDispatch, useSelector } from "./redux/store";
 
 
 function App() {
 
-  const user = {
-    token: true, 
-    accountType: "seeker", 
-  };
+  const dispatch=useDispatch()
+
+  useEffect(()=>{
+    dispatch(fetchUser());
+  },[dispatch])
+
+ const { user }=useSelector((state)=>state.user)
+
+ 
 
   const router = createBrowserRouter([
     {

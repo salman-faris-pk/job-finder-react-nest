@@ -4,11 +4,12 @@ import CustomButton from "../CustomButton"
 import { useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { HiMenuAlt3 } from "react-icons/hi";
+import { useSelector } from "../../redux/store";
 
 
 const Navbar = () => {
 
-    const user =null;
+    const {user} =useSelector((state)=> state.user)
   const [isOpen, setIsOpen] = useState(false);
 
   const handleCloseNavbar = () => {

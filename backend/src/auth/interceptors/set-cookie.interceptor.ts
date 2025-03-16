@@ -34,16 +34,18 @@ export class SetCookieInterceptor implements NestInterceptor {
           delete data.refreshToken;  // Remove refreshtoken from the response data after stored into cookie
         }
 
-        if (data.clearCookies) {
+        if (data.clearCookie) {
           response.clearCookie('accessToken', {
             httpOnly: true,
             secure: true,
+            expires: new Date(0) 
           });
           response.clearCookie('refreshToken', {
             httpOnly: true,
             secure: true,
+            expires: new Date(0)
           });
-        }
+        };
       
         return data;
       }),

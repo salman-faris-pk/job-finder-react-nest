@@ -4,12 +4,15 @@ import { BiChevronDown } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { AiOutlineLogout } from "react-icons/ai";
 import { Link } from "react-router-dom";
+import { dispatch } from "../../redux/store";
+import { logoutUser } from "../../redux/userSlice";
 
 
 const MenuList = ({user,onClick }:any) => {
-  console.log(user);
 
-  const handleLogout = () => {};
+  const handleLogout = () => {
+     dispatch(logoutUser())
+  };
   
   return (
     <div>
