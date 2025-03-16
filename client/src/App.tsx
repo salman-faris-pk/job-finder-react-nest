@@ -10,6 +10,7 @@ import {
   UserProfile,
   AuthPage
 } from "./routes";
+import { Toaster } from "sonner";
 
 
 function App() {
@@ -45,7 +46,17 @@ function App() {
   ]);
 
 
-  return <RouterProvider router={router} />
+  return (
+    <>
+    <Toaster 
+     position="top-right"
+     richColors
+     duration={3000}
+    />
+   <RouterProvider router={router} />
+  </>
+  )
+
 }
 
 export default App

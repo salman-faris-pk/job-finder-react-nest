@@ -15,8 +15,8 @@ export class SetCookieInterceptor implements NestInterceptor {
         if (data.accessToken) {
           response.cookie('accessToken', data.accessToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production', 
-            sameSite: process.env.NODE_ENV === 'production' ? "lax" : "none", 
+            secure: true, 
+            sameSite: "none", 
             maxAge: 900000, 
           });
 
@@ -26,8 +26,8 @@ export class SetCookieInterceptor implements NestInterceptor {
         if (data.refreshToken) {
           response.cookie('refreshToken', data.refreshToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite:process.env.NODE_ENV === 'production' ? "lax" : "none",
+            secure: true,
+            sameSite:"none",
             maxAge: 172800000, 
           });
 
@@ -37,11 +37,11 @@ export class SetCookieInterceptor implements NestInterceptor {
         if (data.clearCookies) {
           response.clearCookie('accessToken', {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: true,
           });
           response.clearCookie('refreshToken', {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: true,
           });
         }
       

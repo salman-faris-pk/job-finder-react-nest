@@ -8,9 +8,11 @@ const Layout = () => {
 
   return (
     <main className="bg-[#f7fdfd]">
+
       <Navbar />
       {user?.token ? <Outlet /> : <Navigate to="/user-auth" state={{ from: location }} replace />}
       <Footer />
+      
     </main>
   );
 };

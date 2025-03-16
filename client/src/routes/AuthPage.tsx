@@ -1,6 +1,5 @@
 import SignUp from "../components/SignUp";
 import Office from "../assets/office.jpg"
-import { useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 
 
@@ -10,7 +9,6 @@ const AuthPage = () => {
   const user = {
     token: false, 
   };
-  const [open, setOpen] = useState(true);
   const location = useLocation();
 
   let from = location?.state?.from?.pathname || "/";

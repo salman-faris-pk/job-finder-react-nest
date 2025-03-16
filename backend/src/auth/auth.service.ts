@@ -24,7 +24,7 @@ export class AuthService {
 
     async validateUser(email:string,password:string){
        const user=await this.findByEmail(email);
-       if (!user) throw new UnauthorizedException('User not found!');
+       if (!user) throw new NotFoundException('User not found!');
        const isPasswordMatch= await bcrypt.compare(password,user.password)
        if (!isPasswordMatch)
         throw new UnauthorizedException('Invalid credentials');
@@ -52,8 +52,7 @@ export class AuthService {
         });
     };
 
-    async registerUser(registerDto: RegisterInputs) {
-       
+    async registerUser(registerDto: RegisterInputs) {       
         const {firstName,lastName,email,password,profileUrl}=registerDto;
 
         const userexists= await this.findByEmail(email);

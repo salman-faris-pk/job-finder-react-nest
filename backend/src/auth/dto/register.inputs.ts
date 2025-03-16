@@ -19,7 +19,6 @@ export class RegisterInputs {
     password:string;
 
     @IsString()
-    @IsUrl()
     @IsOptional()
     profileUrl?:string;
 }

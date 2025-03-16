@@ -1,3 +1,4 @@
+import { FieldErrors } from "react-hook-form";
 
 
 export type FooterLink = {
@@ -63,3 +64,32 @@ export type FooterLink = {
     profileUrl: string; 
     jobPosts: string[]; 
   };
+
+
+ export  type UserFormData = {
+    email: string;
+    firstName: string;
+    lastName: string;
+    password: string;
+    cPassword: string;
+  };
+  
+  export type CompanyFormData = {
+    email: string;
+    name: string;
+    password: string;
+    cPassword: string;
+  };
+  
+ export  type LoginFormData = {
+    email: string;
+    password: string;
+  };
+  
+export type UserErrors = FieldErrors<UserFormData>;
+export type CompanyErrors = FieldErrors<CompanyFormData>;
+export type LoginErrors = FieldErrors<LoginFormData>;
+
+export type Errors = UserErrors | CompanyErrors | LoginErrors;
+
+  export type AuthFormData = UserFormData | CompanyFormData | LoginFormData;

@@ -1,57 +1,89 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TextInput from "./TextInput";
 import CustomButton from "./CustomButton";
 import { FcGoogle } from "react-icons/fc";
-import { useForm } from "react-hook-form"
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { schema } from "../utils/zodvalidation"
+import { userSchema, companySchema, loginSchema } from "../utils/zodvalidation";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-
-
-
+import { apiRequest } from "../apis/auth-api";
+import { useLocation } from "react-router-dom";
+import { toast } from "sonner";
+import { AuthFormData,CompanyErrors,CompanyFormData,Errors, LoginFormData, UserErrors, UserFormData } from "../utils/types";
 
 const SignUp = () => {
+  const location = useLocation();
+
   const [isRegister, setIsRegister] = useState(true);
   const [accountType, setAccountType] = useState("seeker");
-  const [errMsg, setErrMsg] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showCoPassword, setShowCoPassword] = useState(false);
+
+  // let from = location.state?.from?.pathname || "/";
 
   const {
     register,
     handleSubmit,
-    getValues,
-    watch,
+    reset,
     formState: { errors },
-   } = useForm({
-    resolver: zodResolver(schema),
+  } = useForm<AuthFormData>({
+    resolver: zodResolver(
+      isRegister
+        ? accountType === "seeker"
+          ? userSchema
+          : companySchema
+        : loginSchema
+    ),
     mode: "onChange",
-   });
+  });
 
-  const onSubmit = () => {
-    let URL=null;
+  useEffect(() => {
+    reset();
+  }, [accountType, isRegister, reset]);
 
-    if(isRegister){
-        if( accountType === "seeker"){
-           URL="auth/register"
-        }else{
-          URL="auth/company-register"
-        }
-    }else {
-        if( accountType === "seeker"){
-          URL="auth/login"
-        }else {
-          URL="auth/company-login"
-        }
+  const onSubmit = async (data:AuthFormData) => {
+
+    let formData: Omit<AuthFormData, "cPassword">;
+
+    if (isRegister) {
+      const { cPassword, ...otherDatas } = data as UserFormData | CompanyFormData;
+      formData = otherDatas;
+    } else {  
+      formData = data as LoginFormData;
     };
 
+    let URL: string | null = null;
+
+    if (isRegister) {
+      URL = accountType === "seeker" ? "auth/register" : "auth/company-register";
+    } else {
+      URL = accountType === "seeker" ? "auth/login" : "auth/company-login";
+    }
+
+    try {
+      const res = await apiRequest({
+        url: URL,
+        data: formData,
+      });
 
 
+      if (res.status === "failed" && res.message) {
+        toast.error(res.message)
+      } else {
+        toast.success(res.message)
+        // reset();
+        // window.location.replace(from);
+      }
+    } catch (error) {
+      console.error("API Error:", error); 
+    }
   };
+
+  const currentErrors = errors as Errors;
 
   return (
     <div className="flex items-center justify-center">
-       <div className="w-full max-w-xl transform overflow-hidden rounded-2xl bg-white m-2  p-6 text-left align-middle shadow-md">
+      <div className="w-full max-w-xl transform overflow-hidden rounded-2xl bg-white m-2 p-6 text-left align-middle shadow-md">
         <h3 className="text-xl font-semibold text-gray-900">
           {isRegister ? "Create Account" : "Account Sign In"}
         </h3>
@@ -95,7 +127,7 @@ const SignUp = () => {
             placeholder="email@example.com"
             type="email"
             register={register("email")}
-            error={errors.email?.message}
+            error={currentErrors.email?.message}
           />
 
           {isRegister && (
@@ -108,7 +140,9 @@ const SignUp = () => {
                   type="text"
                   register={register(accountType === "seeker" ? "firstName" : "name")}
                   error={
-                    accountType === "seeker" ? errors.firstName?.message : errors.name?.message
+                    accountType === "seeker"
+                      ? (currentErrors as UserErrors).firstName?.message
+                      : (currentErrors as CompanyErrors).name?.message
                   }
                 />
               </div>
@@ -121,7 +155,7 @@ const SignUp = () => {
                     placeholder="Wagonner"
                     type="text"
                     register={register("lastName")}
-                    error={errors.lastName?.message}
+                    error={(currentErrors as UserErrors).lastName?.message}
                   />
                 </div>
               )}
@@ -136,7 +170,7 @@ const SignUp = () => {
                 placeholder="Password"
                 type={showPassword ? "text" : "password"}
                 register={register("password")}
-                error={errors.password?.message}
+                error={currentErrors.password?.message}
               />
               <button
                 type="button"
@@ -147,16 +181,15 @@ const SignUp = () => {
               </button>
             </div>
 
-
-             
             {isRegister && (
               <div className="w-1/2 relative">
                 <TextInput
+                  name="cPassword"
                   label="Confirm Password"
                   placeholder="Password"
                   type={showCoPassword ? "text" : "password"}
                   register={register("cPassword")}
-                  error={errors.cPassword?.message}
+                  error={(currentErrors as UserErrors | CompanyErrors).cPassword?.message}
                 />
                 <button
                   type="button"
@@ -169,8 +202,6 @@ const SignUp = () => {
             )}
           </div>
 
-
-          {errMsg && <span role="alert" className="text-sm text-red-500 mt-0.5">{errMsg}</span>}
 
           <div className="mt-2">
             <CustomButton
