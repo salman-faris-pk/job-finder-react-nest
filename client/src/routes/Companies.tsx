@@ -5,7 +5,7 @@ import ListBox from "../components/ListBox";
 import Header from "../components/Header";
 import { companies } from "../utils/datas";
 import CompanyCard from "../components/CompanyCard";
-import Loading from "../components/Loading";
+import Loading from "../components/Loaders/Loading";
 
 const Companies = () => {
   const [page, setPage] = useState(1);

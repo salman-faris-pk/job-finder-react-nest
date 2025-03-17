@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form";
 import { CompanyUpdateData } from "../utils/types";
 import { EditCompany } from "../apis/uploads.apis";
 import { toast } from "sonner"
+import Loading from "./Loaders/Loading";
 
 
 
@@ -194,12 +195,7 @@ const CompanyForm = ({ open, setOpen }: any) => {
 
                     <div className="mt-4">
                       {isLoading ? (
-                        <CustomButton
-                          type="button"
-                          containerStyles="inline-flex justify-center rounded-md border border-transparent bg-gray-400 px-8 py-2 text-sm font-medium text-white cursor-not-allowed"
-                          title="Loading..."
-                          disabled
-                        />
+                         <Loading/>
                       ) : (
                         <CustomButton
                           type="submit"

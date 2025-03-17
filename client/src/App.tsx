@@ -40,7 +40,10 @@ function App() {
           element: <UserProfile />,
         },
         { path: "/company-profile", element: <CompanyProfile /> },
-        { path: "/company-profile/:id", element: <CompanyProfile /> },
+        { 
+          path: "/company-profile/:id", 
+          element: <CompanyProfile />,
+        },
         { path: "/upload-job", element: <UploadJob /> },
         { path: "/job-detail/:id", element: <JobDetail /> },
       ],

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { companies, jobs } from "../utils/datas";
-import Loading from "../components/Loading";
+import Loading from "../components/Loaders/Loading";
 import { Link } from "react-router-dom";
 import { FiEdit3, FiPhoneCall, FiUpload } from "react-icons/fi";
 import { HiLocationMarker } from "react-icons/hi";
@@ -10,20 +9,41 @@ import { CustomButton, JobCard } from "../components";
 import { Companies } from "../utils/types";
 import CompanyForm from "../components/CompanyForm";
 import { useSelector } from "../redux/store";
+import { CompanyById } from "../apis/fetching.apis";
 
 const CompanyProfile = () => {
   const params = useParams();
+  
   const { user } = useSelector((state) => state.user);
   const [info, setInfo] = useState<Companies | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [openForm, setOpenForm] = useState(false);
 
   
+  const fetchCompany=async()=>{
+      setIsLoading(true)
+      let id : string | null=null;
+
+      if(params.id && params.id !== undefined){
+        id=params?.id;
+      }else{
+        id=user?.id;
+      };
+
+      try {
+        const res=await CompanyById(id);
+        setInfo(res)
+        setIsLoading(false)
+        
+      } catch (error) {
+        console.log(error);
+        setIsLoading(false)
+      }
+  };
+
+  
   useEffect(() => {
-    if (params?.id) {
-      const index = parseInt(params.id) - 1;
-      setInfo(companies[index] ?? null);
-    }
+     fetchCompany();
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, []);
 
@@ -38,7 +58,7 @@ const CompanyProfile = () => {
           Welcome, {info?.name}
         </h2>
 
-        {/* {user?.accountType  === undefined && info?._id === user?.id && ( */}
+        {user?.accountType  === undefined && info?.id === user?.id && (
             <div className='flex items-center justifu-center py-5 md:py-0 gap-4'>
               <CustomButton
                 onClick={() => setOpenForm(true)}
@@ -54,7 +74,7 @@ const CompanyProfile = () => {
                 />
               </Link>
             </div>
-          {/* )} */}
+           )} 
       </div>
 
       <div className='w-full flex flex-col md:flex-row justify-start md:justify-between mt-4 md:mt-8 text-sm'>
@@ -79,7 +99,7 @@ const CompanyProfile = () => {
       <p>Jobs Posted</p>
 
       <div className='flex flex-wrap gap-3'>
-        {jobs?.map((job, index) => {
+        {info?.jobPosts.map((job, index) => {
           const data = {
             name: info?.name,
             email: info?.email,
@@ -90,9 +110,9 @@ const CompanyProfile = () => {
       </div>
     </div>
      
-     {openForm && 
+    
      <CompanyForm open={openForm} setOpen={setOpenForm} />
-     }
+     
   </div>
   )
 }

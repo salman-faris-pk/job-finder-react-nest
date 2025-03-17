@@ -55,14 +55,14 @@ export type FooterLink = {
   };
 
   export type Companies = {
-    _id: number;
+    id: number;
     name: string;
     location: string;
     email: string;
     contact: string;
     about: string;
     profileUrl: string; 
-    jobPosts: string[]; 
+    jobPosts: Job[]; 
   };
 
 
@@ -100,5 +100,5 @@ export interface CompanyUpdateData {
   location: string;
   about: string;
   contact: string;
-  profileUrl: string | File;
+  profileUrl?: string | File;
 };
