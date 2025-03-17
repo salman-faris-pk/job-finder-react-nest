@@ -5,6 +5,7 @@ import { useSelector } from "../../redux/store";
 const Layout = () => {
   const location = useLocation();
   const { user,loading} = useSelector((state) => state.user);
+  
 
   if(loading){
     return <Bgloader/>
@@ -14,7 +15,7 @@ const Layout = () => {
     <main className="bg-[#f7fdfd]">
 
       <Navbar />
-      {user?.id ? <Outlet /> : <Navigate to="/user-auth" state={{ from: location }} replace />}
+      {user ? <Outlet /> : <Navigate to="/user-auth" state={{ from: location }} replace />}
       {user&&<Footer />}
       
     </main>

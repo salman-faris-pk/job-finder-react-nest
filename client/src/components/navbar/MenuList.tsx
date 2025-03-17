@@ -11,7 +11,7 @@ import { logoutUser } from "../../redux/userSlice";
 const MenuList = ({user,onClick }:any) => {
 
   const handleLogout = () => {
-     dispatch(logoutUser())
+     dispatch(logoutUser());
   };
   
   return (

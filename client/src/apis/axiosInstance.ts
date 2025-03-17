@@ -40,7 +40,7 @@ API.interceptors.response.use(
         onTokenRefreshed();
         return API(originalRequest);
       } catch (refreshError) {
-        // console.error("❌ Token refresh failed", refreshError);
+        console.error("❌ Token refresh failed", refreshError);
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;

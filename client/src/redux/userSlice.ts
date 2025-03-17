@@ -10,7 +10,8 @@ interface UserState {
 
 export const fetchUser=createAsyncThunk('user/fetchUser',async()=> {
    const response=await API.get("/user/validate-me");
-      return response.data.user;
+   
+      return response.data.user || response.data.company;
 });
 
 export const logoutUser = createAsyncThunk('user/logoutUser', async (_, { rejectWithValue }) => {

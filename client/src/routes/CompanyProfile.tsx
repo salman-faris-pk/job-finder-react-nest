@@ -9,15 +9,16 @@ import { AiOutlineMail } from "react-icons/ai";
 import { CustomButton, JobCard } from "../components";
 import { Companies } from "../utils/types";
 import CompanyForm from "../components/CompanyForm";
+import { useSelector } from "../redux/store";
 
 const CompanyProfile = () => {
   const params = useParams();
-  // const { user } = useSelector((state) => state.user);
-  const user=true;
+  const { user } = useSelector((state) => state.user);
   const [info, setInfo] = useState<Companies | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [openForm, setOpenForm] = useState(false);
 
+  
   useEffect(() => {
     if (params?.id) {
       const index = parseInt(params.id) - 1;
@@ -37,8 +38,7 @@ const CompanyProfile = () => {
           Welcome, {info?.name}
         </h2>
 
-        {user === undefined &&
-          info?._id === user && (
+        {/* {user?.accountType  === undefined && info?._id === user?.id && ( */}
             <div className='flex items-center justifu-center py-5 md:py-0 gap-4'>
               <CustomButton
                 onClick={() => setOpenForm(true)}
@@ -54,7 +54,7 @@ const CompanyProfile = () => {
                 />
               </Link>
             </div>
-          )}
+          {/* )} */}
       </div>
 
       <div className='w-full flex flex-col md:flex-row justify-start md:justify-between mt-4 md:mt-8 text-sm'>
@@ -89,8 +89,10 @@ const CompanyProfile = () => {
         })}
       </div>
     </div>
-
-    <CompanyForm open={openForm} setOpen={setOpenForm} />
+     
+     {openForm && 
+     <CompanyForm open={openForm} setOpen={setOpenForm} />
+     }
   </div>
   )
 }

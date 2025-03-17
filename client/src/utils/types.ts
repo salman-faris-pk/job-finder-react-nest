@@ -91,5 +91,14 @@ export type CompanyErrors = FieldErrors<CompanyFormData>;
 export type LoginErrors = FieldErrors<LoginFormData>;
 
 export type Errors = UserErrors | CompanyErrors | LoginErrors;
+export type AuthFormData = UserFormData | CompanyFormData | LoginFormData;
 
-  export type AuthFormData = UserFormData | CompanyFormData | LoginFormData;
+
+
+export interface CompanyUpdateData {
+  name: string;
+  location: string;
+  about: string;
+  contact: string;
+  profileUrl: string | File;
+};

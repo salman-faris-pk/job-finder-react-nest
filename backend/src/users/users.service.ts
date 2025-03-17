@@ -63,27 +63,22 @@ export class UsersService {
 
         const user=await this.prisma.user.findUnique({
             where:{id: userId},
-            select: {
-                id: true,
-                firstName: true,
-                accountType: true,
-                profileUrl: true,
-                email: true
-            },
+            omit:{
+                password:true,
+                hashedRefreshToken:true
+            }
         });
 
       
         const company=await this.prisma.companies.findUnique({
             where:{id: userId},
-            select: {
-                id:true,
-                name: true,
-                email:true,
-                location: true
+            omit:{
+                password:true,
+                hashedRefreshToken:true,
             }
         });
 
-       
+        
         if (!user && !company) {
             return null;
         }

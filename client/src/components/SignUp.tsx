@@ -11,6 +11,7 @@ import { useLocation } from "react-router-dom";
 import { toast } from "sonner";
 import { AuthFormData,CompanyErrors,CompanyFormData,Errors, LoginFormData, UserErrors, UserFormData } from "../utils/types";
 
+
 const SignUp = () => {
   const location = useLocation();
 

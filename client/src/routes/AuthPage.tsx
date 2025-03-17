@@ -17,7 +17,7 @@ const AuthPage = () => {
     return <Bgloader/>
   }
 
-  if (user?.id) {
+  if (user) {
     return <Navigate to={from} replace />;
   };
 

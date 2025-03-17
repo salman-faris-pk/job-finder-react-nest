@@ -25,8 +25,7 @@ function App() {
   },[dispatch])
 
  const { user }=useSelector((state)=>state.user)
-
- 
+  
 
   const router = createBrowserRouter([
     {
