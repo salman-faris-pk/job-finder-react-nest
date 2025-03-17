@@ -102,3 +102,15 @@ export interface CompanyUpdateData {
   contact: string;
   profileUrl?: string | File;
 };
+
+
+export interface JobFormInputs {
+  jobTitle: string;
+  salary: number;
+  vacancies: number;
+  experience: number;
+  location: string;
+  desc: string;
+  requirements?: string;
+}
+

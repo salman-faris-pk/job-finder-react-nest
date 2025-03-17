@@ -49,7 +49,7 @@ const CompanyForm = ({ open, setOpen }: any) => {
     if (profileImage) {
       formData.append("profileUrl", profileImage);
     }
-
+     
     try {
       const res = await EditCompany(formData);
 

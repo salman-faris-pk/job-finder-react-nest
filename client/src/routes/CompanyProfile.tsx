@@ -49,7 +49,8 @@ const CompanyProfile = () => {
 
   if (isLoading) {
     return <Loading />;
-  }
+  };
+
   return (
     <div className='container mx-auto p-5'>
     <div className=''>

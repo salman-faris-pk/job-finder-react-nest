@@ -6,7 +6,7 @@ import { CreateJobDto } from './dtos/create-job.dto';
 import { UpdateJobDto } from './dtos/update.dto';
 import { JobQueryDto } from './dtos/job-query.dto';
 
-@Controller('jobs')
+@Controller('jobs')  
 export class JobsController {
   constructor(private readonly jobsService: JobsService) {}
 
@@ -15,8 +15,6 @@ export class JobsController {
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe())
   async CreateJob(@Body() createJob:CreateJobDto,@Req() req:UserIdRequest){
-    console.log(req.user.id);
-
 
      return this.jobsService.CreateNewJob(req.user.id,createJob)
 
