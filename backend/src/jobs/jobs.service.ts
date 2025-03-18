@@ -16,7 +16,7 @@ export class JobsService {
     private readonly Companyservice: CompaniesService,
   ) {}
 
-  async CreateNewJob(companyId: string, jobPostDto: CreateJobDto) {
+  async CreateNewJob(jobPostDto: CreateJobDto,companyId: string) {
     
     const { jobTitle,jobType,location,salary,vacancies,experience,desc, requirements } = jobPostDto;
 

@@ -114,3 +114,6 @@ export interface JobFormInputs {
   requirements?: string;
 }
 
+export interface JobSubmissionData extends JobFormInputs {
+  jobType: string;
+}

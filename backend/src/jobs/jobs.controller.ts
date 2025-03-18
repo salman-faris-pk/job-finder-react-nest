@@ -11,16 +11,15 @@ export class JobsController {
   constructor(private readonly jobsService: JobsService) {}
 
 
-  @Post('upload-job')
+  @Post('upload-job') 
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe())
   async CreateJob(@Body() createJob:CreateJobDto,@Req() req:UserIdRequest){
-
-     return this.jobsService.CreateNewJob(req.user.id,createJob)
+     return this.jobsService.CreateNewJob(createJob,req.user.id,)
 
   }
 
-  @Put('upload-job/:id')
+  @Put('update-job/:id')
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe())
   async updateJob(@Param('id') id:string,@Body() updateJobDto: UpdateJobDto){

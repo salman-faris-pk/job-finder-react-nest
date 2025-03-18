@@ -1,67 +1,79 @@
-import { useState } from "react";
+import { startTransition, useState } from "react";
 import { CustomButton, JobCard} from "../components";
 import { jobs } from "../utils/datas";
 import TextInput from "../components/TextInput";
 import JobTypes from "../components/JobTypes";
 import { useForm } from "react-hook-form"
-import { JobFormInputs } from "../utils/types";
+import { JobFormInputs, JobSubmissionData } from "../utils/types";
 import { uploadJobAPI } from "../apis/uploads.apis";
+import { toast } from "sonner";
+import Loading from "../components/Loaders/Loading";
 
 const UploadJob = () => {
   
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<JobFormInputs>({
     mode: "onChange",
     defaultValues: {},
   });
 
-  const [errMsg, setErrMsg] = useState("");
   const [jobType, setJobType] = useState("Full-Time");
   const [isLoading, setIsLoading] = useState(false);
+  const [recentPost,setRecentPost]=useState([])
 
-  const onSubmit = async (data:JobFormInputs) => {
-    setIsLoading(true)
-
+  const onSubmit = async (data: JobFormInputs) => {
+    startTransition(() => {
+      setIsLoading(true);
+    });
+  
     try {
-      const formData = new FormData();
+      const payload: JobSubmissionData = {
+        jobTitle: data.jobTitle,
+        jobType: jobType,
+        location: data.location,
+        salary: Number(data.salary),
+        vacancies: Number(data.vacancies),
+        experience: Number(data.experience),
+        desc: data.desc,
+        requirements: data.requirements,
+      };
   
-      formData.append("jobTitle", data.jobTitle);
-      formData.append("salary", String(data.salary));
-      formData.append("vacancies", String(data.vacancies));
-      formData.append("experience", String(data.experience));
-      formData.append("location", data.location);
-      formData.append("desc", data.desc);
-      if (data.requirements) {
-        formData.append("requirements", data.requirements);
+      const res = await uploadJobAPI(payload);
+  
+     if(res.status !== "failed"){
+        toast.success(res.message);
+        startTransition(() => {
+          reset();
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       }
-      if (jobType) {
-        formData.append("jobType", jobType);
-      }
-  
-      for (let [key, value] of formData.entries()) {
-        console.log(key, value);
-      }
-  
-      const res = await uploadJobAPI(formData);
-  
-      console.log("API Response:", res);
-  
-      if (res.success) {
 
-      } else {
-        setErrMsg(res.message || "An error occurred while uploading the job.");
-      }
-    } catch (error) {
+      startTransition(() => {
+        setIsLoading(false);
+      });
+  
+    } catch (error:any) {
       console.error("Error uploading job:", error);
-      setErrMsg("An error occurred while uploading the job.");
-    } finally {
-      setIsLoading(false);
-    }
-    
 
+      let errorMessage = "Failed to upload job";
+     if (error.response) {
+      errorMessage = error.response.data?.message || errorMessage;
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+      toast.error(errorMessage);
+      
+    }finally {
+      startTransition(() => {
+        setIsLoading(false);
+      });
+    }
   };
 
   return (
@@ -176,18 +188,18 @@ const UploadJob = () => {
                 {...register("requirements")}
               ></textarea>
             </div>
-
-            {errMsg && (
-              <span role='alert' className='text-sm text-red-500 mt-0.5'>
-                {errMsg}
-              </span>
-            )}
+            
+          
             <div className='mt-2'>
-              <CustomButton
+              {isLoading ? (
+                <Loading/>
+              ):(
+                <CustomButton
                 type='submit'
                 containerStyles='inline-flex cursor-pointer justify-center rounded-md border border-transparent bg-blue-600 px-8 py-2 text-sm font-medium text-white hover:bg-[#1d4fd846] hover:text-[#1d4fd8] focus:outline-none '
                 title='Sumbit'
               />
+              )}
             </div>
           </form>
         </div>

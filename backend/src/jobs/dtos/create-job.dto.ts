@@ -1,8 +1,9 @@
-import { IsString, IsNumber, IsOptional, Min, MaxLength } from "class-validator";
+import { IsString, IsNumber, IsOptional, Min, MaxLength, MinLength } from "class-validator";
 
 export class CreateJobDto {
     @IsString()
-    @MaxLength(100, { message: "Job title must not exceed 100 characters" })
+    @MinLength(5, { message: "Job title must be at least 5  characters long" })
+    @MaxLength(30, { message: "Job title must not exceed3 30 characters" })
     jobTitle: string;
 
     @IsString()
@@ -25,10 +26,12 @@ export class CreateJobDto {
     experience: number;
 
     @IsString()
+    @MinLength(25, { message: "description must be at least 25  characters long" })
     @MaxLength(500, { message: "Description must not exceed 500 characters" })
     desc: string;
 
     @IsString()
-    @MaxLength(1000, { message: "Requirements must not exceed 1000 characters" })
+    @MinLength(15, { message: "requirements must be at least 15  characters long" })
+    @MaxLength(500, { message: "Requirements must not exceed 500 characters" })
     requirements: string;
 }

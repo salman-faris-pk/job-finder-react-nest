@@ -55,6 +55,7 @@ const CompanyForm = ({ open, setOpen }: any) => {
 
       startTransition(() => {
         setIsLoading(false);
+      });
   
         if (res.status === "failed") {
           toast.error(res.message);
@@ -64,7 +65,6 @@ const CompanyForm = ({ open, setOpen }: any) => {
             window.location.reload();
           }, 1500);
         }
-      });
     } catch (error) {
       console.log(error);
       startTransition(() => {
