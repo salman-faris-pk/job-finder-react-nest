@@ -18,7 +18,6 @@ const CompanyProfile = () => {
   const [info, setInfo] = useState<Companies | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [openForm, setOpenForm] = useState(false);
-
   
   const fetchCompany=async()=>{
       setIsLoading(true)
@@ -102,9 +101,10 @@ const CompanyProfile = () => {
       <div className='flex flex-wrap gap-3'>
         {info?.jobPosts.map((job, index) => {
           const data = {
+            ...job,
             name: info?.name,
             email: info?.email,
-            ...job,
+            logo:  info?.profileUrl
           };
           return <JobCard job={data} key={index} />;
         })}

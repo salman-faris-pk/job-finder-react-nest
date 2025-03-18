@@ -123,10 +123,21 @@ export type RecentJobsPosts ={
   id: string;
   name: string;
   email: string; 
-  logo: string; 
+  logo? : string; 
   jobTitle: string;
   jobType: "Full-Time" | "Part-Time" | "Contract";
   location: string;
   detail: JobDetail[];
   createdAt: Date | string; 
 }
+
+export type UpdateURLParams = {
+  pageNum?: number;
+  query?: string;
+  cmpLoc?: string;
+  sort?: string;
+  navigate?: (path: string, options?: { replace?: boolean }) => void;
+  location?: { pathname: string; search: string };
+  jType?: string;
+  exp?: number;
+};
