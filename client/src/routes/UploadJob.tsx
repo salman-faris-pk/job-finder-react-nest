@@ -1,15 +1,18 @@
-import { startTransition, useState } from "react";
+import { startTransition, useEffect, useState } from "react";
 import { CustomButton, JobCard} from "../components";
-import { jobs } from "../utils/datas";
 import TextInput from "../components/TextInput";
 import JobTypes from "../components/JobTypes";
 import { useForm } from "react-hook-form"
-import { JobFormInputs, JobSubmissionData } from "../utils/types";
+import { Job, JobFormInputs, JobSubmissionData, RecentJobsPosts } from "../utils/types";
 import { uploadJobAPI } from "../apis/uploads.apis";
 import { toast } from "sonner";
 import Loading from "../components/Loaders/Loading";
+import { useSelector } from "../redux/store";
+import { RecentPosts } from "../apis/fetching.apis";
 
 const UploadJob = () => {
+
+  const {user}=useSelector((state)=> state.user)
   
   const {
     register,
@@ -23,8 +26,9 @@ const UploadJob = () => {
 
   const [jobType, setJobType] = useState("Full-Time");
   const [isLoading, setIsLoading] = useState(false);
-  const [recentPost,setRecentPost]=useState([])
+  const [recentPost, setRecentPost] = useState<Job[]>([]);
 
+  
   const onSubmit = async (data: JobFormInputs) => {
     startTransition(() => {
       setIsLoading(true);
@@ -75,6 +79,22 @@ const UploadJob = () => {
       });
     }
   };
+
+
+  const getRecendPosts=async()=>{
+    try {
+      const id=user?.id;
+     const res=await RecentPosts(id)
+     setRecentPost(res?.jobPosts)
+    } catch (error:any) {
+      console.log(error);
+      toast.error(error.res?.message)
+    }    
+  };
+
+  useEffect(()=>{
+    getRecendPosts()
+  },[])
 
   return (
     <div className='container mx-auto flex flex-col md:flex-row gap-8 2xl:gap-14 bg-[#f7fdfd] px-5'>
@@ -211,8 +231,15 @@ const UploadJob = () => {
       <div className='w-full md:w-1/3 2xl:2/4 p-5 mt-20 md:mt-0'>
         <p className='text-gray-500 font-semibold'>Recent Job Post</p>
         <div className='w-full flex flex-wrap gap-6'>
-          {jobs.slice(0, 4).map((job, index) => {
-            return <JobCard job={job} key={index} />;
+          {recentPost.slice(0, 4).map((job, index) => {
+             
+           const data= {
+            ...job,
+            name: user?.name,
+            email: user?.email,
+            logo: user?.profileUrl,
+           }
+            return <JobCard job={data} key={index} />;
           })}
         </div>
       </div>

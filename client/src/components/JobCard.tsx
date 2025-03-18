@@ -1,8 +1,15 @@
 import { GoLocation } from "react-icons/go";
 import moment from "moment";
 import { Link } from "react-router-dom";
+import { RecentJobsPosts } from "../utils/types";
 
-const JobCard = ({ job }:any) => {
+
+type JobCardProps = {
+  job: RecentJobsPosts;
+};
+
+const JobCard = ({ job }:JobCardProps) => {
+  
   return (
     <Link to={`/job-detail/${job?.id}`}>
       <div
@@ -11,8 +18,8 @@ const JobCard = ({ job }:any) => {
       >
         <div className='flex gap-3'>
           <img
-            src={job?.company?.profileUrl}
-            alt={job?.company?.name}
+            src={job?.logo}
+            alt={job?.name}
             className='w-14 h-14'
           />
 

@@ -117,3 +117,16 @@ export interface JobFormInputs {
 export interface JobSubmissionData extends JobFormInputs {
   jobType: string;
 }
+
+
+export type RecentJobsPosts ={
+  id: string;
+  name: string;
+  email: string; 
+  logo: string; 
+  jobTitle: string;
+  jobType: "Full-Time" | "Part-Time" | "Contract";
+  location: string;
+  detail: JobDetail[];
+  createdAt: Date | string; 
+}
