@@ -23,7 +23,6 @@ export class JobsController {
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe())
   async updateJob(@Param('id') id:string,@Body() updateJobDto: UpdateJobDto){
-
     return this.jobsService.UpdateJobById(id,updateJobDto)
   }
 
@@ -34,7 +33,7 @@ export class JobsController {
   }
 
   @Get('job-detail/:id')
-  async GetJobDetail(@Param('id') id:string){
+  async GetJobDetail(@Param('id') id:string){    
      return this.jobsService.getJobDetailById(id)
   }
 

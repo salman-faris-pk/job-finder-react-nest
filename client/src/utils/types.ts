@@ -38,16 +38,18 @@ export type FooterLink = {
   
   type JobDetail = {
     desc: string;
-    requirement: string;
+    requirements: string;
   };
   
    export type Job = {
     id: string;
+    companyId: string;
     company: Company;
     jobTitle: string;
     location: string;
+    experience: number;
     jobType: "Full-Time" | "Part-Time" | "Contract";
-    salary: string;
+    salary: number | string;
     detail: JobDetail[];
     applicants: string[];
     vacancies: number;
@@ -122,7 +124,6 @@ export interface JobSubmissionData extends JobFormInputs {
 export type RecentJobsPosts ={
   id: string;
   name: string;
-  email: string; 
   logo? : string; 
   jobTitle: string;
   jobType: "Full-Time" | "Part-Time" | "Contract";

@@ -139,6 +139,7 @@ export class CompaniesService {
         location: true,
         about: true,
         profileUrl: true,
+        jobPosts: true,
       },
     });
 

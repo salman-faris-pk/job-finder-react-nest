@@ -64,4 +64,14 @@ export const GetCompanies=async(newURL:string)=>{
    const response=await API.get(newURL);
    return response.data;
 
-}
+};
+
+
+
+export const JobDetailById=async(id:string)=>{
+
+   const response=await API.get(`/jobs/job-detail/${id}`);
+
+   return response.data;
+
+};

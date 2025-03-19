@@ -2,26 +2,61 @@ import { useEffect, useState } from "react";
 import moment from "moment";
 import { AiOutlineSafetyCertificate } from "react-icons/ai";
 import { useParams } from "react-router-dom";
-import { jobs } from "../utils/datas";
 import { CustomButton, JobCard } from "../components";
+import { useSelector } from "../redux/store";
+import { JobDetailById } from "../apis/fetching.apis";
+import { Job } from "../utils/types";
+import Loading from "../components/Loaders/Loading";
 
 const JobDetail = () => {
-
-  const params = useParams();
-  const id = parseInt(params.id ?? "0") - 1;  
-  const [job, setJob] = useState(jobs[0]);
+ 
+  const { id } = useParams<{ id: string }>();
+  const { user }=useSelector((state)=> state.user)
+  const [job, setJob] = useState<Job | null>(null);
   const [selected, setSelected] = useState("0");
+  const [isFetching,setIsFetching]=useState(false);
+  const [smilarJobs,setSimilarJobs]=useState<Job[]>([])
+
+  
+  const getjoBDetail =async()=>{
+     setIsFetching(true)
+
+     if (!id) {
+      setIsFetching(false);
+      return;
+    };
+
+     try {
+        const res=await JobDetailById(id);
+         
+        setJob(res?.data)
+
+        const filteredSimilarJobs = res?.similarJobs?.filter((similarJob: Job) => similarJob.id !== id);
+        setSimilarJobs(filteredSimilarJobs);
+        setIsFetching(false)
+     } catch (error) {
+      console.log(error);
+     }
+  };
 
   useEffect(() => {
-    setJob(jobs[id ?? 0]);
+     id && getjoBDetail();
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, [id]);
+
+
+  const handleDeletPost=()=>{
+
+  };
 
   return (
     <div className='container mx-auto'>
       <div className='w-full flex flex-col md:flex-row gap-10 mt-5'>
 
         {/* LEFT SIDE */}
+        {isFetching ? (
+        <Loading />
+         ) : (
         <div className='w-full h-fit md:w-2/3 2xl:2/4 bg-white px-5 py-10 md:px-10 shadow-md'>
           <div className='w-full flex items-center justify-between'>
             <div className='w-3/4 flex gap-2'>
@@ -71,7 +106,7 @@ const JobDetail = () => {
             <div className='bg-[#fed0ab] w-40 h-16 px-6 rounded-lg flex flex-col items-center justify-center'>
               <span className='text-sm'>No. of Applicants</span>
               <p className='text-lg font-semibold text-gray-700'>
-                {job?.applicants?.length}K
+                {job?.applicants ? job?.applicants?.length : "N/A"}
               </p>
             </div>
 
@@ -112,11 +147,11 @@ const JobDetail = () => {
 
                 <span className='text-base'>{job?.detail[0]?.desc}</span>
 
-                {job?.detail[0]?.requirement && (
+                {job?.detail[0]?.requirements && (
                   <>
                     <p className='text-xl font-semibold mt-8'>Requirement</p>
                     <span className='text-base'>
-                      {job?.detail[0]?.requirement}
+                      {job?.detail[0]?.requirements}
                     </span>
                   </>
                 )}
@@ -138,21 +173,38 @@ const JobDetail = () => {
           </div>
 
           <div className='w-full'>
-            <CustomButton
+            {user?.id === job?.companyId ? (
+               <CustomButton
+                title='Delete Job'
+                onClick={handleDeletPost}
+                containerStyles={`w-full cursor-pointer flex items-center justify-center text-white bg-black py-3 px-5 outline-none rounded-full text-base`}
+              />
+            ): (
+              <CustomButton
               title='Apply Now'
-              containerStyles={`w-full flex items-center justify-center text-white bg-black py-3 px-5 outline-none rounded-full text-base`}
+              containerStyles={`w-full cursor-pointer flex items-center justify-center text-white bg-black py-3 px-5 outline-none rounded-full text-base`}
             />
+            )}
           </div>
         </div>
+         )}
+
+         
 
         {/* RIGHT SIDE */}
         <div className='w-full md:w-1/3 2xl:w-2/4 p-5 mt-20 md:mt-0'>
           <p className='text-gray-500 font-semibold'>Similar Job Post</p>
 
           <div className='w-full flex flex-wrap gap-4'>
-            {jobs?.slice(0, 6).map((job, index) => (
-              <JobCard job={job} key={index} />
-            ))}
+            {smilarJobs?.slice(0, 6).map((job, index) => {
+              const data = {
+                ...job,
+                name: job?.company.name,
+                logo: job?.company.profileUrl,
+              }
+              
+               return <JobCard job={data} key={index} />
+            })}
           </div>
         </div>
       </div>

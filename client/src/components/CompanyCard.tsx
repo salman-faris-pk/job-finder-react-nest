@@ -1,6 +1,12 @@
 import { Link } from "react-router-dom";
+import { Companies } from "../utils/types";
 
-const CompanyCard = ({ cmp }:any) => {
+
+interface CompanyProps{
+  cmp:Companies
+}
+const CompanyCard = ({ cmp }:CompanyProps) => {
+  
   return (
     <div className='w-full h-16 flex gap-4 items-center justify-between bg-white shadow-md rounded'>
       <div className='w-3/4 md:w-2/4 flex gap-4 items-center'>
