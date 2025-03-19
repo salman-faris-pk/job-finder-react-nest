@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CustomButton } from "../components";
 import ListBox from "../components/ListBox";
 import Header from "../components/Header";
-import { companies } from "../utils/datas";
 import CompanyCard from "../components/CompanyCard";
 import Loading from "../components/Loaders/Loading";
 import { GetCompanies, updateURL } from "../apis/fetching.apis";
@@ -12,7 +11,7 @@ const Companies = () => {
   const [page, setPage] = useState(1);
   const [numPage, setNumPage] = useState(1);
   const [recordsCount, setRecordsCount] = useState(0);
-  const [data, setData] = useState(companies ?? []);
+  const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [cmpLocation, setCmpLocation] = useState("");
   const [sort, setSort] = useState("Newest");
@@ -20,8 +19,7 @@ const Companies = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
-
-
+  
   const fetchCompanies = async()=>{
     setIsFetching(true)
 
@@ -36,28 +34,29 @@ const Companies = () => {
 
     try {
       
-      const res=await GetCompanies(newURL);
-
-      console.log(res);
+      const res=await GetCompanies(newURL);      
       
-      
-      // setNumPage(res?.numOfPage)
-      // setRecordsCount(res?.total)
-      // setData(res?.data)
+      setNumPage(res?.numOfPage)
+      setRecordsCount(res?.total)
+      setData(res?.companydata)
 
       setIsFetching(false)
       
     } catch (error) {
       console.log(error);
     }
-
   };
 
 
   useEffect(()=>{
      fetchCompanies();
   },[page,sort])
-  const handleSearchSubmit = () => {};
+
+  const handleSearchSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+     e.preventDefault();
+     await fetchCompanies();
+  };
+
   const handleShowMore = () => {};
 
   return (
@@ -68,13 +67,13 @@ const Companies = () => {
       searchQuery={searchQuery}
       setSearchQuery={setSearchQuery}
       location={cmpLocation}
-      setLocation={setSearchQuery}
+      setLocation={setCmpLocation}
     />
 
     <div className='container mx-auto flex flex-col gap-5 2xl:gap-10 px-5 py-6 bg-[#f7fdfd]'>
       <div className='flex items-center justify-between mb-4'>
         <p className='text-sm md:text-base'>
-          Shwoing: <span className='font-semibold'>1,902</span> Companies
+          Showing: <span className='font-semibold'>{recordsCount}</span> Companies
           Available
         </p>
 
@@ -86,9 +85,11 @@ const Companies = () => {
       </div>
 
       <div className='w-full flex flex-col gap-6'>
-        {data?.map((cmp, index) => (
-          <CompanyCard cmp={cmp} key={index} />
-        ))}
+      {data?.length > 0 ? (
+        data.map((cmp, index) => <CompanyCard cmp={cmp} key={index} />)
+         ) : (
+         <p className="text-gray-500 text-center">No companies found.</p>
+        )}
 
         {isFetching && (
           <div className='mt-10'>

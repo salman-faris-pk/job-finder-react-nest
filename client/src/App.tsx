@@ -59,7 +59,7 @@ function App() {
   return (
     <>
     <Toaster 
-     position="top-right"
+     position="top-center"
      richColors
      duration={3000}
     />

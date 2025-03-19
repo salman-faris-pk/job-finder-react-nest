@@ -4,8 +4,12 @@ import { CiLocationOn } from "react-icons/ci";
 import CustomButton from "./CustomButton";
 import { popularSearch } from "../utils/datas";
 import HeroImage from "../assets/hero.png";
+import { HeaderProps, SearchInputProps } from "../utils/types";
 
-const SearchInput = ({ placeholder, icon, value, setValue, styles }:any) => {
+
+
+
+const SearchInput = ({ placeholder, icon, value, setValue, styles }:SearchInputProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
   };
@@ -22,18 +26,20 @@ const SearchInput = ({ placeholder, icon, value, setValue, styles }:any) => {
         type='text'
         className='w-full md:w-64 p-2 outline-none bg-transparent text-base'
         placeholder={placeholder}
+        aria-label={placeholder}
       />
 
       <AiOutlineCloseCircle
         className='hidden md:flex text-gray-600 text-xl cursor-pointer'
         onClick={clearInput}
+        aria-label="clear input"
       />
     </div>
   );
 };
 
 
-const Header = ({title,type,handleClick,searchQuery,setSearchQuery, location,setLocation}:any) => {
+const Header = ({title,type,handleClick,searchQuery,setSearchQuery, location,setLocation}:HeaderProps) => {
   return (
     <div className='bg-[#f7fdfd]'>
       <div
@@ -48,7 +54,7 @@ const Header = ({title,type,handleClick,searchQuery,setSearchQuery, location,set
             <p className='text-slate-700 font-bold text-4xl'>{title}</p>
           </div>
 
-          <div className='w-full flex items-center justify-around bg-white px-2 md:px-5 py-2.5 md:py-6 shadow-2xl rounded-full'>
+          <form onSubmit={handleClick} className='w-full flex items-center justify-around bg-white px-2 md:px-5 py-2.5 md:py-6 shadow-2xl rounded-full'>
             <SearchInput
               placeholder='Job Title or Keywords'
               icon={<AiOutlineSearch className='text-gray-600 text-xl' />}
@@ -65,14 +71,14 @@ const Header = ({title,type,handleClick,searchQuery,setSearchQuery, location,set
 
             <div>
               <CustomButton
-                onClick={handleClick}
                 title='Search'
+                type="submit"
                 containerStyles={
-                  "text-white py-2 md:py3 px-3 md:px-10 focus:outline-none bg-blue-600 rounded-full md:rounded-md text-sm md:text-base"
+                  "text-white py-2 cursor-pointer md:py3 px-3 md:px-10 focus:outline-none bg-blue-600 rounded-full md:rounded-md text-sm md:text-base"
                 }
               />
             </div>
-          </div>
+          </form>
 
 
           {type && (

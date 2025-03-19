@@ -141,3 +141,21 @@ export type UpdateURLParams = {
   jType?: string;
   exp?: number;
 };
+
+export interface HeaderProps {
+  title: string;
+  type?: boolean;
+  handleClick: (e: React.FormEvent<HTMLFormElement>) => void;
+  searchQuery: string;
+  setSearchQuery: (value: string) => void;
+  location: string;
+  setLocation: (value: string) => void;
+}
+
+export interface SearchInputProps {
+  placeholder: string;
+  icon: React.ReactNode;
+  value: string;
+  setValue: (value: string) => void;
+  styles?: string;
+}

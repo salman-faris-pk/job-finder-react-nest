@@ -145,7 +145,7 @@ export class CompaniesService {
     return {
       success: true,
       total,
-      data: companies,
+      companydata: companies,
       page: pageNum,
       numOfPage: Math.ceil(total / limitNum),
     };
