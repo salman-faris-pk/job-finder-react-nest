@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import moment from "moment";
 import { AiOutlineSafetyCertificate } from "react-icons/ai";
 import { useParams } from "react-router-dom";
-import { CustomButton, JobCard } from "../components";
+import { CustomButton, DeleteModal, JobCard } from "../components";
 import { useSelector } from "../redux/store";
-import { JobDetailById } from "../apis/fetching.apis";
+import { deletePost, JobDetailById } from "../apis/fetching.apis";
 import { Job } from "../utils/types";
 import Loading from "../components/Loaders/Loading";
+import { toast } from "sonner";
 
 const JobDetail = () => {
  
@@ -16,6 +17,7 @@ const JobDetail = () => {
   const [selected, setSelected] = useState("0");
   const [isFetching,setIsFetching]=useState(false);
   const [smilarJobs,setSimilarJobs]=useState<Job[]>([])
+  const [isdletesModal, setIsdeleteModal] = useState(false);
 
   
   const getjoBDetail =async()=>{
@@ -45,8 +47,28 @@ const JobDetail = () => {
   }, [id]);
 
 
-  const handleDeletPost=()=>{
+  const handleDeletePost=async()=>{
+    setIsFetching(true)
+    if(!job?.id){
+      setIsFetching(false)
+      return;
+    };
 
+    try {
+      const res=await deletePost(job?.id);
+      if(res?.success){
+        toast.success(res?.message)
+        setTimeout(()=>{
+        window.location.replace("/")
+        },1000)
+      }else{
+        toast.error(res?.message)
+      }
+      setIsFetching(false)
+    } catch (error) {
+      setIsFetching(false)
+      console.log(error);
+    }
   };
 
   return (
@@ -174,11 +196,24 @@ const JobDetail = () => {
 
           <div className='w-full'>
             {user?.id === job?.companyId ? (
+              <>
                <CustomButton
                 title='Delete Job'
-                onClick={handleDeletPost}
-                containerStyles={`w-full cursor-pointer flex items-center justify-center text-white bg-black py-3 px-5 outline-none rounded-full text-base`}
+                onClick={()=> setIsdeleteModal(true)}
+                containerStyles={`w-full cursor-pointer flex items-center justify-center text-white 
+                  bg-gradient-to-r from-red-600 to-red-800 hover:from-red-600 hover:to-red-800 py-3 px-5 outline-none rounded-full text-base`}
               />
+               
+               {isdletesModal  && (
+                 <DeleteModal isOpen={isdletesModal}  onClose={() => setIsdeleteModal(false)} 
+                 onDelete={() => {
+                  handleDeletePost();
+                  setIsdeleteModal(false);
+                }}
+                 />
+               )}
+                
+              </>
             ): (
               <CustomButton
               title='Apply Now'

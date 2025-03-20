@@ -75,3 +75,10 @@ export const JobDetailById=async(id:string)=>{
    return response.data;
 
 };
+
+
+export const deletePost=async(id: string)=> {
+
+   const response=await API.delete(`/jobs/delete-job/${id}`);
+   return response.data;
+}
