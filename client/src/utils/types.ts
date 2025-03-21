@@ -139,13 +139,13 @@ export type UpdateURLParams = {
   sort?: string;
   navigate?: (path: string, options?: { replace?: boolean }) => void;
   location?: { pathname: string; search: string };
-  jType?: string;
-  exp?: number;
+  jType?: string | string[];
+  exp?: number | string | string[];
 };
 
 export interface HeaderProps {
   title: string;
-  type?: boolean;
+  type?: string | boolean;
   handleClick: (e: React.FormEvent<HTMLFormElement>) => void;
   searchQuery: string;
   setSearchQuery: (value: string) => void;

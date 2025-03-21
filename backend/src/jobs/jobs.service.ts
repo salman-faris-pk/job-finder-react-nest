@@ -105,14 +105,16 @@ export class JobsService {
     }
 
     if (exp) {
-      const experience = exp.includes('-')
-      ? exp.split('-').map(Number)
-      : [Number(exp), Number(exp)]; 
-      
-      if (experience.length === 2) {
+      if (exp.includes('-')) {
+        const [minExp, maxExp] = exp.split('-').map(Number);
         queryObject.experience = {
-          gte: experience[0] - 1, // If exp = "2-6", then gte = 2 - 1 = 1 (allows 1 year and above)
-          lte: experience[1] + 1, // If exp = "2-6", then lte = 6 + 1 = 7 (allows up to 7 years)
+          gte: minExp,
+          lte: maxExp,
+        };
+      } else {
+        const expValue = Number(exp);
+        queryObject.experience = {
+          gte: expValue, 
         };
       }
     }

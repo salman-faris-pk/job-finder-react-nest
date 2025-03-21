@@ -166,6 +166,9 @@ const JobDetail = () => {
             {selected === "0" ? (
               <>
                 <p className='text-xl font-semibold'>Job Decsription</p>
+                <p className="text-sm font-mono text-gray-500 mb-2">
+                {job?.experience} {job?.experience === 1 ? "year" : "years"} experience
+                </p>
 
                 <span className='text-base'>{job?.detail[0]?.desc}</span>
 

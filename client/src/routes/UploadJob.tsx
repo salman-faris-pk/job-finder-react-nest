@@ -3,7 +3,7 @@ import { CustomButton, JobCard} from "../components";
 import TextInput from "../components/TextInput";
 import JobTypes from "../components/JobTypes";
 import { useForm } from "react-hook-form"
-import { Job, JobFormInputs, JobSubmissionData, RecentJobsPosts } from "../utils/types";
+import { Job, JobFormInputs, JobSubmissionData } from "../utils/types";
 import { uploadJobAPI } from "../apis/uploads.apis";
 import { toast } from "sonner";
 import Loading from "../components/Loaders/Loading";
@@ -232,11 +232,9 @@ const UploadJob = () => {
         <p className='text-gray-500 font-semibold'>Recent Job Post</p>
         <div className='w-full flex flex-wrap gap-6'>
           {recentPost.slice(0, 4).map((job, index) => {
-             
            const data= {
             ...job,
             name: user?.name,
-            email: user?.email,
             logo: user?.profileUrl,
            }
             return <JobCard job={data} key={index} />;

@@ -1,4 +1,3 @@
-import { replace } from "react-router-dom";
 import { API } from "./axiosInstance"
 import { UpdateURLParams } from "../utils/types";
 
@@ -43,11 +42,13 @@ export const updateURL=({pageNum,query,cmpLoc,sort,navigate,location,jType,exp}:
    };
 
    if(jType){
-      params.set('jtype', jType)
+      const jTypeValue = Array.isArray(jType) ? jType.join(',') : jType;
+      params.set('jtype', jTypeValue);
    };
 
    if(exp){
-      params.set('exp', exp.toString())
+      const expValue = Array.isArray(exp) ? exp.join(',') : exp.toString();
+      params.set('exp', expValue);
    }
 
    const newURL= `${location.pathname}?${params.toString()}`;
@@ -81,4 +82,13 @@ export const deletePost=async(id: string)=> {
 
    const response=await API.delete(`/jobs/delete-job/${id}`);
    return response.data;
+};
+
+
+export const FindsJobs=async(newURL:string)=>{
+
+   const response=await API.get("/jobs"+newURL);
+
+   return response.data;
+
 }

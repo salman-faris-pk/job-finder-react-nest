@@ -29,7 +29,7 @@ export class JobsController {
 
   @Get('find-jobs')
   async GetJobPosts(@Query() query:JobQueryDto){
-     return this.jobsService.getPostedJobs(query)
+     return this.jobsService.getPostedJobs(query) 
   }
 
   @Get('job-detail/:id')
