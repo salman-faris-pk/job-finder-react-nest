@@ -5,7 +5,7 @@ interface CustomButtonProps {
   containerStyles?: string; 
   iconRight?: React.ReactNode; 
   type?: "button" | "submit" | "reset"; 
-  onClick?: () => void; 
+  onClick?: (() => void) | ((e: React.MouseEvent<HTMLButtonElement>) => void);
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({ title,containerStyles = "",iconRight,type = "button",

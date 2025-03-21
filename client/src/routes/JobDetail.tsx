@@ -128,7 +128,7 @@ const JobDetail = () => {
             <div className='bg-[#fed0ab] w-40 h-16 px-6 rounded-lg flex flex-col items-center justify-center'>
               <span className='text-sm'>No. of Applicants</span>
               <p className='text-lg font-semibold text-gray-700'>
-                {job?.applicants ? job?.applicants?.length : "N/A"}
+                {job?.application?.length || 0}
               </p>
             </div>
 

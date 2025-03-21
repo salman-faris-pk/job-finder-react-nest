@@ -51,7 +51,7 @@ export type FooterLink = {
     jobType: "Full-Time" | "Part-Time" | "Contract";
     salary: number | string;
     detail: JobDetail[];
-    applicants: string[];
+    application: string[];
     vacancies: number;
     createdAt: Date;
   };

@@ -105,19 +105,29 @@ export class JobsService {
     }
 
     if (exp) {
-      if (exp.includes('-')) {
-        const [minExp, maxExp] = exp.split('-').map(Number);
-        queryObject.experience = {
-          gte: minExp,
-          lte: maxExp,
-        };
-      } else {
-        const expValue = Number(exp);
-        queryObject.experience = {
-          gte: expValue, 
-        };
-      }
-    }
+      const expFilters = exp.split(',');
+      const expConditions = expFilters.map((expFilter) => {
+        if (expFilter.includes('-')) {
+          const [minExp, maxExp] = expFilter.split('-').map(Number);
+          return {
+            experience: {
+              gte: minExp, 
+              lte: maxExp,
+            },
+          };
+        } else {
+          const expValue = Number(expFilter);
+          return {
+            experience: {
+              gte: expValue,
+            },
+          };
+        }
+      });
+  
+      queryObject.OR = expConditions;
+    };
+
 
     if (search) {
       queryObject.OR = [
@@ -143,7 +153,7 @@ export class JobsService {
   async QuerySortAndPagination(queryObject: any, sort: string | undefined, page: number | undefined, limit: number | undefined) {
     
     const Page = Number(page) || 1;
-    const Limit = Number(limit) || 10;
+    const Limit = Number(limit) || 12;
     const skip = (Page - 1) * Limit;
   
     const totalJobs = await this.prisma.job.count({

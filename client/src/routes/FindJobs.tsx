@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import CustomButton from "../components/CustomButton";
 import Header from "../components/Header";
@@ -10,6 +10,7 @@ import ListBox from "../components/ListBox";
 import JobCard from "../components/JobCard";
 import { FindsJobs, updateURL } from "../apis/fetching.apis";
 import { Job } from "../utils/types";
+import Loading from "../components/Loaders/Loading";
 
 const FindJobs = () => {
   const [sort, setSort] = useState("Newest");
@@ -27,34 +28,34 @@ const FindJobs = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  
   const fetchJobs = async () => {
     setIsFetching(true);
 
-    const newURL = updateURL({
-      pageNum: page,
-      query: searchQuery,
-      cmpLoc: jobLocation,
-      sort: sort,
-      navigate: navigate,
-      location: location,
-      jType: filterJobTypes,
-      exp: filterExp,
-    }) || "";
+    const newURL =
+      updateURL({
+        pageNum: page,
+        query: searchQuery,
+        cmpLoc: jobLocation,
+        sort: sort,
+        navigate: navigate,
+        location: location,
+        jType: filterJobTypes,
+        exp: filterExp,
+      }) || "";
 
     try {
       const res = await FindsJobs(newURL);
-      
+
       setNumPage(res?.numOfPage);
       setRecordCount(res?.totalJobs);
       setData(res?.data);
-      
+
       setIsFetching(false);
     } catch (error) {
       console.log(error);
     }
   };
- 
+
   useEffect(() => {
     fetchJobs();
   }, [page, searchQuery, jobLocation, sort, filterJobTypes, filterExp]);
@@ -69,33 +70,41 @@ const FindJobs = () => {
 
   const filterExperience = (value: string) => {
     setFilterExp((prev) =>
-      prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value]
+      prev.includes(value)
+        ? prev.filter((item) => item !== value)
+        : [...prev, value]
     );
   };
 
-  const handleLoadMore = () => {
+  const handleSearchSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await fetchJobs();
+  };
+
+  const handleLoadMore = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     setPage((prev) => prev + 1);
   };
 
   return (
     <div>
       <Header
-        title='Find Your Dream Job with Ease'
-        type='home'
-        handleClick={() => {}}
+        title="Find Your Dream Job with Ease"
+        type="home"
+        handleClick={handleSearchSubmit}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         location={jobLocation}
         setLocation={setJobLocation}
       />
 
-      <div className='container mx-auto flex gap-6 2xl:gap-10 md:px-5 py-0 md:py-6 bg-[#f7fdfd]'>
-        <div className='hidden md:flex flex-col w-1/6 h-fit bg-white shadow-sm p-3'>
-          <p className='text-lg font-semibold text-slate-600'>Filter Search</p>
+      <div className="container mx-auto flex gap-6 2xl:gap-10 md:px-5 py-0 md:py-6 bg-[#f7fdfd]">
+        <div className="hidden md:flex flex-col w-1/6 h-fit bg-white shadow-sm p-3">
+          <p className="text-lg font-semibold text-slate-600">Filter Search</p>
 
-          <div className='py-2'>
-            <div className='flex justify-between mb-3'>
-              <p className='flex items-center gap-2 font-semibold'>
+          <div className="py-2">
+            <div className="flex justify-between mb-3">
+              <p className="flex items-center gap-2 font-semibold">
                 <BiBriefcaseAlt2 />
                 Job Type
               </p>
@@ -105,13 +114,13 @@ const FindJobs = () => {
               </button>
             </div>
 
-            <div className='flex flex-col gap-2'>
+            <div className="flex flex-col gap-2">
               {jobTypes.map((jtype, index) => (
-                <div key={index} className='flex gap-2 text-sm md:text-base '>
+                <div key={index} className="flex gap-2 text-sm md:text-base ">
                   <input
-                    type='checkbox'
+                    type="checkbox"
                     value={jtype}
-                    className='w-4 h-4'
+                    className="w-4 h-4"
                     onChange={(e) => filterJobs(e.target.value)}
                   />
                   <span>{jtype}</span>
@@ -120,9 +129,9 @@ const FindJobs = () => {
             </div>
           </div>
 
-          <div className='py-2 mt-4'>
-            <div className='flex justify-between mb-3'>
-              <p className='flex items-center gap-2 font-semibold'>
+          <div className="py-2 mt-4">
+            <div className="flex justify-between mb-3">
+              <p className="flex items-center gap-2 font-semibold">
                 <BsStars />
                 Experience
               </p>
@@ -132,13 +141,13 @@ const FindJobs = () => {
               </button>
             </div>
 
-            <div className='flex flex-col gap-2'>
+            <div className="flex flex-col gap-2">
               {experience.map((exp) => (
-                <div key={exp.title} className='flex gap-3'>
+                <div key={exp.title} className="flex gap-3">
                   <input
-                    type='checkbox'
+                    type="checkbox"
                     value={exp?.value}
-                    className='w-4 h-4'
+                    className="w-4 h-4"
                     checked={filterExp.includes(exp.value)}
                     onChange={(e) => filterExperience(e.target.value)}
                   />
@@ -149,42 +158,60 @@ const FindJobs = () => {
           </div>
         </div>
 
-        <div className='w-full md:w-5/6 px-5 md:px-0'>
-          <div className='flex items-center justify-between mb-4'>
-            <p className='text-sm md:text-base'>
-              Showing: <span className='font-semibold'>{recordCount}</span> Jobs Available
+        <div className="w-full md:w-5/6 px-5 md:px-0">
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-sm md:text-base">
+              Showing: <span className="font-semibold">{recordCount}</span> Jobs
+              Available
             </p>
 
-            <div className='flex flex-col md:flex-row gap-0 md:gap-2 md:items-center'>
-              <p className='hidden md:block text-sm md:text-base'>Sort By:</p>
+            <div className="flex flex-col md:flex-row gap-0 md:gap-2 md:items-center">
+              <p className="hidden md:block text-sm md:text-base">Sort By:</p>
 
               <ListBox sort={sort} setSort={setSort} />
             </div>
           </div>
 
           <div className="w-full flex flex-wrap gap-4">
-           {data.length === 0 ? (
-            <p className="w-full text-center text-gray-500">Currently, there are no available jobs</p>
-          ) : (
-           data.map((job, index) => {
-              const jobData = {
-                ...job,
-                name: job?.company?.name,
-                logo: job?.company?.profileUrl,
-            };
-         return <JobCard job={jobData} key={index} />;
-        })
-      )}
-      </div>
+            {data.length === 0 ? (
+              <p className="w-full text-center text-gray-500">
+                Currently, there are no available jobs
+              </p>
+            ) : (
+              data.map((job, index) => {
+                const jobData = {
+                  ...job,
+                  name: job?.company?.name,
+                  logo: job?.company?.profileUrl,
+                };
+                return <JobCard job={jobData} key={index} />;
+              })
+            )}
+          </div>
 
+          {isFetching && (
+            <div className="py-10">
+              <Loading />
+            </div>
+          )}
 
-          {numPage > page && !isFetching && (
-            <div className='w-full flex items-center justify-center pt-16'>
-              <CustomButton
-                title='Load More'
-                containerStyles={`text-blue-600 py-1.5 px-5 focus:outline-none hover:bg-blue-700 hover:text-white rounded-full text-base border border-blue-600`}
-                onClick={handleLoadMore}
-              />
+          {numPage > 1 && !isFetching && (
+            <div className="w-full flex items-center justify-center pt-16 gap-4">
+              {page > 1 && (
+                <CustomButton
+                  title="Previous"
+                  containerStyles={`text-blue-600 cursor-pointer py-1.5 px-5 focus:outline-none hover:bg-blue-700 hover:text-white rounded-full text-base border border-blue-600`}
+                  onClick={() => setPage((prev) => prev - 1)}
+                />
+              )}
+
+              {numPage > page && (
+                <CustomButton
+                  title="Load More"
+                  containerStyles={`text-blue-600 cursor-pointer py-1.5 px-5 focus:outline-none hover:bg-blue-700 hover:text-white rounded-full text-base border border-blue-600`}
+                  onClick={handleLoadMore}
+                />
+              )}
             </div>
           )}
         </div>
