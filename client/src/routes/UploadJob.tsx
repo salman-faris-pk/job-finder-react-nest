@@ -234,8 +234,8 @@ const UploadJob = () => {
           {recentPost.slice(0, 4).map((job, index) => {
            const data= {
             ...job,
-            name: user?.name,
-            logo: user?.profileUrl,
+            name: job?.company.name,
+            logo: job?.company.profileUrl,
            }
             return <JobCard job={data} key={index} />;
           })}
