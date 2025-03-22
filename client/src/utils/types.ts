@@ -8,19 +8,21 @@ export type FooterLink = {
   };
 
   export type User = {
+    id:string;
     name?: string;  
     firstName?: string;  
     lastName?: string; 
     location?: string;
+    jobTitle: string;
     email: string;
     contact: string;
     about: string;
-    profileUrl: string; 
+    profileUrl: string;
+    githubUrl: string; 
     jobPosts?: string[]; 
+    portfolioUrl: string;
     accountType?: "seeker" | "employer"; 
-    cvUrl?: string;
-    token: string;
-  };
+    };
 
   export type Experieces = {
      title:string;
@@ -57,7 +59,7 @@ export type FooterLink = {
   };
 
   export type Companies = {
-    id: number;
+    id: string;
     name: string;
     location: string;
     email: string;
@@ -161,3 +163,15 @@ export interface SearchInputProps {
   styles?: string;
 }
 
+export interface Updateduser {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  contact?: string;
+  location?: string;
+  githubUrl?: string;
+  profileUrl?: string | File;
+  portfolioUrl?: string;
+  jobTitle?: string;
+  about?: string;
+}

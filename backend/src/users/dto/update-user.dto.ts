@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsEmail, IsUrl } from "class-validator";
+import { IsOptional, IsString, IsEmail} from "class-validator";
 
 export class UpdateUserDto {
   @IsOptional()
@@ -22,17 +22,16 @@ export class UpdateUserDto {
   location?: string;
 
   @IsOptional()
-  @IsString()
+  @IsString({ message: "Profile URL must be a string" })
   profileUrl?: string;
   
   @IsOptional()
   @IsString()
-  @IsUrl()
   portfolioUrl?:string;
-
+  
   @IsOptional()
   @IsString()
-  cvUrl?: string;
+  githubUrl?:string;
 
   @IsOptional()
   @IsString()

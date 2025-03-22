@@ -1,4 +1,3 @@
-import { Transform } from "class-transformer";
 import { IsString, IsNotEmpty, IsOptional } from "class-validator";
 
 export class CompanyUpdateDto {
@@ -19,7 +18,6 @@ export class CompanyUpdateDto {
   contact: string;
 
   @IsOptional()
-  @Transform(({ value }) => (typeof value === "string" ? value : undefined))
   @IsString({ message: "Profile URL must be a string" })
   profileUrl?: string;
 }

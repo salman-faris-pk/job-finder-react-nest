@@ -24,5 +24,17 @@ export const uploadJobAPI=async(payload:JobSubmissionData)=>{
   });
   return res.data;
 
+};
+
+
+export const UpdateUserDatas=async(formData: FormData)=>{
+
+  const response=await API.put('/user/update-user',formData,{
+    headers: {
+      "Content-Type": "multipart/form-data"
+    },
+  });
+
+   return response.data
 }
 

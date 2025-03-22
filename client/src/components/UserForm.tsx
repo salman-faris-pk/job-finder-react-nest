@@ -10,6 +10,9 @@ import TextInput from "./TextInput";
 import CustomButton from "./CustomButton";
 import { useSelector } from "../redux/store";
 import { useForm } from "react-hook-form";
+import { UpdateUserDatas } from "../apis/uploads.apis";
+import { toast } from "sonner";
+import { Updateduser } from "../utils/types";
 
 interface ModalProps {
   open: boolean;
@@ -21,44 +24,50 @@ const UserForm = ({ open, setOpen }: ModalProps) => {
   const {
     register,
     getValues,
+    handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<Updateduser>({
     mode: "onChange",
     defaultValues: { ...user },
   });
 
   const [profileImage, setProfileImage] = useState<File | null>(null);
-  const [uploadCv, setUploadCv] = useState<File | null>(null);
-  const [portFolioLink, setPortfolioLink] = useState("");
 
   const handleImgFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     setProfileImage(file);
   };
 
-  const handleResumeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files?.[0]) {
-      setUploadCv(event.target.files[0]);
-    }
-  };
 
   const onSubmit = async () => {
     try {
       const formValues = getValues();
-      
-      const newData= {
-        ...formValues,
-        profileUrl:profileImage,
-        cvUrl: uploadCv,
-        portfolioUrl: portFolioLink
-      };
 
-      console.log(newData);
-      
-
-      // cons res=await UpdateUserDatas(newData)
-
+      const formData = new FormData();
+      formData.append("firstName", formValues.firstName || "");
+      formData.append("lastName", formValues.lastName || "");
+      formData.append("email", formValues.email || "");
+      formData.append("contact", formValues.contact || "");
+      formData.append("location", formValues.location || "");
+      formData.append("portfolioUrl", formValues.portfolioUrl || "");
+      formData.append("githubUrl", formValues.githubUrl || "");
+      formData.append("jobTitle", formValues.jobTitle || "");
+      formData.append("about", formValues.about || "");
   
+      if (profileImage) {
+        formData.append("profileUrl", profileImage);
+      }
+
+      const res = await UpdateUserDatas(formData);
+
+      if (res.status === "failed") {
+        toast.error(res.message);
+      } else {
+        toast.success(res.message);
+          setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+      }
     } catch (error) {
       console.error("Error submitting form:", error);
     }
@@ -144,7 +153,9 @@ const UserForm = ({ open, setOpen }: ModalProps) => {
                             register={register("contact", {
                               required: "Contact is required!",
                             })}
-                            error={errors.contact ? errors.contact?.message : ""}
+                            error={
+                              errors.contact ? errors.contact?.message : ""
+                            }
                           />
                         </div>
 
@@ -175,56 +186,65 @@ const UserForm = ({ open, setOpen }: ModalProps) => {
                         error={errors.jobTitle ? errors.jobTitle?.message : ""}
                       />
 
-                      <div className="w-full flex flex-col md:grid md:grid-cols-2 gap-4 text-sm">
-                        <div className="flex flex-col">
-                          <label className="text-gray-600 text-sm mb-1">
-                            Profile Picture
-                          </label>
-                          <label
-                            className="cursor-pointer border border-gray-400 px-4 py-2 text-center rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200"
-                            htmlFor="profilePic"
-                          >
-                            Upload Profile Picture
-                          </label>
-                          <input
-                            type="file"
-                            id="profilePic"
-                            className="hidden"
-                            onChange={handleImgFileChange}
-                          />
-                        </div>
-
-                        <div className="flex flex-col">
-                          <label className="text-gray-600 text-sm mb-1">
-                            Resume (PDF Only)
-                          </label>
-                          <label
-                            className="cursor-pointer border border-gray-400 px-4 py-2 text-center rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200"
-                            htmlFor="resume"
-                          >
-                            Upload Resume
-                          </label>
-                          <input
-                            type="file"
-                            id="resume"
-                            className="hidden"
-                            accept="application/pdf"
-                            onChange={handleResumeChange}
-                          />
-                        </div>
-                      </div>
-
                       <div className="flex flex-col">
                         <label className="text-gray-600 text-sm mb-1">
-                          Portfolio Link
+                          Profile Picture
+                        </label>
+                        <label
+                          className="cursor-pointer border border-gray-400 px-4 py-2 text-center rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200"
+                          htmlFor="profilePic"
+                        >
+                          {profileImage
+                            ? profileImage.name
+                            : "Upload Profile Picture"}
                         </label>
                         <input
-                          type="url"
-                          placeholder="https://your-portfolio.com"
-                          className="border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:border-blue-500"
-                          onChange={(e) => setPortfolioLink(e.target.value)}
+                          type="file"
+                          id="profilePic"
+                          className="hidden"
+                          onChange={handleImgFileChange}
                         />
                       </div>
+
+                      <TextInput
+                        name="portfolioUrl"
+                        label="Portfolio"
+                        placeholder="https://your-portfolio.com"
+                        type="url"
+                        register={register("portfolioUrl", {
+                          required: "Portfolio Link is required",
+                          pattern: {
+                            value:
+                              /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/[\w-./?%&=]*)?$/,
+                            message: "Enter a valid URL",
+                          },
+                        })}
+                        error={
+                          errors.portfolioUrl
+                            ? errors.portfolioUrl?.message
+                            : ""
+                        }
+                      />
+
+                        <TextInput
+                        name="githubUrl"
+                        label="Github"
+                        placeholder="https://your-gitprofile.com"
+                        type="url"
+                        register={register("githubUrl", {
+                          required: "github  Link is required",
+                          pattern: {
+                            value:
+                              /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/[\w-./?%&=]*)?$/,
+                            message: "Enter a valid URL",
+                          },
+                        })}
+                        error={
+                          errors.githubUrl
+                            ? errors.githubUrl?.message
+                            : ""
+                        }
+                      />
 
                       <div className="flex flex-col">
                         <label className="text-gray-600 text-sm mb-1">
@@ -255,9 +275,9 @@ const UserForm = ({ open, setOpen }: ModalProps) => {
                   <div className="mt-4">
                     <CustomButton
                       type="button"
-                      containerStyles="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-8 py-2 text-sm font-medium text-white hover:bg-[#1d4fd846] hover:text-[#1d4fd8] focus:outline-none "
+                      containerStyles="inline-flex cursor-pointer justify-center rounded-md border border-transparent bg-blue-600 px-8 py-2 text-sm font-medium text-white hover:bg-[#1d4fd846] hover:text-[#1d4fd8] focus:outline-none "
                       title={"Submit"}
-                      onClick={onSubmit}
+                      onClick={handleSubmit(onSubmit)}
                     />
                   </div>
                 </DialogPanel>

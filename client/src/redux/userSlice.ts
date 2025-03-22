@@ -1,16 +1,17 @@
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
 import { API } from "../apis/axiosInstance";
+import { User } from "../utils/types";
 
 
 interface UserState {
-  user: any;
+  user: User;
   loading: boolean;
   error: string | null;
 };
 
 export const fetchUser=createAsyncThunk('user/fetchUser',async()=> {
    const response=await API.get("/user/validate-me");
-   
+       
       return response.data.user || response.data.company;
 });
 
