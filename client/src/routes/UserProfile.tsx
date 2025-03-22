@@ -9,9 +9,8 @@ import { useSelector } from "../redux/store";
 
 const UserProfile = () => {
   const { user } = useSelector((state) => state.user);
-  // console.log(user);
   
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
   const userInfo = user;
 
   return (
@@ -52,8 +51,8 @@ const UserProfile = () => {
 
             <div className='w-full md:w-1/3 h-44'>
               <img
-                src={userInfo?.profileUrl}
-                alt={userInfo?.firstName}
+                src={userInfo?.profileUrl || '/profile.jpg'}
+                alt={userInfo?.firstName || "profile"}
                 className='w-full h-48 object-contain rounded-lg'
               />
               <button

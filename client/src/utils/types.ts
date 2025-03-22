@@ -160,3 +160,4 @@ export interface SearchInputProps {
   setValue: (value: string) => void;
   styles?: string;
 }
+

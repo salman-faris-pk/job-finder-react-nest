@@ -25,6 +25,7 @@ model User {
   location     String?
   profileUrl   String?
   cvUrl        String?
+  portfolioUrl String?
   jobTitle     String?
   about        String?
   hashedRefreshToken String?

@@ -34,7 +34,8 @@ const Navbar = () => {
             <Link to='/companies'>Companies</Link>
           </li>
           <li>
-            <Link to='/upload-job'>Upload Job</Link>
+            <Link to={user?.accountType === "seeker" ? "/applicants" : "/upload-job"}>
+            {user?.accountType === "seeker" ? "Applications": "Upload Job"}</Link>
           </li>
           <li>
             <Link to='/about-us'>About</Link>
@@ -79,10 +80,10 @@ const Navbar = () => {
         <Link
           onClick={handleCloseNavbar}
           to={
-            user === "seeker" ? "applly-history" : "upload-job"
+            user?.accountType === "seeker" ? "applicants" : "upload-job"
           }
         >
-          {user === "seeker" ? "Applications" : "Upload Job"}
+          {user?.accountType === "seeker" ? "Applications" : "Upload Job"}
         </Link>
         <Link to='/about-us' onClick={handleCloseNavbar}>
           About

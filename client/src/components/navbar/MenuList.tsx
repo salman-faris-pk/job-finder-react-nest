@@ -29,7 +29,7 @@ const MenuList = ({user,onClick }:any) => {
             </div>
 
             <img
-              src={user?.profileUrl}
+              src={user?.profileUrl || '/profile.jpg'}
               alt='user profile'
               className='w-10 h-10 rounded-full object-cover '
             />
