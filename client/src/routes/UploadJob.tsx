@@ -83,7 +83,7 @@ const UploadJob = () => {
 
   const getRecendPosts=async()=>{
     try {
-      const id=user?.id;
+      const id=user?.id || null;
      const res=await RecentPosts(id)
      setRecentPost(res?.jobPosts)
     } catch (error:any) {
@@ -232,11 +232,11 @@ const UploadJob = () => {
         <p className='text-gray-500 font-semibold'>Recent Job Post</p>
         <div className="w-full flex flex-wrap gap-6">
           {recentPost.length > 0 ? (
-        recentPost.slice(0, 4).map((job, index) => {
+        recentPost?.slice(0, 4).map((job, index) => {
          const data = {
         ...job,
-        name: job?.company.name,
-        logo: job?.company.profileUrl,
+        name: job?.company?.name,
+        logo: job?.company?.profileUrl || "/logo.jpg",
          };
          return <JobCard job={data} key={index} />;
           })

@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form";
 import { UpdateUserDatas } from "../apis/uploads.apis";
 import { toast } from "sonner";
 import { Updateduser } from "../utils/types";
+import Loading from "./Loaders/Loading";
 
 interface ModalProps {
   open: boolean;
@@ -32,6 +33,7 @@ const UserForm = ({ open, setOpen }: ModalProps) => {
   });
 
   const [profileImage, setProfileImage] = useState<File | null>(null);
+  const [isLoading,setIsLoading]=useState(false)
 
   const handleImgFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
@@ -40,6 +42,7 @@ const UserForm = ({ open, setOpen }: ModalProps) => {
 
 
   const onSubmit = async () => {
+    setIsLoading(true)
     try {
       const formValues = getValues();
 
@@ -68,7 +71,9 @@ const UserForm = ({ open, setOpen }: ModalProps) => {
           window.location.reload();
         }, 1500);
       }
+      setIsLoading(false)
     } catch (error) {
+      setIsLoading(false)
       console.error("Error submitting form:", error);
     }
   };
@@ -273,12 +278,17 @@ const UserForm = ({ open, setOpen }: ModalProps) => {
                   </div>
 
                   <div className="mt-4">
-                    <CustomButton
+                    {isLoading ? (
+                      <Loading/>
+                    ): (
+                      <CustomButton
                       type="button"
                       containerStyles="inline-flex cursor-pointer justify-center rounded-md border border-transparent bg-blue-600 px-8 py-2 text-sm font-medium text-white hover:bg-[#1d4fd846] hover:text-[#1d4fd8] focus:outline-none "
                       title={"Submit"}
                       onClick={handleSubmit(onSubmit)}
                     />
+                    )}
+                   
                   </div>
                 </DialogPanel>
               </TransitionChild>

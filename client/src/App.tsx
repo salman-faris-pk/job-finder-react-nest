@@ -8,7 +8,8 @@ import {
   JobDetail,
   UploadJob,
   UserProfile,
-  AuthPage
+  AuthPage,
+  ErrorBoundary
 } from "./routes";
 import { Toaster } from "sonner";
 import { useEffect } from "react";
@@ -31,14 +32,13 @@ function App() {
     {
       path: "/",
       element: <Layout />,
+      errorElement: <ErrorBoundary/>,
       children: [
         { path: "/", element: <Navigate to="/find-jobs" replace /> },
         { path: "/find-jobs", element: <FindJobs /> },
         { path: "/companies", element: <Companies /> },
-        {
-          path: user?.accountType === "seeker" ? "/user-profile" : "/user-profile/:id",
-          element: <UserProfile />,
-        },
+        { path: "/user-profile", element: user?.accountType === "seeker" ? <UserProfile /> : <Navigate to="/" replace /> },
+        { path: "/user-profile/:id", element: <UserProfile /> },
         { path: "/company-profile", element: <CompanyProfile /> },
         { 
           path: "/company-profile/:id", 
@@ -46,12 +46,13 @@ function App() {
         },
         { path: "/upload-job", element: <UploadJob /> },
         { path: "/job-detail/:id", element: <JobDetail /> },
+        { path: "/about-us", element: <About /> },
       ],
     },
     
 
-    { path: "/about-us", element: <About /> },
     { path: "/user-auth", element: <AuthPage /> },
+    
 
   ]);
 

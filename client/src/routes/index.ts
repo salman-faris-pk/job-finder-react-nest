@@ -7,6 +7,7 @@ import UploadJob from "./UploadJob";
 import About from "./About";
 import JobDetail from "./JobDetail";
 import Layout from "./layout/Layout";
+import ErrorBoundary from "./ErrorBoundary";
 
 export {
   Layout,
@@ -18,4 +19,5 @@ export {
   UploadJob,
   About,
   JobDetail,
+  ErrorBoundary,
 };
