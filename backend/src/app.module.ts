@@ -7,7 +7,8 @@ import { CompaniesModule } from './companies/companies.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
-  imports: [PrismaModule, AuthModule, UsersModule, JobsModule, CompaniesModule, CloudinaryModule],
+  imports: [
+    PrismaModule, AuthModule, UsersModule, JobsModule, CompaniesModule, CloudinaryModule],
   controllers: [],
   providers: [],
 })
