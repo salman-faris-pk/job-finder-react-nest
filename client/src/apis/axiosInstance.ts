@@ -1,7 +1,7 @@
 import axios, { AxiosError,AxiosResponse, InternalAxiosRequestConfig} from "axios"
 
 
-const API_URL=import.meta.env.VITE_API_URL;
+const API_URL=import.meta.env.VITE_API_MAIN_URL || import.meta.env.VITE_API_URL;
 
 
 

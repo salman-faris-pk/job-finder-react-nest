@@ -57,7 +57,10 @@ const Companies = () => {
      await fetchCompanies();
   };
 
-  const handleShowMore = () => {};
+  const handleShowMore = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setPage((prev) => prev + 1);
+  };
 
   return (
     <div className='w-full'>
