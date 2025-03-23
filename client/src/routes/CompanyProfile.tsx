@@ -26,7 +26,7 @@ const CompanyProfile = () => {
       if(params.id && params.id !== undefined){
         id=params?.id;
       }else{
-        id=user?.id;
+        id=user?.id || null;
       };
 
       try {
