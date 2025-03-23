@@ -233,16 +233,20 @@ const JobDetail = () => {
         <div className='w-full md:w-1/3 2xl:w-2/4 p-5 mt-20 md:mt-0'>
           <p className='text-gray-500 font-semibold'>Similar Job Post</p>
 
-          <div className='w-full flex flex-wrap gap-4'>
-            {smilarJobs?.slice(0, 6).map((job, index) => {
-              const data = {
-                ...job,
-                name: job?.company.name,
+          <div className="w-full flex flex-wrap gap-4">
+          {smilarJobs?.length > 0 ? (
+              smilarJobs.slice(0, 6).map((job, index) => {
+               const data = {
+                 ...job,
+                 name: job?.company.name,
                 logo: job?.company.profileUrl,
-              }
-              
-               return <JobCard job={data} key={index} />
-            })}
+                };
+
+               return <JobCard job={data} key={index} />;
+            })
+          ) : (
+          <p className="w-full text-center mt-10 text-gray-500 text-sm">No similar jobs available .</p>
+          )}
           </div>
         </div>
       </div>

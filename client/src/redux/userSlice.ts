@@ -4,7 +4,7 @@ import { User } from "../utils/types";
 
 
 interface UserState {
-  user: User;
+  user: User | null;
   loading: boolean;
   error: string | null;
 };

@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { AiOutlineMail } from "react-icons/ai";
+import { AiOutlineMail,AiFillGithub } from "react-icons/ai";
 import { FiPhoneCall } from "react-icons/fi";
 import { HiLocationMarker } from "react-icons/hi";
 import UserForm from "../components/UserForm";
 import { useSelector } from "../redux/store";
-
-
+import { BiLinkExternal } from "react-icons/bi";
 
 const UserProfile = () => {
   const { user } = useSelector((state) => state.user);
@@ -37,6 +36,25 @@ const UserProfile = () => {
             </p>
           </div>
         </div>
+
+        <div className="flex items-center justify-center gap-10 mt-4 mb-3">
+      <a
+      href={userInfo?.githubUrl || "#"}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center gap-1 text-blue-700 font-semibold"
+    >
+      <AiFillGithub /> GitHub
+    </a>
+    <a
+      href={userInfo?.portfolioUrl || "#"}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center gap-1 text-blue-700 font-semibold"
+    >
+      <BiLinkExternal /> Portfolio
+    </a>
+  </div>
 
         <hr />
 

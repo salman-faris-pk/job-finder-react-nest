@@ -230,16 +230,20 @@ const UploadJob = () => {
 
       <div className='w-full md:w-1/3 2xl:2/4 p-5 mt-20 md:mt-0'>
         <p className='text-gray-500 font-semibold'>Recent Job Post</p>
-        <div className='w-full flex flex-wrap gap-6'>
-          {recentPost.slice(0, 4).map((job, index) => {
-           const data= {
-            ...job,
-            name: job?.company.name,
-            logo: job?.company.profileUrl,
-           }
-            return <JobCard job={data} key={index} />;
-          })}
-        </div>
+        <div className="w-full flex flex-wrap gap-6">
+          {recentPost.length > 0 ? (
+        recentPost.slice(0, 4).map((job, index) => {
+         const data = {
+        ...job,
+        name: job?.company.name,
+        logo: job?.company.profileUrl,
+         };
+         return <JobCard job={data} key={index} />;
+          })
+          ) : (
+        <p className="w-full text-center mt-10 text-gray-500 text-sm">No recent posts available .</p>
+        )}
+      </div>
       </div>
 
     </div>

@@ -7,8 +7,19 @@ import { Link } from "react-router-dom";
 import { dispatch } from "../../redux/store";
 import { logoutUser } from "../../redux/userSlice";
 
+interface MenuProps {
+  user: {
+    firstName?: string;
+    name?: string;
+    jobTitle?: string;
+    email?: string;
+    profileUrl?: string;
+    accountType?: string;
+  } | null;
+  onClick?: () => void;
+}
 
-const MenuList = ({user,onClick }:any) => {
+const MenuList = ({user,onClick }:MenuProps) => {
 
   const handleLogout = () => {
      dispatch(logoutUser());
@@ -49,7 +60,7 @@ const MenuList = ({user,onClick }:any) => {
           leaveFrom='transform opacity-100 scale-100'
           leaveTo='transform opacity-0 scale-95'
         >
-          <MenuItems className='absolute z-50 right2 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg focus:outline-none '>
+          <MenuItems className='absolute z-50 right-1 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg focus:outline-none '>
             <div className='p-1 '>
               <MenuItem>
                 {({ active }) => (
