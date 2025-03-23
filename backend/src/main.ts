@@ -11,7 +11,8 @@ async function bootstrap() {
   app.use(express.json({ limit: '10mb' }));
   app.use(helmet());
   app.enableCors({
-    origin: [process.env.FRONTEND_SEC_URL,process.env.FRONTEND_URL,"https://job-finder-react-nest-wgu1.vercel.app"],
+    // origin: [process.env.FRONTEND_SEC_URL,process.env.FRONTEND_URL,"https://job-finder-react-nest-wgu1.vercel.app"],
+    origin: true,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], 
   });
