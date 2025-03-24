@@ -34,7 +34,6 @@ export class UsersService {
 
     async UpdateTheUser(userId:string, updateUserDto: Partial<UpdateUserDto>){
 
-        
         const User = await this.prisma.user.findUnique({ where: { id: userId } });
 
         if (!User) {

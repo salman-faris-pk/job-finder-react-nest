@@ -40,4 +40,7 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   about?: string;
+
+
+  
 }
