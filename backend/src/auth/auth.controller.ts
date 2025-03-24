@@ -69,7 +69,7 @@ async googleCallback(@Req() req:AuthenticatedRequest) {
 
   return {
     ...loginResult,
-    redirectUrl: process.env.FRONTEND_URL
+    redirectUrl: process.env.FRONTEND_URL,
   };
 };
 

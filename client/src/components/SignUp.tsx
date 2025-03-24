@@ -87,151 +87,151 @@ const SignUp = () => {
   const currentErrors = errors as Errors;
 
   return (
-    <div className="flex items-center justify-center">
-      <div className="w-full max-w-xl transform overflow-hidden rounded-2xl bg-white m-2 p-6 text-left align-middle shadow-md">
-        <h3 className="text-xl font-semibold text-gray-900">
-          {isRegister ? "Create Account" : "Account Sign In"}
-        </h3>
+    <div className="w-full md:max-w-xl mx-auto">
+    <div className="w-full transform overflow-hidden rounded-xl sm:rounded-2xl bg-white p-4 sm:p-6 text-left align-middle shadow-md">
+      <h3 className="text-lg sm:text-xl font-semibold text-gray-900">
+        {isRegister ? "Create Account" : "Account Sign In"}
+      </h3>
 
-        <div className="w-full flex items-center justify-center py-4">
-          <button
-            className={`flex-1 px-4 py-2 rounded text-sm outline-none ${
-              accountType === "seeker"
-                ? "bg-[#1d4fd862] text-blue-900 font-semibold"
-                : "bg-white border border-blue-400"
-            }`}
-            onClick={() => setAccountType("seeker")}
+      <div className="w-full flex items-center justify-center py-3 sm:py-4">
+        <button
+          className={`flex-1 px-3 py-1 sm:px-4 sm:py-2 rounded text-sm outline-none ${
+            accountType === "seeker"
+              ? "bg-[#1d4fd862] text-blue-900 font-semibold"
+              : "bg-white border border-blue-400"
+          }`}
+          onClick={() => setAccountType("seeker")}
+        >
+          User Account
+        </button>
+        <button
+          className={`flex-1 px-3 py-1 sm:px-4 sm:py-2 rounded text-sm outline-none ${
+            accountType !== "seeker"
+              ? "bg-[#1d4fd862] text-blue-900 font-semibold"
+              : "bg-white border border-blue-400"
+          }`}
+          onClick={() => setAccountType("company")}
+        >
+          Company Account
+        </button>
+      </div>
+
+      {accountType === "seeker" && (
+        <div className="w-full flex items-center justify-center py-2 mb-4 sm:mb-5">
+          <button 
+            className="flex items-center justify-center w-full gap-2 px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-100"
+            onClick={handleGoogleLogin}
           >
-            User Account
-          </button>
-          <button
-            className={`flex-1 px-4 py-2 rounded text-sm outline-none ${
-              accountType !== "seeker"
-                ? "bg-[#1d4fd862] text-blue-900 font-semibold"
-                : "bg-white border border-blue-400"
-            }`}
-            onClick={() => setAccountType("company")}
-          >
-            Company Account
+            <FcGoogle />
+            {isRegister ? "Sign up with Google" : "Sign in with Google"}
           </button>
         </div>
+      )}
 
-        {accountType === "seeker" && (
-          <div className="w-full flex items-center justify-center py-2 mb-5">
-            <button className="flex items-center justify-center w-full gap-2 px-4 py-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-100"
-             onClick={handleGoogleLogin}
-            >
-              <FcGoogle />
-              {isRegister ? "Sign up with Google" : "Sign in with Google"}
-            </button>
-          </div>
-        )}
+      <form className="w-full flex flex-col gap-3 sm:gap-4" onSubmit={handleSubmit(onSubmit)}>
+        <TextInput
+          name="email"
+          label="Email Address"
+          placeholder="email@example.com"
+          type="email"
+          register={register("email")}
+          error={currentErrors.email?.message}
+        />
 
-        <form className="w-full flex flex-col gap-5" onSubmit={handleSubmit(onSubmit)}>
-          <TextInput
-            name="email"
-            label="Email Address"
-            placeholder="email@example.com"
-            type="email"
-            register={register("email")}
-            error={currentErrors.email?.message}
-          />
-
-          {isRegister && (
-            <div className="w-full flex gap-1 md:gap-2">
-              <div className={`${accountType === "seeker" ? "w-1/2" : "w-full"}`}>
-                <TextInput
-                  name={accountType === "seeker" ? "firstName" : "name"}
-                  label={accountType === "seeker" ? "First Name" : "Company Name"}
-                  placeholder={accountType === "seeker" ? "eg. James" : "Company name"}
-                  type="text"
-                  register={register(accountType === "seeker" ? "firstName" : "name")}
-                  error={
-                    accountType === "seeker"
-                      ? (currentErrors as UserErrors).firstName?.message
-                      : (currentErrors as CompanyErrors).name?.message
-                  }
-                />
-              </div>
-
-              {accountType === "seeker" && (
-                <div className="w-1/2">
-                  <TextInput
-                    name="lastName"
-                    label="Last Name"
-                    placeholder="Wagonner"
-                    type="text"
-                    register={register("lastName")}
-                    error={(currentErrors as UserErrors).lastName?.message}
-                  />
-                </div>
-              )}
-            </div>
-          )}
-
-          <div className="w-full flex gap-1 md:gap-2 relative">
-            <div className={`${isRegister ? "w-1/2" : "w-full"} relative`}>
+        {isRegister && (
+          <div className="w-full flex flex-col sm:flex-row gap-3 sm:gap-2">
+            <div className={`${accountType === "seeker" ? "sm:w-1/2" : "w-full"}`}>
               <TextInput
-                name="password"
-                label="Password"
-                placeholder="Password"
-                type={showPassword ? "text" : "password"}
-                register={register("password")}
-                error={currentErrors.password?.message}
+                name={accountType === "seeker" ? "firstName" : "name"}
+                label={accountType === "seeker" ? "First Name" : "Company Name"}
+                placeholder={accountType === "seeker" ? "eg. James" : "Company name"}
+                type="text"
+                register={register(accountType === "seeker" ? "firstName" : "name")}
+                error={
+                  accountType === "seeker"
+                    ? (currentErrors as UserErrors).firstName?.message
+                    : (currentErrors as CompanyErrors).name?.message
+                }
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-10 text-gray-500"
-              >
-                {showPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
-              </button>
             </div>
 
-            {isRegister && (
-              <div className="w-1/2 relative">
+            {accountType === "seeker" && (
+              <div className="w-full sm:w-1/2">
                 <TextInput
-                  name="cPassword"
-                  label="Confirm Password"
-                  placeholder="Password"
-                  type={showCoPassword ? "text" : "password"}
-                  register={register("cPassword")}
-                  error={(currentErrors as UserErrors | CompanyErrors).cPassword?.message}
+                  name="lastName"
+                  label="Last Name"
+                  placeholder="Wagonner"
+                  type="text"
+                  register={register("lastName")}
+                  error={(currentErrors as UserErrors).lastName?.message}
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowCoPassword(!showCoPassword)}
-                  className="absolute right-3 top-10 text-gray-500"
-                >
-                  {showCoPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
-                </button>
               </div>
             )}
           </div>
+        )}
 
-
-          <div className="mt-2">
-            <CustomButton
-              type="submit"
-              containerStyles="inline-flex justify-center rounded-md bg-blue-600 px-8 py-2 text-sm font-medium text-white outline-none hover:bg-blue-800"
-              title={isRegister ? "Create Account" : "Login Account"}
+        <div className="w-full flex flex-col sm:flex-row gap-3 sm:gap-2">
+          <div className={`${isRegister ? "sm:w-1/2" : "w-full"} relative`}>
+            <TextInput
+              name="password"
+              label="Password"
+              placeholder="Password"
+              type={showPassword ? "text" : "password"}
+              register={register("password")}
+              error={currentErrors.password?.message}
             />
-          </div>
-        </form>
-
-        <div className="mt-4">
-          <p className="text-sm text-gray-700">
-            {isRegister ? "Already have an account?" : "Do not have an account?"}
-            <span
-              className="text-sm text-blue-600 ml-2 hover:text-blue-700 hover:font-semibold cursor-pointer"
-              onClick={() => setIsRegister((prev) => !prev)}
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-11 text-gray-500"
             >
-              {isRegister ? "Login" : "Create Account"}
-            </span>
-          </p>
+              {showPassword ? <AiOutlineEyeInvisible size={18} /> : <AiOutlineEye size={18} />}
+            </button>
+          </div>
+
+          {isRegister && (
+            <div className="w-full sm:w-1/2 relative">
+              <TextInput
+                name="cPassword"
+                label="Confirm Password"
+                placeholder="Password"
+                type={showCoPassword ? "text" : "password"}
+                register={register("cPassword")}
+                error={(currentErrors as UserErrors | CompanyErrors).cPassword?.message}
+              />
+              <button
+                type="button"
+                onClick={() => setShowCoPassword(!showCoPassword)}
+                className="absolute right-3 top-11 text-gray-500"
+              >
+                {showCoPassword ? <AiOutlineEyeInvisible size={18} /> : <AiOutlineEye size={18} />}
+              </button>
+            </div>
+          )}
         </div>
+
+        <div className="mt-2">
+          <CustomButton
+            type="submit"
+            containerStyles="inline-flex justify-center rounded-md bg-blue-600 px-6 py-1.5 sm:px-8 sm:py-2 text-sm font-medium text-white outline-none hover:bg-blue-800 w-full"
+            title={isRegister ? "Create Account" : "Login Account"}
+          />
+        </div>
+      </form>
+
+      <div className="mt-3 sm:mt-4">
+        <p className="text-sm text-gray-700">
+          {isRegister ? "Already have an account?" : "Do not have an account?"}
+          <span
+            className="text-sm text-blue-600 ml-2 hover:text-blue-700 hover:font-semibold cursor-pointer"
+            onClick={() => setIsRegister((prev) => !prev)}
+          >
+            {isRegister ? "Login" : "Create Account"}
+          </span>
+        </p>
       </div>
     </div>
+  </div>
   );
 };
 
