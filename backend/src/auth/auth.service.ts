@@ -261,7 +261,7 @@ export class AuthService {
         }
     
         throw new NotFoundException('User or Company not found');
-    };
+    };;
 
 
     async validateJwtUser(userId:string){

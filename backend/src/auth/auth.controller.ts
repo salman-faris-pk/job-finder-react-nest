@@ -55,14 +55,6 @@ async CompanySignin(@Body() compLoginDTO:LoginInputs){
   return this.authService.CompanySignIn(compLoginDTO);
 }
 
-
-@Post('logout')
-@UseGuards(JwtAuthGuard)
-async SignOutUser(@Req() req:UserIdRequest){
-   return this.authService.Logoutuser(req.user.id);
-};
-
-
   
 @Get('google/login')
 @UseGuards(GoogleAuthGuard)
@@ -79,6 +71,13 @@ async googleCallback(@Req() req:AuthenticatedRequest) {
     ...loginResult,
     redirectUrl: process.env.FRONTEND_URL
   };
+};
+
+
+@Post('logout')
+@UseGuards(JwtAuthGuard)
+async SignOutUser(@Req() req:UserIdRequest){
+   return this.authService.Logoutuser(req.user.id);
 };
 
 };

@@ -38,11 +38,13 @@ export class SetCookieInterceptor implements NestInterceptor {
           response.clearCookie('accessToken', {
             httpOnly: true,
             secure: true,
+            sameSite:"none",
             expires: new Date(0) 
           });
           response.clearCookie('refreshToken', {
             httpOnly: true,
             secure: true,
+            sameSite:"none",
             expires: new Date(0)
           });
         };
