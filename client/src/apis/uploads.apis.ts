@@ -1,5 +1,5 @@
 
-import { JobSubmissionData } from "../utils/types";
+import { applydataitems, JobSubmissionData } from "../utils/types";
 import { API } from "./axiosInstance"
 
 
@@ -38,3 +38,21 @@ export const UpdateUserDatas=async(formData: FormData)=>{
    return response.data
 }
 
+
+export const JobApply = async(applydata:applydataitems)=>{
+  const formData = new FormData();
+  formData.append('userId', applydata.userId);
+  formData.append('JobId', applydata.JobId);
+  formData.append('CvUrl', applydata.CvUrl);
+  if (applydata.whyHire) {
+    formData.append('whyHire', applydata.whyHire);
+  }
+
+  const response = await API.post('/jobs/job-apply', formData, {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  });
+
+  return response.data;
+};

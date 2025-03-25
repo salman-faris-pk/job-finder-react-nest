@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import moment from "moment";
 import { AiOutlineSafetyCertificate } from "react-icons/ai";
 import { useParams } from "react-router-dom";
-import { CustomButton, DeleteModal, JobCard } from "../components";
+import { CustomButton, CvUpload, DeleteModal, JobCard } from "../components";
 import { useSelector } from "../redux/store";
 import { deletePost, JobDetailById } from "../apis/fetching.apis";
 import { Job } from "../utils/types";
 import Loading from "../components/Loaders/Loading";
 import { toast } from "sonner";
+
 
 const JobDetail = () => {
  
@@ -18,6 +19,7 @@ const JobDetail = () => {
   const [isFetching,setIsFetching]=useState(false);
   const [smilarJobs,setSimilarJobs]=useState<Job[]>([])
   const [isdletesModal, setIsdeleteModal] = useState(false);
+  const [openApplyModal, setApplyModal] = useState(false);
 
   
   const getjoBDetail =async()=>{
@@ -218,10 +220,21 @@ const JobDetail = () => {
                 
               </>
             ): (
+              <>
               <CustomButton
               title='Apply Now'
+              onClick={()=> setApplyModal(true)}
               containerStyles={`w-full cursor-pointer flex items-center justify-center text-white bg-black py-3 px-5 outline-none rounded-full text-base`}
-            />
+              />
+
+            {openApplyModal && (
+              <CvUpload isOpen={openApplyModal} onClose={()=> setApplyModal(false)}
+               JobId={job?.id} userId={user?.id}
+              />
+            )}
+
+            </>
+
             )}
           </div>
         </div>

@@ -8,6 +8,7 @@ import { CreateJobDto } from './dtos/create-job.dto';
 import { CompaniesService } from 'src/companies/companies.service';
 import { UpdateJobDto } from './dtos/update.dto';
 import { JobQueryDto } from './dtos/job-query.dto';
+import { ApplyJobDto } from './dtos/applyjob.dto';
 
 @Injectable()
 export class JobsService {
@@ -299,6 +300,40 @@ export class JobsService {
 
     });
 
+};
+
+
+async JobApplying(applyJob: ApplyJobDto){
+
+  const {CvUrl,JobId,userId,whyHire}=applyJob;
+
+  const existingApplication = await this.prisma.jobApplication.findFirst({
+    where: {
+      jobId: JobId,
+      userId: userId,
+    },
+  });
+
+  if (existingApplication) {
+    return {
+      success: false,
+      message: 'You have already applied for this job',
+    };
+  }
+
+   await this.prisma.jobApplication.create({
+    data:{
+      jobId:JobId,
+      CvUrl,
+      userId,
+      whyHire
+    },
+   });
+
+   return {
+    success: true,
+     message: 'job apllied succesfully'
+   };
 };
 
 

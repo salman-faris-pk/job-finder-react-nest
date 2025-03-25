@@ -175,3 +175,11 @@ export interface Updateduser {
   jobTitle?: string;
   about?: string;
 }
+
+
+export type applydataitems={
+   userId: string;
+   JobId: string;
+   CvUrl: File;
+   whyHire?: string;
+};

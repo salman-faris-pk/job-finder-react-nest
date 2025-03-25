@@ -34,9 +34,7 @@ export class UsersController {
     CloudinaryInterceptor
   )
   async UpdateUser(@Body() updatedUserdto:UpdateUserDto,@Req() req:UserIdRequest,@UploadedFile() file: Express.Multer.File){
-    
-    console.log(file);
-    
+        
     if (file && req.body.profileUrl) {
       updatedUserdto.profileUrl = req.body.profileUrl;
     };

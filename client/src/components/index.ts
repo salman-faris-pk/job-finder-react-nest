@@ -4,7 +4,7 @@ import JobCard from "./JobCard";
 import CustomButton from "./CustomButton";
 import Bgloader from "./Loaders/Bgloader";
 import DeleteModal from "./DeleteModal";
-
+import CvUpload from "./CvUpload";
 
 
 export {
@@ -13,5 +13,6 @@ export {
     JobCard,
     CustomButton,
     Bgloader,
-    DeleteModal
+    DeleteModal,
+    CvUpload,
 }
