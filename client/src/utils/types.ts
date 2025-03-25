@@ -53,7 +53,7 @@ export type FooterLink = {
     jobType: "Full-Time" | "Part-Time" | "Contract";
     salary: number | string;
     detail: JobDetail[];
-    application: string[];
+    application: JobApplication[];
     vacancies: number;
     createdAt: Date;
   };
@@ -84,6 +84,25 @@ export type FooterLink = {
     password: string;
     cPassword: string;
   };
+
+  export enum ApplicationStatus {
+    PENDING = "PENDING",
+    APPROVED = "APPROVED",
+    REJECTED = "REJECTED",
+  }
+  
+  export interface JobApplication {
+    id: string;
+    userId: string;
+    jobId: string;
+    CvUrl: string;
+    whyHire?: string;
+    applicationStatus: ApplicationStatus;
+    appliedAt: Date;
+    
+    user: User;
+    job: Job;
+  }
   
  export  type LoginFormData = {
     email: string;

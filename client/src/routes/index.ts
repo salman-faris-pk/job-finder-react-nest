@@ -8,6 +8,7 @@ import About from "./About";
 import JobDetail from "./JobDetail";
 import Layout from "./layout/Layout";
 import ErrorBoundary from "./ErrorBoundary";
+import Applications from "./Applications";
 
 export {
   Layout,
@@ -20,4 +21,5 @@ export {
   About,
   JobDetail,
   ErrorBoundary,
+  Applications,
 };

@@ -12,6 +12,7 @@ interface ApplyModalProps {
 const CvUpload = ({ isOpen, onClose, userId, JobId }: ApplyModalProps) => {
 
     const [file, setFile] = useState<File | null>(null);
+    const [isLoading,setLoading]=useState(false)
     const [hireReason, setHireReason] = useState('');
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -30,30 +31,47 @@ const CvUpload = ({ isOpen, onClose, userId, JobId }: ApplyModalProps) => {
         }
     };
 
-    const handleSubmit = async() => {
-        if (!file) {
-            toast.info('Please upload your resume/CV');
-            return;
-        };
-        if (!userId || !JobId) {
-            throw new Error("User ID and Job ID are required");
-          }
-        
-        const applydata={
-            userId,
-            JobId,
-            CvUrl:file,
-            whyHire: hireReason
-        };
-        
-
-        const res=await JobApply(applydata)
-         console.log(res);
-         
-         
+    const handleSubmit = async () => {
+        try {
+            setLoading(true);
     
-        // onClose();
+            if (!file) {
+                toast.info("Please upload your resume/CV");
+                setLoading(false);
+                return;
+            }
+    
+            if (!userId || !JobId) {
+                throw new Error("User ID and Job ID are required.");
+            }
+    
+            const applyData = {
+                userId,
+                JobId,
+                CvUrl: file,
+                whyHire: hireReason,
+            };
+    
+            const response = await JobApply(applyData);
+    
+            if (response?.success) {
+                toast.success(response.message);
+                setTimeout(() => {
+                    window.location.reload();
+                    onClose();
+                }, 1000);
+            } else {
+                toast.error(response?.message || "Something went wrong. Please try again.");
+                onClose();
+            }
+        } catch (error) {
+            console.error("Job application failed:", error);
+            toast.error("An error occurred. Please try again later.");
+        } finally {
+            setLoading(false);
+        }
     };
+    
 
        useEffect(() => {
             if (isOpen) {
@@ -123,7 +141,7 @@ const CvUpload = ({ isOpen, onClose, userId, JobId }: ApplyModalProps) => {
                                   font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none
                                   focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer"
                     >
-                        Submit Application
+                        {isLoading ? "submitting.." : "Submit Application"}
                     </button>
                 </div>
             </div>

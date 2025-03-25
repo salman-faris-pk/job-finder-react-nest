@@ -9,7 +9,8 @@ import {
   UploadJob,
   UserProfile,
   AuthPage,
-  ErrorBoundary
+  ErrorBoundary,
+  Applications
 } from "./routes";
 import { Toaster } from "sonner";
 import { useEffect } from "react";
@@ -44,6 +45,8 @@ function App() {
           path: "/company-profile/:id", 
           element: <CompanyProfile />,
         },
+        { path: "/applicants", element: <Applications /> },
+
         { path: "/upload-job", element: <UploadJob /> },
         { path: "/job-detail/:id", element: <JobDetail /> },
         { path: "/about-us", element: <About /> },

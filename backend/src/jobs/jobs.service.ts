@@ -220,6 +220,9 @@ export class JobsService {
             profileUrl: true,
           },
         },
+        _count: {
+          select: { application: true}
+        }
       },
     });
 
@@ -257,6 +260,7 @@ export class JobsService {
     return {
       success: true,
       data: job,
+      applicationCount: job._count.application,
       similarJobs,
     };
 

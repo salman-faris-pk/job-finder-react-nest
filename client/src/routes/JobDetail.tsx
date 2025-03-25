@@ -20,6 +20,7 @@ const JobDetail = () => {
   const [smilarJobs,setSimilarJobs]=useState<Job[]>([])
   const [isdletesModal, setIsdeleteModal] = useState(false);
   const [openApplyModal, setApplyModal] = useState(false);
+  const [applicationCount,setAppCount]=useState<number | null>(null)
 
   
   const getjoBDetail =async()=>{
@@ -37,6 +38,7 @@ const JobDetail = () => {
 
         const filteredSimilarJobs = res?.similarJobs?.filter((similarJob: Job) => similarJob.id !== id);
         setSimilarJobs(filteredSimilarJobs);
+        setAppCount(res?.applicationCount)
         setIsFetching(false)
      } catch (error) {
       console.log(error);
@@ -130,7 +132,7 @@ const JobDetail = () => {
             <div className='bg-[#fed0ab] w-40 h-16 px-6 rounded-lg flex flex-col items-center justify-center'>
               <span className='text-sm'>No. of Applicants</span>
               <p className='text-lg font-semibold text-gray-700'>
-                {job?.application?.length || 0}
+                {applicationCount || 0}
               </p>
             </div>
 
@@ -199,17 +201,17 @@ const JobDetail = () => {
             )}
           </div>
 
-          <div className='w-full'>
-            {user?.id === job?.companyId ? (
-              <>
-               <CustomButton
-                title='Delete Job'
-                onClick={()=> setIsdeleteModal(true)}
-                containerStyles={`w-full cursor-pointer flex items-center justify-center text-white 
-                  bg-gradient-to-r from-red-600 to-red-800 hover:from-red-600 hover:to-red-800 py-3 px-5 outline-none rounded-full text-base`}
-              />
-               
-               {isdletesModal  && (
+          <div className="w-full">
+  {user?.id === job?.companyId ? (
+    <>
+      <CustomButton
+        title="Delete Job"
+        onClick={() => setIsdeleteModal(true)}
+        containerStyles={`w-full cursor-pointer flex items-center justify-center text-white 
+          bg-gradient-to-r from-red-600 to-red-800 hover:from-red-600 hover:to-red-800 py-3 px-5 outline-none rounded-full text-base`}
+      />
+
+           {isdletesModal  && (
                  <DeleteModal isOpen={isdletesModal}  onClose={() => setIsdeleteModal(false)} 
                  onDelete={() => {
                   handleDeletePost();
@@ -217,26 +219,28 @@ const JobDetail = () => {
                 }}
                  />
                )}
-                
-              </>
-            ): (
-              <>
-              <CustomButton
-              title='Apply Now'
-              onClick={()=> setApplyModal(true)}
-              containerStyles={`w-full cursor-pointer flex items-center justify-center text-white bg-black py-3 px-5 outline-none rounded-full text-base`}
-              />
+        </>
+      ) : user?.accountType === "seeker" ? (
+       <>
+        <CustomButton
+        title="Apply Now"
+        onClick={() => setApplyModal(true)}
+        containerStyles={`cursor-pointer w-full flex items-center justify-center text-white bg-black py-3 px-5 outline-none rounded-full text-base`}
+       />
 
-            {openApplyModal && (
-              <CvUpload isOpen={openApplyModal} onClose={()=> setApplyModal(false)}
-               JobId={job?.id} userId={user?.id}
-              />
-            )}
+      {openApplyModal && (
+        <CvUpload
+          isOpen={openApplyModal}
+          onClose={() => setApplyModal(false)}
+          JobId={job?.id}
+          userId={user?.id}
+        />
+      )}
+    </>
+  ) : null}
+   </div>
 
-            </>
 
-            )}
-          </div>
         </div>
          )}
 
