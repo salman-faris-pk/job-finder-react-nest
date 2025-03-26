@@ -202,3 +202,24 @@ export type applydataitems={
    CvUrl: File;
    whyHire?: string;
 };
+
+
+export type MyJobApplication = {
+  id: string;
+  applicationStatus: "PENDING" | "APPROVED" | "REJECTED"; // Add more statuses if needed
+  appliedAt: string; // ISO date string
+  job: {
+    id: string;
+    jobTitle: string;
+    jobType: string;
+    location: string;
+    salary: number;
+    company: {
+      name: string;
+      logo: string;
+    };
+    detail: {
+      desc: string;
+    }[];
+  };
+};

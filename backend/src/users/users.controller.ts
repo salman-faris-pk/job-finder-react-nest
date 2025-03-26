@@ -50,7 +50,7 @@ export class UsersController {
   }
 
 
-@Delete(':id')
+@Delete('application/:id')
 @UseGuards(JwtAuthGuard)
 async withdrawApplication(
   @Param('id') id: string,

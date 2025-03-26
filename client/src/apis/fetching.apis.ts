@@ -91,4 +91,16 @@ export const FindsJobs=async(newURL:string)=>{
 
    return response.data;
 
+};
+
+export const fetchMyApplications = async() => {
+    const response=await API.get("/user/my-applications");
+
+    return response.data;
+};
+
+export const WithDrawApplication =async(id:string,)=>{
+   const response = await API.delete(`/user/application/${id}`);
+
+   return response.data;
 }

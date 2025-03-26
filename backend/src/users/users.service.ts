@@ -156,7 +156,7 @@ export class UsersService {
             where: { id: applicationId }
           });
         
-          return { success: true };
+          return { success: true ,message:"Application Deleted succesfully.."};
 
     }
 
