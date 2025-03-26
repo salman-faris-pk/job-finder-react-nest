@@ -40,44 +40,94 @@ const Applications = () => {
       description: 'Build scalable microservices architecture with Node.js and AWS.'
     },
     {
-        id: 4,
-        jobTitle: 'Backend Engineer',
-        companyName: 'DataSystems Corp',
-        companyLogo: 'https://logo.clearbit.com/datasystems.com',
-        status: 'Offer Received',
-        appliedDate: '2023-10-05',
-        location: 'Austin, TX',
-        salary: '$110K - $140K',
-        type: 'Full-time',
-        description: 'Build scalable microservices architecture with Node.js and AWS.'
-      },
-      {
-        id: 5,
-        jobTitle: 'Backend Engineer',
-        companyName: 'DataSystems Corp',
-        companyLogo: 'https://logo.clearbit.com/datasystems.com',
-        status: 'Offer Received',
-        appliedDate: '2023-10-05',
-        location: 'Austin, TX',
-        salary: '$110K - $140K',
-        type: 'Full-time',
-        description: 'Build scalable microservices architecture with Node.js and AWS.'
-      },
-      {
-        id: 6,
-        jobTitle: 'Backend Engineer',
-        companyName: 'DataSystems Corp',
-        companyLogo: 'https://logo.clearbit.com/datasystems.com',
-        status: 'Offer Received',
-        appliedDate: '2023-10-05',
-        location: 'Austin, TX',
-        salary: '$110K - $140K',
-        type: 'Full-time',
-        description: 'Build scalable microservices architecture with Node.js and AWS.'
-      },
+      id: 4,
+      jobTitle: 'Backend Engineer',
+      companyName: 'DataSystems Corp',
+      companyLogo: 'https://logo.clearbit.com/datasystems.com',
+      status: 'Offer Received',
+      appliedDate: '2023-10-05',
+      location: 'Austin, TX',
+      salary: '$110K - $140K',
+      type: 'Full-time',
+      description: 'Build scalable microservices architecture with Node.js and AWS.'
+    },
+    {
+      id: 5,
+      jobTitle: 'Backend Engineer',
+      companyName: 'DataSystems Corp',
+      companyLogo: 'https://logo.clearbit.com/datasystems.com',
+      status: 'Offer Received',
+      appliedDate: '2023-10-05',
+      location: 'Austin, TX',
+      salary: '$110K - $140K',
+      type: 'Full-time',
+      description: 'Build scalable microservices architecture with Node.js and AWS.'
+    },
+    {
+      id: 6,
+      jobTitle: 'Backend Engineer',
+      companyName: 'DataSystems Corp',
+      companyLogo: 'https://logo.clearbit.com/datasystems.com',
+      status: 'Offer Received',
+      appliedDate: '2023-10-05',
+      location: 'Austin, TX',
+      salary: '$110K - $140K',
+      type: 'Full-time',
+      description: 'Build scalable microservices architecture with Node.js and AWS.'
+    },
+    {
+      id: 7,
+      jobTitle: 'Product Manager',
+      companyName: 'InnovateTech',
+      companyLogo: 'https://logo.clearbit.com/innovatetech.com',
+      status: 'Under Review',
+      appliedDate: '2023-10-18',
+      location: 'San Francisco, CA',
+      salary: '$130K - $160K',
+      type: 'Full-time',
+      description: 'Lead product development and work with cross-functional teams.'
+    },
+    {
+      id: 8,
+      jobTitle: 'DevOps Engineer',
+      companyName: 'CloudScale',
+      companyLogo: 'https://logo.clearbit.com/cloudscale.com',
+      status: 'Interview Scheduled',
+      appliedDate: '2023-10-12',
+      location: 'Remote',
+      salary: '$100 - $140/hr',
+      type: 'Contract',
+      description: 'Implement CI/CD pipelines and manage cloud infrastructure.'
+    },
+    {
+      id: 9,
+      jobTitle: 'Data Scientist',
+      companyName: 'AnalyticsPro',
+      companyLogo: 'https://logo.clearbit.com/analyticspro.com',
+      status: 'Under Review',
+      appliedDate: '2023-10-20',
+      location: 'Boston, MA',
+      salary: '$125K - $155K',
+      type: 'Full-time',
+      description: 'Develop machine learning models and analyze large datasets.'
+    },
+    {
+      id: 10,
+      jobTitle: 'Mobile Developer',
+      companyName: 'AppWorks',
+      companyLogo: 'https://logo.clearbit.com/appworks.com',
+      status: 'Rejected',
+      appliedDate: '2023-10-08',
+      location: 'Chicago, IL',
+      salary: '$115K - $145K',
+      type: 'Full-time',
+      description: 'Build and maintain iOS and Android applications.'
+    }
   ]);
 
   const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const applicationsPerPage = 5;
 
   const statusVariant: any = {
     'Under Review': { 
@@ -139,6 +189,14 @@ const Applications = () => {
     setExpandedId(expandedId === id ? null : id);
   };
 
+  // Pagination logic
+  const indexOfLastApplication = currentPage * applicationsPerPage;
+  const indexOfFirstApplication = indexOfLastApplication - applicationsPerPage;
+  const currentApplications = applications.slice(indexOfFirstApplication, indexOfLastApplication);
+  const totalPages = Math.ceil(applications.length / applicationsPerPage);
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
   return (
     <div className="min-h-screen bg-gray-50/50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
@@ -147,7 +205,7 @@ const Applications = () => {
           <p className="mt-2 text-gray-600">Manage and track your current job applications</p>
         </div>
 
-        <div className={`space-y-5 ${applications.length > 6 ? 'max-h-[700px] overflow-y-auto pr-3' : ''}`}>
+        <div className="space-y-5">
           {applications.length === 0 ? (
             <div className="bg-white rounded-xl p-10 text-left border border-gray-200/70 shadow-sm">
               <div className="h-20 w-20 text-gray-300 mb-6">
@@ -162,90 +220,125 @@ const Applications = () => {
               </button>
             </div>
           ) : (
-            applications.map((application) => (
-              <div 
-                key={application.id} 
-                className={`bg-white rounded-xl border border-gray-200/70 overflow-hidden shadow-xs hover:shadow-sm transition-all duration-200 ${expandedId === application.id ? 'ring-1 ring-gray-300/50' : ''}`}
-              >
-                <div className="p-6">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-start space-x-5">
-                      <div className="flex-shrink-0">
-                        <img
-                          className="h-14 w-14 rounded-lg object-cover border border-gray-200/70 shadow-xs"
-                          src={application.companyLogo}
-                          alt={application.companyName}
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${application.companyName.charAt(0)}&background=random&color=fff&bold=true&font-size=0.5`;
-                          }}
-                        />
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-semibold text-gray-900">{application.jobTitle}</h3>
-                        <p className="text-gray-700 mt-1">{application.companyName}</p>
-                        <div className="mt-4 flex flex-wrap gap-2">
-                          <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${statusVariant[application.status].bg} ${statusVariant[application.status].text} ${statusVariant[application.status].border}`}>
-                            {statusVariant[application.status].icon}
-                            {application.status}
-                          </span>
-                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100/30 text-gray-700 border border-gray-200">
-                            {application.type}
-                          </span>
-                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100/30 text-gray-700 border border-gray-200">
-                            {application.location}
-                          </span>
+            <>
+              <div className="max-h-[700px] overflow-y-auto pr-3">
+                {currentApplications.map((application) => (
+                  <div 
+                    key={application.id} 
+                    className={`bg-white rounded-xl border border-gray-200/70 overflow-hidden shadow-xs hover:shadow-sm transition-all duration-200 mb-5 ${expandedId === application.id ? 'ring-1 ring-gray-300/50' : ''}`}
+                  >
+                    <div className="p-6">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-start space-x-5">
+                          <div className="flex-shrink-0">
+                            <img
+                              className="h-14 w-14 rounded-lg object-cover border border-gray-200/70 shadow-xs"
+                              src={application.companyLogo}
+                              alt={application.companyName}
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${application.companyName.charAt(0)}&background=random&color=fff&bold=true&font-size=0.5`;
+                              }}
+                            />
+                          </div>
+                          <div>
+                            <h3 className="text-xl font-semibold text-gray-900">{application.jobTitle}</h3>
+                            <p className="text-gray-700 mt-1">{application.companyName}</p>
+                            <div className="mt-4 flex flex-wrap gap-2">
+                              <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${statusVariant[application.status].bg} ${statusVariant[application.status].text} ${statusVariant[application.status].border}`}>
+                                {statusVariant[application.status].icon}
+                                {application.status}
+                              </span>
+                              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100/30 text-gray-700 border border-gray-200">
+                                {application.type}
+                              </span>
+                              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100/30 text-gray-700 border border-gray-200">
+                                {application.location}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm text-gray-500">Applied {formatDate(application.appliedDate)}</p>
+                          <p className="mt-1 font-medium text-gray-900">{application.salary}</p>
                         </div>
                       </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm text-gray-500">Applied {formatDate(application.appliedDate)}</p>
-                      <p className="mt-1 font-medium text-gray-900">{application.salary}</p>
-                    </div>
-                  </div>
 
-                  {expandedId === application.id && (
-                    <div className="mt-6 pt-6 border-t border-gray-100/70">
-                      <h4 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-3">Position Details</h4>
-                      <p className="text-gray-700">{application.description}</p>
-                    </div>
-                  )}
-                </div>
-
-                <div className="border-t border-gray-100/70 px-6 py-4 bg-gray-50/30">
-                  <div className="flex justify-between items-center">
-                    <button
-                      onClick={() => toggleExpand(application.id)}
-                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100/50 focus:outline-none focus:ring-1 focus:ring-gray-300 transition-all duration-150"
-                    >
-                      {expandedId === application.id ? (
-                        <>
-                          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7" />
-                          </svg>
-                          Show Less
-                        </>
-                      ) : (
-                        <>
-                          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                          </svg>
-                          View Details
-                        </>
+                      {expandedId === application.id && (
+                        <div className="mt-6 pt-6 border-t border-gray-100/70">
+                          <h4 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-3">Position Details</h4>
+                          <p className="text-gray-700">{application.description}</p>
+                        </div>
                       )}
-                    </button>
+                    </div>
+
+                    <div className="border-t border-gray-100/70 px-6 py-4 bg-gray-50/30">
+                      <div className="flex justify-between items-center">
+                        <button
+                          onClick={() => toggleExpand(application.id)}
+                          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100/50 focus:outline-none focus:ring-1 focus:ring-gray-300 transition-all duration-150"
+                        >
+                          {expandedId === application.id ? (
+                            <>
+                              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7" />
+                              </svg>
+                              Show Less
+                            </>
+                          ) : (
+                            <>
+                              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                              </svg>
+                              View Details
+                            </>
+                          )}
+                        </button>
+                        <button
+                          onClick={() => handleWithdraw(application.id)}
+                          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-xs text-red-700 bg-red-50 hover:bg-red-100 focus:outline-none focus:ring-1 focus:ring-red-300 transition-all duration-150"
+                        >
+                          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                          Withdraw
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Pagination */}
+              {applications.length > applicationsPerPage && (
+                <div className="flex justify-center mt-6">
+                  <div className="flex space-x-2">
                     <button
-                      onClick={() => handleWithdraw(application.id)}
-                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-xs text-red-700 bg-red-50 hover:bg-red-100 focus:outline-none focus:ring-1 focus:ring-red-300 transition-all duration-150"
+                      onClick={() => paginate(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className={`px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium ${currentPage === 1 ? 'text-gray-400 bg-gray-50 cursor-not-allowed' : 'text-gray-700 bg-white hover:bg-gray-50'}`}
                     >
-                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
-                      Withdraw
+                      Previous
+                    </button>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
+                      <button
+                        key={number}
+                        onClick={() => paginate(number)}
+                        className={`px-4 py-2 border rounded-lg text-sm font-medium ${currentPage === number ? 'bg-gray-900 text-white border-gray-900' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}
+                      >
+                        {number}
+                      </button>
+                    ))}
+                    <button
+                      onClick={() => paginate(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      className={`px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium ${currentPage === totalPages ? 'text-gray-400 bg-gray-50 cursor-not-allowed' : 'text-gray-700 bg-white hover:bg-gray-50'}`}
+                    >
+                      Next
                     </button>
                   </div>
                 </div>
-              </div>
-            ))
+              )}
+            </>
           )}
         </div>
       </div>

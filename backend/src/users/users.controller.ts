@@ -1,4 +1,4 @@
-import { Body, Controller, Get,Put,Req, UploadedFile, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get,Param,Put,Req, UploadedFile, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UserIdRequest } from 'src/auth/types/auth-jwtPayload';
@@ -41,5 +41,22 @@ export class UsersController {
 
     return this.usersService.UpdateTheUser(req.user.id,updatedUserdto)
   }
+
+
+  @Get('my-applications')
+  @UseGuards(JwtAuthGuard)
+  async AppliedApplications(@Req() req:UserIdRequest){
+    return this.usersService.MyApplications(req.user.id)
+  }
+
+
+@Delete(':id')
+@UseGuards(JwtAuthGuard)
+async withdrawApplication(
+  @Param('id') id: string,
+  @Req() req: UserIdRequest
+) {
+  return this.usersService.withdrawApplication(id, req.user.id);
+}
 
 }

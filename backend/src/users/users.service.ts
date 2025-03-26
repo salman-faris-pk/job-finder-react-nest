@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -85,6 +85,81 @@ export class UsersService {
         return user ? { user } : { company };
 
     };
+
+    async MyApplications(userId:string){
+
+        const JobAplication=await this.prisma.jobApplication.findMany({
+            where:{userId: userId},
+            include: {
+                job: {
+                  select: {
+                    id: true,
+                    jobTitle: true,
+                    company: {
+                        select: {
+                            profileUrl: true,
+                            name: true,
+                        }
+                    },
+                    detail: {
+                        select:{
+                            desc: true
+                        }
+                    },
+                    location: true,
+                    salary: true,
+                    jobType: true,
+                  }
+                }
+              },
+              orderBy: {
+                appliedAt: 'desc'
+              }
+        });
+
+        return {
+            success: true,
+            applications: JobAplication.map(app => ({
+                id: app.id,
+                applicationStatus: app.applicationStatus,
+                appliedAt: app.appliedAt,
+                job: {
+                    ...app.job,
+                    company: {
+                        logo: app.job.company?.profileUrl,
+                        name: app.job.company?.name,
+                    }
+                }
+            }))
+        }
+
+    };
+
+
+
+    async withdrawApplication(applicationId:string,userId:string){
+
+        const application = await this.prisma.jobApplication.findUnique({
+            where: { id: applicationId },
+            select: { userId: true }
+          });
+        
+          if (!application) {
+            throw new NotFoundException('Application not found');
+          }
+        
+          if (application.userId !== userId) {
+            throw new ForbiddenException('You can only withdraw your own applications');
+          }
+        
+          await this.prisma.jobApplication.delete({
+            where: { id: applicationId }
+          });
+        
+          return { success: true };
+
+    }
+
 
 
 }
