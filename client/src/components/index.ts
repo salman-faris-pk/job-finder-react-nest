@@ -5,6 +5,7 @@ import CustomButton from "./CustomButton";
 import Bgloader from "./Loaders/Bgloader";
 import DeleteModal from "./DeleteModal";
 import CvUpload from "./CvUpload";
+import CompanyAplicants from "./CompanyAplicants";
 
 
 export {
@@ -15,4 +16,5 @@ export {
     Bgloader,
     DeleteModal,
     CvUpload,
+    CompanyAplicants
 }

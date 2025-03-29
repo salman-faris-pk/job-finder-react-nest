@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import moment from "moment";
 import { AiOutlineSafetyCertificate } from "react-icons/ai";
 import { useParams } from "react-router-dom";
-import { CustomButton, CvUpload, DeleteModal, JobCard } from "../components";
+import { CompanyAplicants, CustomButton, CvUpload, DeleteModal, JobCard } from "../components";
 import { useSelector } from "../redux/store";
 import { deletePost, JobDetailById } from "../apis/fetching.apis";
 import { Job } from "../utils/types";
@@ -240,32 +240,40 @@ const JobDetail = () => {
   ) : null}
    </div>
 
-
         </div>
          )}
 
          
-
         {/* RIGHT SIDE */}
-        <div className='w-full md:w-1/3 2xl:w-2/4 p-5 mt-20 md:mt-0'>
-          <p className='text-gray-500 font-semibold'>Similar Job Post</p>
+   <div className='w-full md:w-1/3 2xl:w-2/4 p-1 shadow-md'>
+    {user?.id === job?.companyId ? (
+        <CompanyAplicants />
+  ) : (
+    <>
+      <p className='text-gray-500 font-semibold'>Similar Job Posts</p>
+      <div className="w-full flex flex-wrap gap-4">
+        {smilarJobs?.length > 0 ? (
+          smilarJobs.slice(0, 6).map((job, index) => (
+            <JobCard 
+              job={{
+                ...job,
+                name: job?.company.name,
+                logo: job?.company.profileUrl
+              }} 
+              key={index} 
+            />
+          ))
+        ) : (
+          <p className="w-full text-center mt-10 text-gray-500 text-sm">
+            No similar jobs available
+          </p>
+        )}
+      </div>
+    </>
+  )}
+</div>
 
-          <div className="w-full flex flex-wrap gap-4">
-          {smilarJobs?.length > 0 ? (
-              smilarJobs.slice(0, 6).map((job, index) => {
-               const data = {
-                 ...job,
-                 name: job?.company.name,
-                logo: job?.company.profileUrl,
-                };
 
-               return <JobCard job={data} key={index} />;
-            })
-          ) : (
-          <p className="w-full text-center mt-10 text-gray-500 text-sm">No similar jobs available .</p>
-          )}
-          </div>
-        </div>
       </div>
     </div>
   );

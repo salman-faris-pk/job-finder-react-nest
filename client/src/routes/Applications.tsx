@@ -4,6 +4,7 @@ import { useSelector } from "../redux/store";
 import { fetchMyApplications, WithDrawApplication } from "../apis/fetching.apis";
 import Loading from "../components/Loaders/Loading";
 import { MyJobApplication } from "../utils/types";
+import { useNavigate } from "react-router-dom";
 
 enum ApplicationStatus {
   PENDING = "PENDING",
@@ -13,6 +14,7 @@ enum ApplicationStatus {
 
 const Applications = () => {
   const { user } = useSelector((state) => state.user);
+  const navigate=useNavigate()
   const [applications, setApplications] = useState<MyJobApplication[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -112,7 +114,9 @@ const Applications = () => {
                 Your submitted job applications will appear here once you apply
               </p>
               <div className="mt-4 sm:mt-6">
-                <button className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg text-sm transition-all duration-200 shadow-sm hover:shadow-md">
+                <button className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg text-sm transition-all duration-200 shadow-sm hover:shadow-md"
+                 onClick={()=> navigate('/find-jobs')}
+                >
                   Explore Career Opportunities
                 </button>
               </div>
