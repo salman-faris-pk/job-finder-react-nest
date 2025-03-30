@@ -206,8 +206,8 @@ export type applydataitems={
 
 export type MyJobApplication = {
   id: string;
-  applicationStatus: "PENDING" | "APPROVED" | "REJECTED"; // Add more statuses if needed
-  appliedAt: string; // ISO date string
+  applicationStatus: "PENDING" | "APPROVED" | "REJECTED"; 
+  appliedAt: string; 
   job: {
     id: string;
     jobTitle: string;
@@ -223,3 +223,13 @@ export type MyJobApplication = {
     }[];
   };
 };
+
+
+export type JobUserApplicants= {
+  id: string;
+  firstName: string;
+  location: string;
+  profileUrl: string;
+  applicationStatus: "PENDING" | "APPROVED" | "REJECTED"; 
+  appliedAt: string; 
+}

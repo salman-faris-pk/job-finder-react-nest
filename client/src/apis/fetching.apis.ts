@@ -103,4 +103,10 @@ export const WithDrawApplication =async(id:string,)=>{
    const response = await API.delete(`/user/application/${id}`);
 
    return response.data;
+};
+
+export const JobApplicants=async(id:string)=>{
+   const response=await API.get(`/jobs/job-applicants/${id}`);
+
+   return response.data;
 }

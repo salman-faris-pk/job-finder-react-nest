@@ -9,6 +9,7 @@ import { CompaniesService } from 'src/companies/companies.service';
 import { UpdateJobDto } from './dtos/update.dto';
 import { JobQueryDto } from './dtos/job-query.dto';
 import { ApplyJobDto } from './dtos/applyjob.dto';
+import { DeleteAppliacntDTO, UpdateJobStatusDTO } from './dtos/update.status.dto';
 
 @Injectable()
 export class JobsService {
@@ -370,7 +371,61 @@ async JobApplicants(JobId:string){
 
   return {
     success: true,
-    Applications: flattenedApplications
+    Applications: flattenedApplications,
+    count: flattenedApplications.length,
+  };
+
+};
+
+
+async updateApplicationStatus(updateStatus:UpdateJobStatusDTO){
+  
+   const {jobId,userId,newStatus}=updateStatus;
+
+   const updatedStatus= await this.prisma.jobApplication.updateMany({
+    where:{
+      jobId: jobId,
+      userId: userId,
+    },
+    data: {
+      applicationStatus: newStatus
+    }
+   });
+
+   if (updatedStatus.count === 0) {
+    return {
+      success: false,
+      message: "No application found to update"
+    };
+   }
+
+   return {
+    success: true,
+    message: "Status updated successfully"
+  };
+};
+
+
+async deleteJobApplicationByCompany(dleteDto:DeleteAppliacntDTO){
+  const { jobId,userId }=dleteDto;
+
+  const deleted= await this.prisma.jobApplication.deleteMany({
+    where:{
+      jobId: jobId,
+      userId: userId,
+    }
+  });
+
+  if (deleted.count === 0) {
+    return {
+      success: false,
+      message: "No application found to delete"
+    };
+  }
+
+  return {
+    success: true,
+    message: "Application deleted successfully",
   };
 
 };

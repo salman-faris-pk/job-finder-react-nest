@@ -10,6 +10,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { CvUploadInterceptor } from './interceptor/jobupload.interceptor';
 import { memoryStorage } from 'multer';
 import { Request } from 'express';
+import { DeleteAppliacntDTO, UpdateJobStatusDTO } from './dtos/update.status.dto';
 
 @Controller('jobs')  
 export class JobsController {
@@ -70,5 +71,16 @@ export class JobsController {
     return this.jobsService.JobApplicants(id)
   }
 
+  @Put('update-status')
+  @UseGuards(JwtAuthGuard)
+  async updateStatus(@Body() updateStatus:UpdateJobStatusDTO){
+   return this.jobsService.updateApplicationStatus(updateStatus)
+  }
+
+  @Delete('remove-userApplicant')
+  @UseGuards(JwtAuthGuard)
+  async dleteUserApp(@Body() deleteUserids:DeleteAppliacntDTO){
+   return this.jobsService.deleteJobApplicationByCompany(deleteUserids)
+  }
   
 }

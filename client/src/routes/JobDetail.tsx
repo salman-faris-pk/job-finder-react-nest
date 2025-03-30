@@ -247,7 +247,7 @@ const JobDetail = () => {
         {/* RIGHT SIDE */}
    <div className='w-full md:w-1/3 2xl:w-2/4 p-1 shadow-md'>
     {user?.id === job?.companyId ? (
-        <CompanyAplicants />
+        <CompanyAplicants jobId={job?.id}/>
   ) : (
     <>
       <p className='text-gray-500 font-semibold'>Similar Job Posts</p>
