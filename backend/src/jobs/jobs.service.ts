@@ -341,5 +341,38 @@ async JobApplying(applyJob: ApplyJobDto){
 };
 
 
+async JobApplicants(JobId:string){
+
+  const JobApplicants=await  this.prisma.jobApplication.findMany({
+    where:{ jobId: JobId},
+    select:{
+      applicationStatus: true,
+      appliedAt: true,
+      user:{
+        select:{
+          id: true,
+          location: true,
+          profileUrl: true,
+          firstName: true,
+        }
+      }
+    },
+    orderBy: {
+      appliedAt: "desc"
+    }
+  });
+  
+  const flattenedApplications = JobApplicants.map(app => ({
+    ...app.user, 
+    applicationStatus: app.applicationStatus,
+    appliedAt: app.appliedAt
+  }));
+
+  return {
+    success: true,
+    Applications: flattenedApplications
+  };
+
+};
 
 }

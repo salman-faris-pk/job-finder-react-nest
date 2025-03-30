@@ -64,5 +64,11 @@ export class JobsController {
   }
 
 
+  @Get('job-applicants/:id')
+  @UseGuards(JwtAuthGuard)
+  async JobApplicants(@Param('id') id:string) {
+    return this.jobsService.JobApplicants(id)
+  }
 
+  
 }
