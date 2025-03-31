@@ -176,6 +176,13 @@ const Applications = () => {
                                 {application?.job?.location}
                               </span>
                             </div>
+                             
+                            {application.applicationStatus === ApplicationStatus.ACCEPTED && (
+                         <p className="mt-2 text-xs sm:text-sm text-green-600 font-medium">
+                           Additional information will be sent to your email soon
+                        </p>
+                        )}
+
                           </div>
                         </div>
                         <div className="text-left sm:text-right">

@@ -87,7 +87,7 @@ export type FooterLink = {
 
   export enum ApplicationStatus {
     PENDING = "PENDING",
-    APPROVED = "APPROVED",
+    APPROVED = "ACCEPTED",
     REJECTED = "REJECTED",
   }
   
@@ -206,7 +206,7 @@ export type applydataitems={
 
 export type MyJobApplication = {
   id: string;
-  applicationStatus: "PENDING" | "APPROVED" | "REJECTED"; 
+  applicationStatus: "PENDING" | "ACCEPTED" | "REJECTED"; 
   appliedAt: string; 
   job: {
     id: string;
