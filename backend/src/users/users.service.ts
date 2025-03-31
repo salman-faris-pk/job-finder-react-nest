@@ -158,7 +158,31 @@ export class UsersService {
         
           return { success: true ,message:"Application Deleted succesfully.."};
 
-    }
+    };
+
+
+    async FindUserById(id:string){
+        
+        const user=await this.prisma.user.findUnique({
+            where:{id},
+            omit:{
+                hashedRefreshToken: true,
+                password:true,
+                updatedAt: true,
+                accountType: true,
+                createdAt: true
+            }
+        });
+
+        if(!user){
+            throw new NotFoundException(`No user found with id: ${id}`);
+        }
+
+        return{
+            success: true,
+            user
+        }
+    };
 
 
 

@@ -5,7 +5,6 @@ import { ApplicationStattus, JobUserApplicants } from '../utils/types';
 import moment from 'moment';
 import Loading from './Loaders/Loading';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from '../redux/store';
 
 interface CompanyApplicantsProps {
     jobId?: string; 
@@ -14,7 +13,6 @@ interface CompanyApplicantsProps {
 const CompanyApplicants = ({jobId}:CompanyApplicantsProps) => {
 
   const navigate=useNavigate();
-  const {user}=useSelector((state)=> state.user)
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(7);
   const containerRef = useRef(null);
@@ -24,7 +22,7 @@ const CompanyApplicants = ({jobId}:CompanyApplicantsProps) => {
   const [isLoading, setIsLoading] = useState(false);
    
   const formatTimeAgo = (dateString: string) => {
-    return moment(dateString).fromNow();
+    return moment(dateString).fromNow(true) + " ago";
   };
 
   const FetchApllicants = async() => {
@@ -159,8 +157,8 @@ const CompanyApplicants = ({jobId}:CompanyApplicantsProps) => {
                       alt="Applicant"
                     />
                     <div>
-                      <h3 className="font-medium text-gray-900"
-                       onClick={()=> navigate(`/user-profile/${user?.id}`)}
+                      <h3 className="font-medium text-gray-900 cursor-pointer"
+                       onClick={()=> navigate(`/user-profile/${applicant?.id}`)}
                       >{applicant.firstName}</h3>
                       <p className="text-sm text-gray-500 flex items-center mt-1">
                         <svg className="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

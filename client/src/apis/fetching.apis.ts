@@ -125,3 +125,8 @@ export const updateApplicationStatus = async (data: {
    const res = await API.delete('/jobs/remove-userApplicant', { data });
    return res.data;
  };
+
+ export const userById= async(id:string)=>{
+   const res=await API.get(`/user/userBy/${id}`)
+   return res.data;
+ }

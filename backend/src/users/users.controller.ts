@@ -59,4 +59,10 @@ async withdrawApplication(
   return this.usersService.withdrawApplication(id, req.user.id);
 }
 
+@Get('userBy/:id')
+@UseGuards(JwtAuthGuard)
+async UserById(@Param('id') id: string) {
+  return this.usersService.FindUserById(id);
+}
+
 }
