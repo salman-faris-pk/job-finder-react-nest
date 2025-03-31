@@ -109,4 +109,19 @@ export const JobApplicants=async(id:string)=>{
    const response=await API.get(`/jobs/job-applicants/${id}`);
 
    return response.data;
-}
+};
+
+export const updateApplicationStatus = async (data: {
+   jobId: string;
+   userId: string;
+   newStatus: string;
+ }) => {
+   const res = await API.put('/jobs/update-status', data);
+   return res.data;
+ };
+ 
+ export const deleteJobApplication = async (data: {jobId: string;userId: string;}) => {
+   
+   const res = await API.delete('/jobs/remove-userApplicant', { data });
+   return res.data;
+ };

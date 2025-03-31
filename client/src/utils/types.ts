@@ -224,12 +224,13 @@ export type MyJobApplication = {
   };
 };
 
+export type ApplicationStattus = "PENDING" | "ACCEPTED" | "REJECTED";
 
 export type JobUserApplicants= {
   id: string;
   firstName: string;
   location: string;
   profileUrl: string;
-  applicationStatus: "PENDING" | "APPROVED" | "REJECTED"; 
+  applicationStatus: ApplicationStattus; 
   appliedAt: string; 
 }

@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
-import { JobApplicants } from '../apis/fetching.apis';
+import { JobApplicants, updateApplicationStatus, deleteJobApplication } from '../apis/fetching.apis';
 import { toast } from 'sonner';
-import { JobUserApplicants } from '../utils/types';
+import { ApplicationStattus, JobUserApplicants } from '../utils/types';
 import moment from 'moment';
+import Loading from './Loaders/Loading';
 
 interface CompanyApplicantsProps {
     jobId?: string; 
@@ -14,29 +15,37 @@ const CompanyApplicants = ({jobId}:CompanyApplicantsProps) => {
   const containerRef = useRef(null);
   const [totalPages, setTotalPages] = useState(1);
   const [applicants, setApplicants] = useState<JobUserApplicants[]>([]);
-  const [count,setCount]=useState<number | null>(null)
+  const [count,setCount]=useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
    
   const formatTimeAgo = (dateString: string) => {
     return moment(dateString).fromNow();
   };
 
-  const FetchApllicants=async()=>{
+  const FetchApllicants = async() => {
     if(!jobId){
-        toast.error('there is no job Id!')
+        toast.error('there is no job Id!');
         return;
     }
-    const res=await JobApplicants(jobId)
-    if(res.success){
-        setApplicants(res?.Applications);
-        setCount(res?.count)
-    }else{
-        toast.error('error fetching applicants!')
+    setIsLoading(true);
+    try {
+      const res = await JobApplicants(jobId);
+      if(res.success){
+          setApplicants(res?.Applications);
+          setCount(res?.count);
+      } else {
+          toast.error('Error fetching applicants!');
+      }
+    } catch (error) {
+      toast.error('Failed to fetch applicants');
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     FetchApllicants();
-  },[])
+  }, [jobId]);
 
   useEffect(() => {
     setTotalPages(Math.ceil(applicants.length / itemsPerPage));
@@ -61,15 +70,70 @@ const CompanyApplicants = ({jobId}:CompanyApplicantsProps) => {
     }
   };
 
-  const handleDelete = (id:string) => {
-    setApplicants(applicants.filter(applicant => applicant.id !== id));
+  const handleStatusChange = async (userId: string, newStatus: string) => {
+    if (!jobId) {
+      toast.error('Job ID is missing');
+      return;
+    };
+    if (!userId) {
+        toast.error('userId is missing');
+        return;
+    };
+    
+    try {
+      const response = await updateApplicationStatus({jobId,userId,newStatus});        
+      if (response.success) {
+        toast.success('Status updated successfully');
+        setApplicants(applicants.map(applicant => 
+          applicant.id === userId 
+            ? { 
+                ...applicant,
+             applicationStatus: newStatus as ApplicationStattus
+            } 
+            : applicant
+        ));
+      } else {
+        toast.error(response?.message || 'Failed to update status');
+      }
+    } catch (error) {
+      toast.error('An error occurred while updating status');
+    }
+  };
+
+  const handleDelete = async (userId: string) => {
+    if (!jobId) {
+      toast.error('Job ID is missing');
+      return;
+    };
+    if (!userId) {
+        toast.error('userId is missing');
+        return;
+    };
+    
+    try {
+      const response = await deleteJobApplication({ jobId, userId});
+      
+      if (response.success) {
+        toast.success('Application deleted successfully');
+        setApplicants(applicants.filter(applicant => applicant.id !== userId));
+        setCount(prevCount => prevCount ? prevCount - 1 : null);
+      } else {
+        toast.error(response.message || 'Failed to delete application');
+      }
+    } catch (error) {
+      toast.error('An error occurred while deleting application');
+    }
   };
 
   return (
     <div className="w-full h-full p-4 bg-white flex flex-col">
       <h2 className="text-lg font-semibold text-gray-800 mb-4">Applicants ({count})</h2>
       
-      {applicants.length === 0 ? (
+      {isLoading ? (
+        <>
+         <Loading />
+        </>
+      ) : applicants.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center text-gray-500">
           <svg className="w-16 h-16 mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -104,12 +168,13 @@ const CompanyApplicants = ({jobId}:CompanyApplicantsProps) => {
                   <div className="flex flex-col items-end gap-2">
                     <div className="flex items-center gap-2">
                       <select
-                        defaultValue={applicant.applicationStatus}
+                        value={applicant.applicationStatus}
+                        onChange={(e) => handleStatusChange(applicant.id, e.target.value)}
                         className="text-xs py-1.5 px-2 rounded border bg-yellow-50 border-yellow-200 text-yellow-800 focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                       >
-                        <option value="pending">Pending</option>
-                        <option value="accepted">Accepted</option>
-                        <option value="rejected">Rejected</option>
+                        <option value="PENDING">Pending</option>
+                        <option value="ACCEPTED">Accepted</option>
+                        <option value="REJECTED">Rejected</option>
                       </select>
               
                       <button 
