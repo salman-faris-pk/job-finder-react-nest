@@ -252,7 +252,8 @@ const Applications = () => {
                             </>
                           )}
                         </button>
-                        {application.applicationStatus === ApplicationStatus.PENDING && (
+                        {(application.applicationStatus === ApplicationStatus.PENDING || 
+                            application.applicationStatus === ApplicationStatus.REJECTED) && (
                           <button
                             onClick={() => handleWithdraw(application.id)}
                             className="w-full sm:w-auto inline-flex justify-center items-center px-3 py-1.5 sm:px-4 sm:py-2 border border-transparent text-sm font-medium rounded-lg shadow-xs text-red-700 bg-red-50 hover:bg-red-100 focus:outline-none focus:ring-1 focus:ring-red-300 transition-all duration-150"
