@@ -6,12 +6,13 @@ import { JobsModule } from './jobs/jobs.module';
 import { CompaniesModule } from './companies/companies.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { AppController } from "./app.controller"
+import { CronService} from "./cron.service"
 
 @Module({
   imports: [
     PrismaModule, AuthModule, UsersModule, JobsModule, CompaniesModule, CloudinaryModule],
   controllers: [AppController],
-  providers: [],
+  providers: [CronService],
 })
 
 export class AppModule {}
