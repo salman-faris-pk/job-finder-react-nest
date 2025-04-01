@@ -5,14 +5,14 @@ import axios from 'axios'
 @Injectable()
 export class CronService implements OnModuleInit {
   onModuleInit() {
-    cron.schedule('12,26,40,54 * * * *', async () => {
+    cron.schedule('*/14 * * * *', async () => {
       try {
         
         const res = await axios.get('https://job-finder-romk.onrender.com/dummy');
         if (res.status === 200) {
           console.log("GET request sent successfully");
         } else {
-          console.log("GET request failed", res.status);
+          console.log("GET request failed", res.status);  
         }
         
       } catch (error) {
