@@ -8,7 +8,7 @@ export class CronService implements OnModuleInit {
     cron.schedule('*/14 * * * *', async () => {
       try {
         
-        const res = await axios.get(process.env.FRONTEND_URL as string);
+        const res = await axios.get('https://job-finder-romk.onrender.com/dummy');
         if (res.status === 200) {
           console.log("GET request sent successfully");
         } else {
