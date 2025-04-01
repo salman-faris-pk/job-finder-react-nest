@@ -4,6 +4,6 @@ import { Controller, Get } from '@nestjs/common';
 export class AppController {
   @Get('dummy')
   dummyRoute() {
-    return { status: true,message: 'Hello, world! Cron job triggered.' };
+    return { status: 'OK',message: 'Hello, world! Cron job triggered.' };
   }
 }
