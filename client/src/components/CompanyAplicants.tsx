@@ -5,6 +5,7 @@ import { ApplicationStattus, JobUserApplicants } from '../utils/types';
 import moment from 'moment';
 import Loading from './Loaders/Loading';
 import { useNavigate } from 'react-router-dom';
+import DownloadDropdown from './DownloadDropdown';
 
 interface CompanyApplicantsProps {
     jobId?: string; 
@@ -128,6 +129,8 @@ const CompanyApplicants = ({jobId}:CompanyApplicantsProps) => {
     }
   };
 
+
+
   return (
     <div className="w-full h-full p-4 bg-white flex flex-col">
       <h2 className="text-lg font-semibold text-gray-800 mb-4">Applicants ({count})</h2>
@@ -154,7 +157,7 @@ const CompanyApplicants = ({jobId}:CompanyApplicantsProps) => {
                     <img 
                       src={applicant.profileUrl} 
                       className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
-                      alt="Applicant"
+                      alt={applicant.firstName}
                     />
                     <div>
                       <h3 className="font-medium text-gray-900 cursor-pointer"
@@ -172,6 +175,9 @@ const CompanyApplicants = ({jobId}:CompanyApplicantsProps) => {
             
                   <div className="flex flex-col items-end gap-2">
                     <div className="flex items-center gap-2">
+                     
+                    <DownloadDropdown CVUrl={applicant?.CvUrl} />
+                     
                       <select
                         value={applicant.applicationStatus}
                         onChange={(e) => handleStatusChange(applicant.id, e.target.value)}

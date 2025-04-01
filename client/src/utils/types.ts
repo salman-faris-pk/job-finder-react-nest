@@ -231,6 +231,7 @@ export type JobUserApplicants= {
   firstName: string;
   location: string;
   profileUrl: string;
+  CvUrl: string;
   applicationStatus: ApplicationStattus; 
   appliedAt: string; 
 }

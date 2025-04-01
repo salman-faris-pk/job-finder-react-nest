@@ -349,6 +349,7 @@ async JobApplicants(JobId:string){
     select:{
       applicationStatus: true,
       appliedAt: true,
+      CvUrl: true,
       user:{
         select:{
           id: true,
@@ -366,7 +367,8 @@ async JobApplicants(JobId:string){
   const flattenedApplications = JobApplicants.map(app => ({
     ...app.user, 
     applicationStatus: app.applicationStatus,
-    appliedAt: app.appliedAt
+    appliedAt: app.appliedAt,
+    CvUrl: app.CvUrl
   }));
 
   return {

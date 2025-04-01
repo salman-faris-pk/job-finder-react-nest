@@ -11,6 +11,7 @@ import JobCard from "../components/JobCard";
 import { FindsJobs, updateURL } from "../apis/fetching.apis";
 import { Job } from "../utils/types";
 import Loading from "../components/Loaders/Loading";
+import { AxiosError } from "axios";
 
 const FindJobs = () => {
   const [sort, setSort] = useState("Newest");
@@ -28,8 +29,10 @@ const FindJobs = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const fetchJobs = async () => {
+  const fetchJobs = async (controller: AbortController) => {
     setIsFetching(true);
+  
+    const { signal } = controller;
 
     const newURL =
       updateURL({
@@ -42,22 +45,34 @@ const FindJobs = () => {
         jType: filterJobTypes,
         exp: filterExp,
       }) || "";
-
+  
     try {
-      const res = await FindsJobs(newURL);
-
-      setNumPage(res?.numOfPage);
-      setRecordCount(res?.totalJobs);
-      setData(res?.data);
-
-      setIsFetching(false);
+      const res = await FindsJobs(newURL,  signal );
+  
+      if (!signal.aborted) {
+        setNumPage(res?.numOfPage);
+        setRecordCount(res?.totalJobs);
+        setData(res?.data);
+      }
     } catch (error) {
-      console.log(error);
+      if ((error as AxiosError).code === 'ERR_CANCELED') {
+        return;
+      }
+      console.error((error as AxiosError).message);
+    
+    } finally {
+      setIsFetching(false);
     }
   };
+  
 
   useEffect(() => {
-    fetchJobs();
+    const controller = new AbortController();
+    fetchJobs(controller);
+  
+    return ()=> {
+      controller.abort();
+    }
   }, [page, searchQuery, jobLocation, sort, filterJobTypes, filterExp]);
 
   const filterJobs = (val: string) => {
@@ -78,7 +93,9 @@ const FindJobs = () => {
 
   const handleSearchSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await fetchJobs();
+    const controller = new AbortController();
+
+    await fetchJobs(controller);
   };
 
   const handleLoadMore = async (e: React.MouseEvent<HTMLButtonElement>) => {

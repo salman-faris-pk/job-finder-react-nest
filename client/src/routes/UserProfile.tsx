@@ -8,6 +8,7 @@ import { BiLinkExternal } from "react-icons/bi";
 import { useParams } from "react-router-dom";
 import { userById } from "../apis/fetching.apis";
 import Loading from "../components/Loaders/Loading";
+import { AxiosError } from "axios";
 
 interface UserData {
   firstName?: string;
@@ -31,16 +32,19 @@ const UserProfile = () => {
 
   const isCurrentUserProfile = !id || id === currentUser?.id;
 
-  const fetchUserById = async () => {
+  const fetchUserById = async (signal:AbortSignal) => {
     if (!id) return;
     
     try {
       setIsLoading(true);
-      const res = await userById(id);
+      const res = await userById(id,signal);
       if (res.success) {
         setUserData(res.user);
       }
     } catch (error) {
+       if ((error as AxiosError).code === 'ERR_CANCELED') {
+          return;
+        }
       console.error("Failed to fetch user data:", error);
     } finally {
       setIsLoading(false);
@@ -52,7 +56,13 @@ const UserProfile = () => {
       setUserData(currentUser || {});
       setIsLoading(false);
     } else {
-      fetchUserById();
+      const controller = new AbortController();
+      const { signal } = controller;
+      fetchUserById(signal);
+
+      return () => {
+        controller.abort();
+      };
     }
   }, [id, currentUser, isCurrentUserProfile]);
 

@@ -8,6 +8,7 @@ import { deletePost, JobDetailById } from "../apis/fetching.apis";
 import { Job } from "../utils/types";
 import Loading from "../components/Loaders/Loading";
 import { toast } from "sonner";
+import { AxiosError } from "axios";
 
 
 const JobDetail = () => {
@@ -23,7 +24,7 @@ const JobDetail = () => {
   const [applicationCount,setAppCount]=useState<number | null>(null)
 
   
-  const getjoBDetail =async()=>{
+  const getjoBDetail =async(signal: AbortSignal)=>{
      setIsFetching(true)
 
      if (!id) {
@@ -32,22 +33,33 @@ const JobDetail = () => {
     };
 
      try {
-        const res=await JobDetailById(id);
+        const res=await JobDetailById(id,signal);
          
-        setJob(res?.data)
+        setJob(res?.data)  
 
         const filteredSimilarJobs = res?.similarJobs?.filter((similarJob: Job) => similarJob.id !== id);
         setSimilarJobs(filteredSimilarJobs);
+
         setAppCount(res?.applicationCount)
         setIsFetching(false)
      } catch (error) {
+       if ((error as AxiosError).code === 'ERR_CANCELED') {
+                return;
+        }
       console.log(error);
      }
   };
 
   useEffect(() => {
-     id && getjoBDetail();
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    const controller = new AbortController();
+    const { signal } = controller;
+
+     id && getjoBDetail(signal);
+     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+
+     return () => {
+      controller.abort();
+    };
   }, [id]);
 
 

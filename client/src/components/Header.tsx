@@ -40,6 +40,7 @@ const SearchInput = ({ placeholder, icon, value, setValue, styles }:SearchInputP
 
 
 const Header = ({title,type,handleClick,searchQuery,setSearchQuery, location,setLocation}:HeaderProps) => {
+  
   return (
     <div className='bg-[#f7fdfd]'>
       <div
@@ -48,7 +49,7 @@ const Header = ({title,type,handleClick,searchQuery,setSearchQuery, location,set
         } flex items-center relative`}
       >
 
-        {/**title and serchBar */}
+        {/**title and searchBar */}
         <div className='w-full z-10'>
           <div className='mb-8'>
             <p className='text-slate-700 font-bold text-4xl'>{title}</p>

@@ -10,6 +10,7 @@ import { Companies } from "../utils/types";
 import CompanyForm from "../components/CompanyForm";
 import { useSelector } from "../redux/store";
 import { CompanyById } from "../apis/fetching.apis";
+import { AxiosError } from "axios";
 
 const CompanyProfile = () => {
   const params = useParams();
@@ -19,7 +20,7 @@ const CompanyProfile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [openForm, setOpenForm] = useState(false);
   
-  const fetchCompany=async()=>{
+  const fetchCompany=async(signal: AbortSignal)=>{
       setIsLoading(true)
       let id : string | null=null;
 
@@ -30,11 +31,14 @@ const CompanyProfile = () => {
       };
 
       try {
-        const res=await CompanyById(id);
+        const res=await CompanyById(id,signal);
         setInfo(res)
         setIsLoading(false)
         
       } catch (error) {
+        if ((error as AxiosError).code === 'ERR_CANCELED') {
+                  return;
+        }
         console.log(error);
         setIsLoading(false)
       }
@@ -42,8 +46,15 @@ const CompanyProfile = () => {
 
   
   useEffect(() => {
-     fetchCompany();
+    const controller = new AbortController();
+    const { signal } = controller;
+
+     fetchCompany(signal);
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+
+    return ()=> {
+      controller.abort();
+    }
   }, []);
 
   if (isLoading) {
@@ -119,3 +130,6 @@ const CompanyProfile = () => {
 }
 
 export default CompanyProfile
+
+
+

@@ -4,8 +4,8 @@ import { UpdateURLParams } from "../utils/types";
 
 
 
-export const CompanyById=async(id: string | null)=>{
-   const response=await API.get(`/companies/${id}`)
+export const CompanyById=async(id: string | null,signal: AbortSignal)=>{
+   const response=await API.get(`/companies/${id}`,{signal})
    
    return response.data.data;
 };
@@ -61,17 +61,17 @@ export const updateURL=({pageNum,query,cmpLoc,sort,navigate,location,jType,exp}:
 };
 
 
-export const GetCompanies=async(newURL:string)=>{
-   const response=await API.get(newURL);
+export const GetCompanies=async(newURL:string,signal: AbortSignal)=>{
+   const response=await API.get(newURL,{signal});
    return response.data;
 
 };
 
 
 
-export const JobDetailById=async(id:string)=>{
+export const JobDetailById=async(id:string, signal: AbortSignal)=>{
 
-   const response=await API.get(`/jobs/job-detail/${id}`);
+   const response=await API.get(`/jobs/job-detail/${id}`,{signal});
 
    return response.data;
 
@@ -85,12 +85,10 @@ export const deletePost=async(id: string)=> {
 };
 
 
-export const FindsJobs=async(newURL:string)=>{
+export const FindsJobs=async(newURL:string,signal: AbortSignal)=>{
 
-   const response=await API.get("/jobs"+newURL);
-
+   const response=await API.get("/jobs"+newURL, { signal });
    return response.data;
-
 };
 
 export const fetchMyApplications = async() => {
@@ -126,7 +124,7 @@ export const updateApplicationStatus = async (data: {
    return res.data;
  };
 
- export const userById= async(id:string)=>{
-   const res=await API.get(`/user/userBy/${id}`)
+ export const userById= async(id:string,signal:AbortSignal)=>{
+   const res=await API.get(`/user/userBy/${id}`,{signal})
    return res.data;
  }
