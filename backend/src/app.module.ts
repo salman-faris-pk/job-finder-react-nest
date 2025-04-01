@@ -6,7 +6,6 @@ import { JobsModule } from './jobs/jobs.module';
 import { CompaniesModule } from './companies/companies.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { CronService } from "./cron.service"
-import { ActivityMiddleware } from './app.middleware';
 
 @Module({
   imports: [
@@ -15,8 +14,4 @@ import { ActivityMiddleware } from './app.middleware';
   providers: [CronService],
 })
 
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(ActivityMiddleware).forRoutes('*'); 
-  }
-}
+export class AppModule {}
