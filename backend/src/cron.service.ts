@@ -5,7 +5,7 @@ import axios from 'axios'
 @Injectable()
 export class CronService implements OnModuleInit {
   onModuleInit() {
-    cron.schedule('*/14 * * * *', async () => {
+    cron.schedule('12,26,40,54 * * * *', async () => {
       try {
         
         const res = await axios.get('https://job-finder-romk.onrender.com/dummy');
