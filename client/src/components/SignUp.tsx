@@ -144,7 +144,7 @@ const SignUp = () => {
               <TextInput
                 name={accountType === "seeker" ? "firstName" : "name"}
                 label={accountType === "seeker" ? "First Name" : "Company Name"}
-                placeholder={accountType === "seeker" ? "eg. James" : "Company name"}
+                placeholder={accountType === "seeker" ? "eg. David" : "Company name"}
                 type="text"
                 register={register(accountType === "seeker" ? "firstName" : "name")}
                 error={
@@ -160,7 +160,7 @@ const SignUp = () => {
                 <TextInput
                   name="lastName"
                   label="Last Name"
-                  placeholder="Wagonner"
+                  placeholder="Beckam"
                   type="text"
                   register={register("lastName")}
                   error={(currentErrors as UserErrors).lastName?.message}
@@ -226,7 +226,7 @@ const SignUp = () => {
             className="text-sm text-blue-600 ml-2 hover:text-blue-700 hover:font-semibold cursor-pointer"
             onClick={() => setIsRegister((prev) => !prev)}
           >
-            {isRegister ? "Login" : "Create Account"}
+            {isRegister ? "Sign in" : "Create Account"}
           </span>
         </p>
       </div>
