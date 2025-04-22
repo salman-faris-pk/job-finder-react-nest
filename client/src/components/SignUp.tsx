@@ -10,6 +10,7 @@ import { apiRequest } from "../apis/auth-api";
 import { useLocation } from "react-router-dom";
 import { toast } from "sonner";
 import { AuthFormData,CompanyErrors,CompanyFormData,Errors, LoginFormData, UserErrors, UserFormData } from "../utils/types";
+import Loading from "./Loaders/Loading";
 
 
 const SignUp = () => {
@@ -221,7 +222,7 @@ const SignUp = () => {
                 isLoading ? "bg-blue-400" : "hover:bg-blue-800"} w-full`}
               title={
                 isLoading 
-                  ? "Loading..." 
+                  ? <Loading/>
                   : isRegister 
                     ? "Create Account" 
                     : "Login Account"

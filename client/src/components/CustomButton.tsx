@@ -1,7 +1,7 @@
-import React from "react";
+import React, { ReactNode } from "react";
 
 interface CustomButtonProps {
-  title?: string; 
+  title?: ReactNode; 
   containerStyles?: string; 
   iconRight?: React.ReactNode; 
   type?: "button" | "submit" | "reset"; 
