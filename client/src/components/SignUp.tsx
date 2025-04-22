@@ -19,6 +19,7 @@ const SignUp = () => {
   const [accountType, setAccountType] = useState("seeker");
   const [showPassword, setShowPassword] = useState(false);
   const [showCoPassword, setShowCoPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   let from = location.state?.from?.pathname || "/";
 
@@ -43,6 +44,7 @@ const SignUp = () => {
   }, [accountType, isRegister, reset]);
 
   const onSubmit = async (data:AuthFormData) => {
+    setIsLoading(true);
 
     let formData: Omit<AuthFormData, "cPassword">;
 
@@ -76,6 +78,8 @@ const SignUp = () => {
       }
     } catch (error) {
       console.error("API Error:", error); 
+    } finally{
+      setIsLoading(false); 
     }
   };
 
@@ -211,11 +215,19 @@ const SignUp = () => {
         </div>
 
         <div className="mt-2">
-          <CustomButton
-            type="submit"
-            containerStyles="inline-flex justify-center rounded-md bg-blue-600 px-6 py-1.5 sm:px-8 sm:py-2 text-sm font-medium text-white outline-none hover:bg-blue-800 w-full"
-            title={isRegister ? "Create Account" : "Login Account"}
-          />
+        <CustomButton
+              type="submit"
+              containerStyles={`inline-flex justify-center rounded-md bg-blue-600 px-6 py-1.5 sm:px-8 sm:py-2 text-sm font-medium text-white outline-none ${
+                isLoading ? "bg-blue-400" : "hover:bg-blue-800"} w-full`}
+              title={
+                isLoading 
+                  ? "Loading..." 
+                  : isRegister 
+                    ? "Create Account" 
+                    : "Login Account"
+              }
+              disabled={isLoading}
+            />
         </div>
       </form>
 
@@ -224,7 +236,7 @@ const SignUp = () => {
           {isRegister ? "Already have an account?" : "Do not have an account?"}
           <span
             className="text-sm text-blue-600 ml-2 hover:text-blue-700 hover:font-semibold cursor-pointer"
-            onClick={() => setIsRegister((prev) => !prev)}
+            onClick={() => !isLoading && setIsRegister((prev) => !prev)} 
           >
             {isRegister ? "Sign in" : "Create Account"}
           </span>
