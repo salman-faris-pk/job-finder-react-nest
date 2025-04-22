@@ -21,11 +21,11 @@ export class CronService implements OnModuleInit {
       }
     });
 
-    process.on('SIGTERM', () => {
-      this.task.stop();
-      this.logger.log('Cron job stopped (SIGTERM)');
-      process.exit(0);
-    });
+    // process.on('SIGTERM', () => {
+    //   this.task.stop();
+    //   this.logger.log('Cron job stopped (SIGTERM)');
+    //   process.exit(0);
+    // });
 
     this.logger.log('Cron job scheduled to run every 14 minutes');
   }
