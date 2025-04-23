@@ -189,7 +189,7 @@ const FindJobs = () => {
             </div>
           </div>
 
-          <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="w-full grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
             {data.length === 0 ? (
               <p className="w-full text-center text-gray-500">
                 Currently, there are no available jobs
