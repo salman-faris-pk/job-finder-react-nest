@@ -29,7 +29,6 @@ const UploadJob = () => {
   const [recentPost, setRecentPost] = useState<Job[]>([]);
   
 
-  
   const onSubmit = async (data: JobFormInputs) => {
     startTransition(() => {
       setIsLoading(true);
@@ -232,7 +231,7 @@ const UploadJob = () => {
         <p className='text-gray-500 font-semibold'>Recent Job Post</p>
         <div className="w-full flex flex-wrap gap-6">
           {recentPost.length > 0 ? (
-        recentPost?.slice(0, 4).map((job, index) => {
+        recentPost?.slice(0, 3).map((job, index) => {
          return <JobCard job={job} key={index} />;
           })
           ) : (
