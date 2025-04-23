@@ -31,7 +31,7 @@ const FindJobs = () => {
 
   const fetchJobs = async (controller: AbortController) => {
     setIsFetching(true);
-  
+
     const { signal } = controller;
 
     const newURL =
@@ -45,34 +45,32 @@ const FindJobs = () => {
         jType: filterJobTypes,
         exp: filterExp,
       }) || "";
-  
+
     try {
-      const res = await FindsJobs(newURL,  signal );
-  
+      const res = await FindsJobs(newURL, signal);
+
       if (!signal.aborted) {
         setNumPage(res?.numOfPage);
         setRecordCount(res?.totalJobs);
         setData(res?.data);
       }
     } catch (error) {
-      if ((error as AxiosError).code === 'ERR_CANCELED') {
+      if ((error as AxiosError).code === "ERR_CANCELED") {
         return;
       }
       console.error((error as AxiosError).message);
-    
     } finally {
       setIsFetching(false);
     }
   };
-  
 
   useEffect(() => {
     const controller = new AbortController();
     fetchJobs(controller);
-  
-    return ()=> {
+
+    return () => {
       controller.abort();
-    }
+    };
   }, [page, searchQuery, jobLocation, sort, filterJobTypes, filterExp]);
 
   const filterJobs = (val: string) => {
@@ -116,7 +114,7 @@ const FindJobs = () => {
       />
 
       <div className="container mx-auto flex gap-6 2xl:gap-10 md:px-5 py-0 md:py-6 bg-[#f7fdfd]">
-        <div className="hidden md:flex flex-col w-1/6 h-fit bg-white shadow-sm p-3">
+        <div className="hidden lg:flex flex-col w-1/6 h-fit bg-white shadow-sm p-3">
           <p className="text-lg font-semibold text-slate-600">Filter Search</p>
 
           <div className="py-2">
@@ -189,20 +187,27 @@ const FindJobs = () => {
             </div>
           </div>
 
-          <div className="w-full grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
+          <div className="grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full">
             {data.length === 0 ? (
-              <p className="w-full text-center text-gray-500">
-                Currently, there are no available jobs
-              </p>
+              <div className="col-span-full text-center py-12">
+                <p className="text-gray-500 text-lg font-medium">
+                  No jobs available
+                </p>
+                <p className="mt-2 text-sm text-gray-400">
+                  Check back later for new opportunities
+                </p>
+              </div>
             ) : (
-              data.map((job, index) => {
-                const jobData = {
-                  ...job,
-                  name: job?.company?.name,
-                  logo: job?.company?.profileUrl,
-                };
-                return <JobCard job={jobData} key={index} />;
-              })
+              data.map((job) => (
+                <JobCard
+                  key={job.id}
+                  job={{
+                    ...job,
+                    name: job.company?.name,
+                    logo: job.company?.profileUrl,
+                  }}
+                />
+              ))
             )}
           </div>
 
