@@ -8,7 +8,7 @@ export class CronService implements OnModuleInit {
   private task: cron.ScheduledTask;
 
   onModuleInit() {
-    this.task = cron.schedule('*/11 * * * *', async () => {
+    this.task = cron.schedule('*/13 * * * *', async () => {
       try {
         const res = await axios.get('https://job-finder-romk.onrender.com/dummy');
         if (res.status === 200) {
