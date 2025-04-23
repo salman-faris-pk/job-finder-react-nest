@@ -3,7 +3,7 @@ import { IsString, IsNumber, IsOptional, Min, MaxLength, MinLength } from "class
 export class CreateJobDto {
     @IsString()
     @MinLength(5, { message: "Job title must be at least 5  characters long" })
-    @MaxLength(30, { message: "Job title must not exceed3 30 characters" })
+    @MaxLength(50, { message: "Job title must not exceed3 30 characters" })
     jobTitle: string;
 
     @IsString()

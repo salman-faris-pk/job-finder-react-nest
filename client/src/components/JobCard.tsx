@@ -1,6 +1,6 @@
 import { GoLocation } from "react-icons/go";
 import moment from "moment";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { RecentJobsPosts } from "../utils/types";
 
 
@@ -9,7 +9,9 @@ type JobCardProps = {
 };
 
 const JobCard = ({ job }:JobCardProps) => {
-  
+
+  const location=useLocation()
+    
   return (
     <Link to={`/job-detail/${job?.id}`}>
       <div
@@ -22,7 +24,7 @@ const JobCard = ({ job }:JobCardProps) => {
           <img
             src={job?.logo}
             alt={job?.name}
-            className='w-14 h-14'
+            className={`${location.pathname === '/upload-job' ? "hidden" : "w-14 h-14"} `}
           />
 
           <div className='w-full h-16 flex flex-col justify-center'>

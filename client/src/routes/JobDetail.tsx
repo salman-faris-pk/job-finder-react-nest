@@ -9,6 +9,7 @@ import { Job } from "../utils/types";
 import Loading from "../components/Loaders/Loading";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
+import { formatSalary } from "../utils/formatSalary";
 
 
 const JobDetail = () => {
@@ -127,11 +128,11 @@ const JobDetail = () => {
           </div>
 
           <div className='w-full flex flex-wrap md:flex-row gap-2 items-center justify-between my-10'>
-            <div className='bg-[#bdf4c8] w-40 h-16 rounded-lg flex flex-col items-center justify-center'>
+            <div className='bg-[#bdf4c8] w-44 h-16 rounded-lg flex flex-col items-center justify-center'>
               <span className='text-sm'>Salary</span>
-              <p className='text-lg font-semibold text-gray-700'>
-                $ {job?.salary}
-              </p>
+              <p className={`${job?.salary && Number(job.salary) <= 50000 ? "text-md font-bold" : "text-lg font-semibold"} text-gray-700`}>
+                 {formatSalary(job?.salary)}
+               </p>
             </div>
 
             <div className='bg-[#bae5f4] w-40 h-16 rounded-lg flex flex-col items-center justify-center'>

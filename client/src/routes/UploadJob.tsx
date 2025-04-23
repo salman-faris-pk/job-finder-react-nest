@@ -27,6 +27,7 @@ const UploadJob = () => {
   const [jobType, setJobType] = useState("Full-Time");
   const [isLoading, setIsLoading] = useState(false);
   const [recentPost, setRecentPost] = useState<Job[]>([]);
+  
 
   
   const onSubmit = async (data: JobFormInputs) => {
@@ -87,7 +88,6 @@ const UploadJob = () => {
      const res=await RecentPosts(id)
      setRecentPost(res?.jobPosts)
     } catch (error:any) {
-      console.log(error);
       toast.error(error.res?.message)
     }    
   };
@@ -233,12 +233,7 @@ const UploadJob = () => {
         <div className="w-full flex flex-wrap gap-6">
           {recentPost.length > 0 ? (
         recentPost?.slice(0, 4).map((job, index) => {
-         const data = {
-        ...job,
-        name: job?.company?.name,
-        logo: job?.company?.profileUrl || "/logo.jpg",
-         };
-         return <JobCard job={data} key={index} />;
+         return <JobCard job={job} key={index} />;
           })
           ) : (
         <p className="w-full text-center mt-10 text-gray-500 text-sm">No recent posts available .</p>

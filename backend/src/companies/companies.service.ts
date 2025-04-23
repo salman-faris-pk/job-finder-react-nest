@@ -183,6 +183,7 @@ export class CompaniesService {
 
   };
 
+ 
 
   async editCompanyProfile(compId:string,updatesData:CompanyUpdateDto){
 

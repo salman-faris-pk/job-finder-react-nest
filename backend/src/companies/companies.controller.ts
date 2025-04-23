@@ -25,7 +25,7 @@ export class CompaniesController {
     return this.companiesService.getSingleCompany(id)
   }
 
-
+  
   @Post('company-profile')
   @UseGuards(JwtAuthGuard)
   async GetCompanyProfile(@Req() req:UserIdRequest){

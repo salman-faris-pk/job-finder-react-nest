@@ -21,7 +21,5 @@ export class CronService implements OnModuleInit {
       }
     });
 
-
-    this.logger.log('Cron job scheduled to run every 14 minutes');
   }
 }
