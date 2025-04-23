@@ -33,7 +33,7 @@ export const footerLinks: FooterLink[] = [
     "Office Assistant",
   ];
 
-  export const jobTypes : string[] = ["Full-Time", "Part-Time", "ContracT", "Intern"];
+  export const jobTypes : string[] = ["Full-Time", "Part-Time", "Contract", "Intern"];
 
   export const experience : Experieces[]= [
     { title: "Under 1 Year", value: "0-1" },
