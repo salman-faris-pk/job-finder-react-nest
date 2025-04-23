@@ -8,7 +8,7 @@ export class CronService implements OnModuleInit {
   private task: cron.ScheduledTask;
 
   onModuleInit() {
-    this.task = cron.schedule('*/14 * * * *', async () => {
+    this.task = cron.schedule('*/11 * * * *', async () => {
       try {
         const res = await axios.get('https://job-finder-romk.onrender.com/dummy');
         if (res.status === 200) {
@@ -21,11 +21,6 @@ export class CronService implements OnModuleInit {
       }
     });
 
-    // process.on('SIGTERM', () => {
-    //   this.task.stop();
-    //   this.logger.log('Cron job stopped (SIGTERM)');
-    //   process.exit(0);
-    // });
 
     this.logger.log('Cron job scheduled to run every 14 minutes');
   }
