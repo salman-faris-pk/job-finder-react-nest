@@ -3,7 +3,7 @@ import {Menu,Transition,MenuButton,MenuItem,MenuItems} from "@headlessui/react"
 import { BiChevronDown } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { AiOutlineLogout } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { dispatch } from "../../redux/store";
 import { logoutUser } from "../../redux/userSlice";
 
@@ -20,9 +20,11 @@ interface MenuProps {
 }
 
 const MenuList = ({user,onClick }:MenuProps) => {
+  const navigate=useNavigate()
 
   const handleLogout = () => {
      dispatch(logoutUser());
+     navigate('/',{replace: true})
   };
   
   return (

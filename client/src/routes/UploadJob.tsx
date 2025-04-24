@@ -13,7 +13,7 @@ import { RecentPosts } from "../apis/fetching.apis";
 const UploadJob = () => {
 
   const {user}=useSelector((state)=> state.user)
-  
+   
   const {
     register,
     handleSubmit,
@@ -83,17 +83,23 @@ const UploadJob = () => {
 
   const getRecendPosts=async()=>{
     try {
-      const id=user?.id || null;
-     const res=await RecentPosts(id)
+      const id=user?.id || null; 
+      if (!id) {
+        throw new Error("User ID is not available");
+      }
+           
+     const res=await RecentPosts(id)     
      setRecentPost(res?.jobPosts)
     } catch (error:any) {
-      toast.error(error.res?.message)
+      toast.error(error.response?.data?.message || "Failed to fetch recent posts")
     }    
   };
 
   useEffect(()=>{
-    getRecendPosts()
-  },[])
+    if (user?.id) {
+      getRecendPosts();
+    }
+  },[user?.id])
 
   return (
     <div className='container mx-auto flex flex-col md:flex-row gap-8 2xl:gap-14 bg-[#f7fdfd] px-5'>
