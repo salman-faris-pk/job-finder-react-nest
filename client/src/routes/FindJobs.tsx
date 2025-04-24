@@ -187,7 +187,7 @@ const FindJobs = () => {
             </div>
           </div>
 
-          <div className="grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 w-full">
+          <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 w-full">
             {data.length === 0 ? (
               <div className="col-span-full text-center py-12">
                 <p className="text-gray-500 text-lg font-medium">

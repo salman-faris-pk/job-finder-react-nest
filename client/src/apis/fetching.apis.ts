@@ -1,18 +1,19 @@
 import { API } from "./axiosInstance"
 import { UpdateURLParams } from "../utils/types";
+import { Axios } from "./auth-api";
 
 
 
 
 export const CompanyById=async(id: string | null,signal: AbortSignal)=>{
-   const response=await API.get(`/companies/${id}`,{signal})
+   const response=await Axios.get(`/companies/${id}`,{signal})
    
    return response.data.data;
 };
 
 
 export const RecentPosts=async(id:string | null) => {
-   const response=await API.get(`/companies/${id}`)
+   const response=await Axios.get(`/companies/${id}`)
    return response.data.data;
 };
 
@@ -61,7 +62,7 @@ export const updateURL=({pageNum,query,cmpLoc,sort,navigate,location,jType,exp}:
 
 
 export const GetCompanies=async(newURL:string,signal: AbortSignal)=>{
-   const response=await API.get(newURL,{signal});
+   const response=await Axios.get(newURL,{signal});
    return response.data;
 
 };
@@ -69,8 +70,8 @@ export const GetCompanies=async(newURL:string,signal: AbortSignal)=>{
 
 
 export const JobDetailById=async(id:string, signal: AbortSignal)=>{
-
-   const response=await API.get(`/jobs/job-detail/${id}`,{signal});
+    
+   const response=await Axios.get(`/jobs/job-detail/${id}`,{signal});
 
    return response.data;
 
@@ -86,7 +87,7 @@ export const deletePost=async(id: string)=> {
 
 export const FindsJobs=async(newURL:string,signal: AbortSignal)=>{
 
-   const response=await API.get("/jobs"+newURL, { signal });
+   const response=await Axios.get("/jobs"+newURL, { signal });
    return response.data;
 };
 

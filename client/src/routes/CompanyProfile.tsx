@@ -27,7 +27,7 @@ const CompanyProfile = () => {
       if(params.id && params.id !== undefined){
         id=params?.id;
       }else{
-        id=user?.id || null;
+        id=user?.id || null; //comanyid from logined companyuser
       };
 
       try {
@@ -50,7 +50,7 @@ const CompanyProfile = () => {
     const { signal } = controller;
 
      fetchCompany(signal);
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
 
     return ()=> {
       controller.abort();
@@ -69,7 +69,7 @@ const CompanyProfile = () => {
           Welcome, {info?.name}
         </h2>
 
-        {user?.accountType  === undefined && info?.id === user?.id && (
+        {user && user?.accountType  === undefined && info?.id === user?.id && (
             <div className='flex items-center justifu-center py-5 md:py-0 gap-4'>
               <CustomButton
                 onClick={() => setOpenForm(true)}
@@ -107,19 +107,35 @@ const CompanyProfile = () => {
     </div>
 
     <div className='w-full mt-20 flex flex-col gap-2'>
-      <p>Jobs Posted</p>
+    {info && info?.jobPosts?.length > 0 && (
+     <p>
+      Jobs Posted
+    </p>
+    )}
 
-      <div className='flex flex-wrap gap-3'>
-        {info?.jobPosts.map((job, index) => {
-          const data = {
-            ...job,
-            name: info?.name,
-            email: info?.email,
-            logo:  info?.profileUrl
-          };
-          return <JobCard job={data} key={index} />;
-        })}
+   <div className='flex flex-wrap gap-3'>
+  {info && info?.jobPosts?.length > 0 ? (
+    info.jobPosts.map((job, index) => {
+      const data = {
+        ...job,
+        name: info?.name,
+        email: info?.email,
+        logo: info?.profileUrl
+      };
+      return <JobCard job={data} key={index} />;
+    })
+  ) : (
+    <div className="w-full py-10 flex flex-col items-center justify-center">
+      <div className="text-gray-500 text-lg font-medium mb-2">
+        No jobs posted yet
       </div>
+      <p className="text-gray-400 text-center max-w-md">
+        There are currently no job listings available. Check back later or post a new job opportunity.
+      </p>
+      
+    </div>
+   )}
+  </div>
     </div>
      
     

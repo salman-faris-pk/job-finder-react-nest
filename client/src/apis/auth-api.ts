@@ -1,5 +1,5 @@
-import { API } from "./axiosInstance"
-import { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
+import { API } from './axiosInstance';
 
 
 interface ApiRequestProps {
@@ -12,6 +12,13 @@ interface ApiResponse {
     message?: string;
     [key: string]: any;
 }
+
+const API_URL=import.meta.env.VITE_API_URL;
+
+export const Axios= axios.create({
+    baseURL: API_URL,
+}); 
+
 
 export const apiRequest= async({url,data}:ApiRequestProps): Promise<ApiResponse> => {
 

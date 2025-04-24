@@ -4,21 +4,28 @@ import CustomButton from "./CustomButton"
 import TextInput from "./TextInput"
 import { FaFacebookF, FaTwitter, FaLinkedinIn } from "react-icons/fa";
 import { FiInstagram } from "react-icons/fi";
+import { useEffect, useState } from "react";
 
 
 
 const Footer = () => {
 
-  const location=useLocation()
+  const location = useLocation();
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    setTimeout(()=>{
+    setVisible(!location.pathname.startsWith("/user-auth"));
+    },1000)
+  }, [location]);
 
   const date = new Date();
   const year = date.getFullYear();
 
-  const isAuthpage = location.pathname.startsWith("/user-auth");
+  if (!visible) return null;
   
   return (
-    <footer className={`${isAuthpage ? "hidden" : ""} text-white mp-20`}>
-      
+    <footer className="transition-opacity duration-500 opacity-100 text-white mt-10">
     <div className='overflow-x-hidden -mb-0.5'>
       <svg
         preserveAspectRatio='none'

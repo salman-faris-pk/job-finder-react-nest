@@ -23,11 +23,9 @@ const JobDetail = () => {
   const [isdletesModal, setIsdeleteModal] = useState(false);
   const [openApplyModal, setApplyModal] = useState(false);
   const [applicationCount,setAppCount]=useState<number | null>(null)
-
   
   const getjoBDetail =async(signal: AbortSignal)=>{
      setIsFetching(true)
-
      if (!id) {
       setIsFetching(false);
       return;
@@ -35,7 +33,7 @@ const JobDetail = () => {
 
      try {
         const res=await JobDetailById(id,signal);
-         
+           
         setJob(res?.data)  
 
         const filteredSimilarJobs = res?.similarJobs?.filter((similarJob: Job) => similarJob.id !== id);
@@ -45,9 +43,8 @@ const JobDetail = () => {
         setIsFetching(false)
      } catch (error) {
        if ((error as AxiosError).code === 'ERR_CANCELED') {
-                return;
+            return;
         }
-      console.log(error);
      }
   };
 
@@ -56,7 +53,7 @@ const JobDetail = () => {
     const { signal } = controller;
 
      id && getjoBDetail(signal);
-     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
 
      return () => {
       controller.abort();
@@ -215,7 +212,7 @@ const JobDetail = () => {
           </div>
 
           <div className="w-full">
-  {user?.id === job?.companyId ? (
+  {user && user?.id === job?.companyId ? (
     <>
       <CustomButton
         title="Delete Job"
@@ -233,7 +230,7 @@ const JobDetail = () => {
                  />
                )}
         </>
-      ) : user?.accountType === "seeker" ? (
+      ) : user && user?.accountType === "seeker" ? (
        <>
         <CustomButton
         title="Apply Now"
@@ -259,7 +256,7 @@ const JobDetail = () => {
          
         {/* RIGHT SIDE */}
    <div className='w-full md:w-1/3 2xl:w-2/4 p-1 shadow-md'>
-    {user?.id === job?.companyId ? (
+    {user && user?.id === job?.companyId ? (
         <CompanyAplicants jobId={job?.id}/>
   ) : (
     <>
