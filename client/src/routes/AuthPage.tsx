@@ -3,11 +3,21 @@ import { Navigate, useLocation } from "react-router-dom";
 import { useSelector } from "../redux/store";
 import { Bgloader } from "../components";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
+
 
 const AuthPage = () => {
   const { user, loading } = useSelector((state) => state.user);
   const location = useLocation();
   let from = location?.state?.from?.pathname || "/";
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left:0,
+      behavior: "instant"
+    });
+  }, []);
 
   if (loading) {
     return <Bgloader />;
