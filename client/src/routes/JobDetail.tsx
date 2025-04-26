@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import moment from "moment";
 import { AiOutlineSafetyCertificate } from "react-icons/ai";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { CompanyAplicants, CustomButton, CvUpload, DeleteModal, JobCard } from "../components";
 import { useSelector } from "../redux/store";
 import { deletePost, JobDetailById } from "../apis/fetching.apis";
@@ -10,11 +10,13 @@ import Loading from "../components/Loaders/Loading";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
 import { formatSalary } from "../utils/formatSalary";
+import { Link } from "react-router-dom";
 
 
 const JobDetail = () => {
  
   const { id } = useParams<{ id: string }>();
+  const location=useLocation();
   const { user }=useSelector((state)=> state.user)
   const [job, setJob] = useState<Job | null>(null);
   const [selected, setSelected] = useState("0");
@@ -211,8 +213,9 @@ const JobDetail = () => {
             )}
           </div>
 
-          <div className="w-full">
-  {user && user?.id === job?.companyId ? (
+
+   <div className="w-full">
+   {user && user?.id === job?.companyId ? (
     <>
       <CustomButton
         title="Delete Job"
@@ -221,22 +224,24 @@ const JobDetail = () => {
           bg-gradient-to-r from-red-600 to-red-800 hover:from-red-600 hover:to-red-800 py-3 px-5 outline-none rounded-full text-base`}
       />
 
-           {isdletesModal  && (
-                 <DeleteModal isOpen={isdletesModal}  onClose={() => setIsdeleteModal(false)} 
-                 onDelete={() => {
-                  handleDeletePost();
-                  setIsdeleteModal(false);
-                }}
-                 />
-               )}
-        </>
-      ) : user && user?.accountType === "seeker" ? (
-       <>
-        <CustomButton
+      {isdletesModal && (
+        <DeleteModal 
+          isOpen={isdletesModal}  
+          onClose={() => setIsdeleteModal(false)} 
+          onDelete={() => {
+            handleDeletePost();
+            setIsdeleteModal(false);
+          }}
+        />
+      )}
+    </>
+  ) : user && user?.accountType === "seeker" ? (
+    <>
+      <CustomButton
         title="Apply Now"
         onClick={() => setApplyModal(true)}
         containerStyles={`cursor-pointer w-full flex items-center justify-center text-white bg-black py-3 px-5 outline-none rounded-full text-base`}
-       />
+      />
 
       {openApplyModal && (
         <CvUpload
@@ -247,8 +252,15 @@ const JobDetail = () => {
         />
       )}
     </>
+  ) : !user ? (
+    <Link to={'/user-auth'} state={{ from: location.pathname }}
+    className="cursor-pointer w-full flex items-center justify-center text-blue-600 py-1.5 px-5 focus:outline-none hover:bg-blue-700 hover:text-white rounded-full text-base border border-blue-600"
+    >
+          SignIn
+    </Link>
+  
   ) : null}
-   </div>
+</div>
 
         </div>
          )}

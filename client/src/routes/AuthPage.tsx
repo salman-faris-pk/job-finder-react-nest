@@ -18,28 +18,28 @@ const AuthPage = () => {
   }
 
   return (
-    <div className="min-h-screen flex">
-      {/* Left Panel - Branding/Info */}
-      <motion.div 
-        initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5 }}
-        className="hidden md:flex w-1/2 bg-gradient-to-br from-blue-600 to-indigo-700 items-center justify-center p-12 text-white"
-      >
-        <div className="max-w-md">
+    <div className="min-h-screen">
+      <div className="flex flex-col md:flex-row min-h-screen">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="w-full md:w-1/2 bg-gradient-to-br from-purple-600 md:from-blue-600 to-indigo-700 p-6 sm:p-12 text-white"
+        >
           <motion.div
             initial={{ scale: 0.9 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
+            className="max-w-md mx-auto"
           >
-            <h1 className="text-4xl font-bold mb-6">Welcome to Our Platform</h1>
-            <p className="text-lg mb-8 opacity-90">
+            <h1 className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-6">Welcome to Our Platform</h1>
+            <p className="text-base sm:text-lg mb-6 sm:mb-8 opacity-90">
               Join thousands of professionals who trust our solution for their job needs.
             </p>
-            <ul className="space-y-4">
+            <ul className="space-y-3 sm:space-y-4 hidden sm:block">
               <li className="flex items-center">
                 <span className="mr-3 bg-white/20 p-1 rounded-full">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </span>
@@ -47,7 +47,7 @@ const AuthPage = () => {
               </li>
               <li className="flex items-center">
                 <span className="mr-3 bg-white/20 p-1 rounded-full">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </span>
@@ -55,7 +55,7 @@ const AuthPage = () => {
               </li>
               <li className="flex items-center">
                 <span className="mr-3 bg-white/20 p-1 rounded-full">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </span>
@@ -63,20 +63,17 @@ const AuthPage = () => {
               </li>
             </ul>
           </motion.div>
-        </div>
-      </motion.div>
+        </motion.div>
 
-      {/* Right Panel - Form */}
-      <div className="w-full md:w-1/2 flex items-center justify-center p-6 sm:p-12">
+        {/* Right Panel - Form */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="w-full max-w-md"
+          className="w-full md:w-1/2 flex items-center justify-center p-6 sm:p-12"
         >
-
-          <SignUp />
-          
+            <SignUp />
+            
         </motion.div>
       </div>
     </div>
@@ -84,4 +81,3 @@ const AuthPage = () => {
 };
 
 export default AuthPage;
-
