@@ -73,6 +73,7 @@ const FindJobs = () => {
     };
   }, [page, searchQuery, jobLocation, sort, filterJobTypes, filterExp]);
 
+
   const filterJobs = (val: string) => {
     if (filterJobTypes?.includes(val)) {
       setFilterJobTypes(filterJobTypes.filter((el) => el !== val));

@@ -5,6 +5,7 @@ import CustomButton from "./CustomButton";
 import { popularSearch } from "../utils/datas";
 import HeroImage from "../assets/hero.png";
 import { HeaderProps, SearchInputProps } from "../utils/types";
+import { useLocation } from "react-router-dom";
 
 
 
@@ -41,6 +42,9 @@ const SearchInput = ({ placeholder, icon, value, setValue, styles }:SearchInputP
 
 const Header = ({title,type,handleClick,searchQuery,setSearchQuery, location,setLocation}:HeaderProps) => {
   
+  const Location=useLocation()
+  const pathname=Location.pathname;
+  
   return (
     <div className='bg-[#f7fdfd]'>
       <div
@@ -57,7 +61,7 @@ const Header = ({title,type,handleClick,searchQuery,setSearchQuery, location,set
 
           <form onSubmit={handleClick} className='w-full flex items-center justify-around bg-white px-2 md:px-5 py-2.5 md:py-6 shadow-2xl rounded-full'>
             <SearchInput
-              placeholder='Job Title or Keywords'
+              placeholder={`${pathname === '/companies' ? "Search Company" : "Job Title or Keywords"}`}
               icon={<AiOutlineSearch className='text-gray-600 text-xl' />}
               value={searchQuery}
               setValue={setSearchQuery}
