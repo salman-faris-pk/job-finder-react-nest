@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState, useEffect, useDeferredValue, useTransition } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import CustomButton from "../components/CustomButton";
 import Header from "../components/Header";
@@ -24,43 +24,47 @@ const FindJobs = () => {
   const [jobLocation, setJobLocation] = useState("");
   const [filterJobTypes, setFilterJobTypes] = useState<string[]>([]);
   const [filterExp, setFilterExp] = useState<string[]>([]);
-  const [isFetching, setIsFetching] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
+  // Deferred values for search inputs
+  const deferredSearchQuery = useDeferredValue(searchQuery);
+  const deferredJobLocation = useDeferredValue(jobLocation);
+  const deferredFilterJobTypes = useDeferredValue(filterJobTypes);
+  const deferredFilterExp = useDeferredValue(filterExp);
 
   const location = useLocation();
   const navigate = useNavigate();
 
   const fetchJobs = async (controller: AbortController) => {
-    setIsFetching(true);
-
     const { signal } = controller;
 
     const newURL =
       updateURL({
         pageNum: page,
-        query: searchQuery,
-        cmpLoc: jobLocation,
+        query: deferredSearchQuery,
+        cmpLoc: deferredJobLocation,
         sort: sort,
         navigate: navigate,
         location: location,
-        jType: filterJobTypes,
-        exp: filterExp,
+        jType: deferredFilterJobTypes,
+        exp: deferredFilterExp,
       }) || "";
 
     try {
       const res = await FindsJobs(newURL, signal);
 
       if (!signal.aborted) {
-        setNumPage(res?.numOfPage);
-        setRecordCount(res?.totalJobs);
-        setData(res?.data);
+        startTransition(() => {
+          setNumPage(res?.numOfPage);
+          setRecordCount(res?.totalJobs);
+          setData(res?.data);
+        });
       }
     } catch (error) {
       if ((error as AxiosError).code === "ERR_CANCELED") {
         return;
       }
       console.error((error as AxiosError).message);
-    } finally {
-      setIsFetching(false);
     }
   };
 
@@ -71,8 +75,7 @@ const FindJobs = () => {
     return () => {
       controller.abort();
     };
-  }, [page, searchQuery, jobLocation, sort, filterJobTypes, filterExp]);
-
+  }, [page, sort, deferredSearchQuery, deferredJobLocation, deferredFilterJobTypes, deferredFilterExp]);
 
   const filterJobs = (val: string) => {
     if (filterJobTypes?.includes(val)) {
@@ -90,14 +93,12 @@ const FindJobs = () => {
     );
   };
 
-  const handleSearchSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const controller = new AbortController();
-
-    await fetchJobs(controller);
+    setPage(1); //reset to 1 page
   };
 
-  const handleLoadMore = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleLoadMore = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setPage((prev) => prev + 1);
   };
@@ -192,11 +193,13 @@ const FindJobs = () => {
             {data.length === 0 ? (
               <div className="col-span-full text-center py-12">
                 <p className="text-gray-500 text-lg font-medium">
-                  No jobs available
+                  {isPending ? "Searching..." : "No jobs available"}
                 </p>
-                <p className="mt-2 text-sm text-gray-400">
-                  Check back later for new opportunities
-                </p>
+                {!isPending && (
+                  <p className="mt-2 text-sm text-gray-400">
+                    Check back later for new opportunities
+                  </p>
+                )}
               </div>
             ) : (
               data.map((job) => (
@@ -212,13 +215,13 @@ const FindJobs = () => {
             )}
           </div>
 
-          {isFetching && (
+          {isPending && (
             <div className="py-10">
               <Loading />
             </div>
           )}
 
-          {numPage > 1 && !isFetching && (
+          {numPage > 1 && !isPending && (
             <div className="w-full flex items-center justify-center pt-16 gap-4">
               {page > 1 && (
                 <CustomButton

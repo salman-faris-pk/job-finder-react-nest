@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState, useTransition, useDeferredValue, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CustomButton } from "../components";
 import ListBox from "../components/ListBox";
@@ -8,6 +8,7 @@ import Loading from "../components/Loaders/Loading";
 import { GetCompanies, updateURL } from "../apis/fetching.apis";
 import { AxiosError } from "axios";
 
+
 const Companies = () => {
   const [page, setPage] = useState(1);
   const [numPage, setNumPage] = useState(1);
@@ -16,37 +17,36 @@ const Companies = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [cmpLocation, setCmpLocation] = useState("");
   const [sort, setSort] = useState("Newest");
-  const [isFetching, setIsFetching] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const deferredSearchQuery = useDeferredValue(searchQuery);
+  const deferredCmpLocation = useDeferredValue(cmpLocation);
 
   const location = useLocation();
   const navigate = useNavigate();
 
   const fetchCompanies = async (signal: AbortSignal) => {
-    setIsFetching(true);
-
     const newURL = updateURL({
       pageNum: page,
-      query: searchQuery,
-      cmpLoc: cmpLocation,
+      query: deferredSearchQuery,
+      cmpLoc: deferredCmpLocation,
       sort: sort,
       navigate: navigate,
       location: location,
     }) || "";
 
     try {
-      const res = await GetCompanies(newURL,signal);
-
-      setNumPage(res?.numOfPage);
-      setRecordsCount(res?.total);
-      setData(res?.companydata);
-
-      setIsFetching(false);
+      const res = await GetCompanies(newURL, signal);
+      if (!signal.aborted) {
+       startTransition(()=>{
+        setNumPage(res?.numOfPage);
+        setRecordsCount(res?.total);
+        setData(res?.companydata);  
+      });
+    }
+      
     } catch (error) {
-       if ((error as AxiosError).code === 'ERR_CANCELED') {
-          return;
-      }
+      if ((error as AxiosError).code === 'ERR_CANCELED') return;
       console.error((error as AxiosError).message);
-      setIsFetching(false);
     }
   };
 
@@ -54,17 +54,18 @@ const Companies = () => {
     const controller = new AbortController();
     const { signal } = controller;
 
-    fetchCompanies(signal);
+    startTransition(() => {
+      fetchCompanies(signal);
+    });
 
     return () => {
       controller.abort();
     };
-  }, [page, sort, searchQuery, cmpLocation]);
+  }, [page, sort, deferredSearchQuery, deferredCmpLocation]);
 
-  const handleSearchSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setPage(1); 
-    await fetchCompanies(new AbortController().signal);
+    setPage(1);
   };
 
   const handleShowMore = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -86,13 +87,11 @@ const Companies = () => {
       <div className="container mx-auto flex flex-col gap-5 2xl:gap-10 px-5 py-6 bg-[#f7fdfd]">
         <div className="flex items-center justify-between mb-4">
           <p className="text-sm md:text-base">
-            Showing: <span className="font-semibold">{recordsCount}</span> Companies
-            Available
+            Showing: <span className="font-semibold">{recordsCount}</span> Companies Available
           </p>
 
           <div className="flex flex-col md:flex-row gap-0 md:gap-2 md:items-center">
             <p className="text-sm md:text-base hidden md:block">Sort By:</p>
-
             <ListBox sort={sort} setSort={setSort} />
           </div>
         </div>
@@ -101,10 +100,10 @@ const Companies = () => {
           {data?.length > 0 ? (
             data.map((cmp, index) => <CompanyCard cmp={cmp} key={index} />)
           ) : (
-            <p className="text-gray-500 text-center">No companies found.</p>
+            !isPending && <p className="text-gray-500 text-center">No companies found.</p>
           )}
 
-          {isFetching && (
+          {isPending && (
             <div className="mt-10">
               <Loading />
             </div>
@@ -115,7 +114,7 @@ const Companies = () => {
           </p>
         </div>
 
-        {numPage > page && !isFetching && (
+        {numPage > page && !isPending && (
           <div className="w-full flex items-center justify-center pt-16">
             <CustomButton
               onClick={handleShowMore}
