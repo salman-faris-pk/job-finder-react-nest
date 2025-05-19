@@ -17,4 +17,6 @@ export class ApplyJobDto {
   @IsString()
   @IsOptional()
   whyHire?: string;
+
+  
 }

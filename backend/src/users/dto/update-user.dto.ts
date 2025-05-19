@@ -42,5 +42,4 @@ export class UpdateUserDto {
   about?: string;
 
 
-  
 }
