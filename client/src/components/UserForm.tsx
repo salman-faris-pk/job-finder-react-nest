@@ -217,7 +217,6 @@ const UserForm = ({ open, setOpen }: ModalProps) => {
                         placeholder="https://your-portfolio.com"
                         type="url"
                         register={register("portfolioUrl", {
-                          required: "Portfolio Link is required",
                           pattern: {
                             value:
                               /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/[\w-./?%&=]*)?$/,
@@ -237,7 +236,6 @@ const UserForm = ({ open, setOpen }: ModalProps) => {
                         placeholder="https://your-gitprofile.com"
                         type="url"
                         register={register("githubUrl", {
-                          required: "github  Link is required",
                           pattern: {
                             value:
                               /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/[\w-./?%&=]*)?$/,
@@ -261,7 +259,7 @@ const UserForm = ({ open, setOpen }: ModalProps) => {
                           cols={6}
                           {...register("about", {
                             required:
-                              "Write a little bit about yourself and your projects",
+                              "Write a little bit about yourself",
                           })}
                           aria-invalid={errors.about ? "true" : "false"}
                         ></textarea>
