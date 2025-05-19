@@ -3,14 +3,15 @@ import { AiOutlineMail, AiFillGithub } from "react-icons/ai";
 import { FiPhoneCall } from "react-icons/fi";
 import { HiLocationMarker } from "react-icons/hi";
 import UserForm from "../components/UserForm";
-import { useSelector } from "../redux/store";
 import { BiLinkExternal } from "react-icons/bi";
 import { useParams } from "react-router-dom";
 import { userById } from "../apis/fetching.apis";
 import Loading from "../components/Loaders/Loading";
 import { AxiosError } from "axios";
+import { API }  from "../apis/axiosInstance";
 
 interface UserData {
+  id?: string;
   firstName?: string;
   lastName?: string;
   jobTitle?: string;
@@ -24,28 +25,44 @@ interface UserData {
 }
 
 const UserProfile = () => {
-  const { user: currentUser,loading: isUserLoading } = useSelector((state) => state.user);
   const { id } = useParams();
   const [userData, setUserData] = useState<UserData>({});
+  const [currentUser, setCurrentUser] = useState<UserData | null>(null);
   const [open, setOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isCurrentUserLoading, setIsCurrentUserLoading] = useState<boolean>(true);
 
-  
   const isCurrentUserProfile = !id || id === currentUser?.id;
 
-  const fetchUserById = async (signal:AbortSignal) => {
+  const fetchCurrentUser = async (signal: AbortSignal) => {
+    try {
+      setIsCurrentUserLoading(true);
+      const response = await API.get("/user/validate-me", { signal });
+      setCurrentUser(response.data.user);
+    } catch (error) {
+      if ((error as AxiosError).code === 'ERR_CANCELED') {
+        return;
+      }
+      console.error("Failed to fetch current user:", error);
+      setCurrentUser(null);
+    } finally {
+      setIsCurrentUserLoading(false);
+    }
+  };
+
+  const fetchUserById = async (signal: AbortSignal) => {
     if (!id) return;
     
     try {
       setIsLoading(true);
-      const res = await userById(id,signal);
+      const res = await userById(id, signal);
       if (res.success) {
         setUserData(res.user);
       }
     } catch (error) {
-       if ((error as AxiosError).code === 'ERR_CANCELED') {
-          return;
-        }
+      if ((error as AxiosError).code === 'ERR_CANCELED') {
+        return;
+      }
       console.error("Failed to fetch user data:", error);
     } finally {
       setIsLoading(false);
@@ -53,24 +70,34 @@ const UserProfile = () => {
   };
 
   useEffect(() => {
+    const controller = new AbortController();
+    const { signal } = controller;
+
+    fetchCurrentUser(signal);
+
+    return () => {
+      controller.abort();
+    };
+  }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const { signal } = controller;
+
     if (isCurrentUserProfile) {
       setUserData(currentUser || {});
       setIsLoading(false);
-    } else {
-      const controller = new AbortController();
-      const { signal } = controller;
+    } else if (id) {
       fetchUserById(signal);
-
-      return () => {
-        controller.abort();
-      };
     }
+
+    return () => {
+      controller.abort();
+    };
   }, [id, currentUser, isCurrentUserProfile]);
 
-  if (isLoading || isUserLoading) {
-    return (
-      <Loading />
-    );
+  if (isLoading || isCurrentUserLoading) {
+    return <Loading />;
   }
 
   return (

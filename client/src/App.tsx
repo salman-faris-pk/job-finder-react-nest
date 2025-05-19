@@ -1,5 +1,9 @@
-import { lazy, Suspense, ReactNode } from 'react';
-import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
+import { lazy, Suspense, ReactNode } from "react";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import {
   Layout,
   About,
@@ -12,8 +16,8 @@ import {
 import { Toaster } from "sonner";
 import { useEffect } from "react";
 import { fetchUser } from "./redux/userSlice";
-import { useDispatch, useSelector } from "./redux/store";
-import Loading from './components/Loaders/Loading';
+import { useDispatch } from "./redux/store";
+import Loading from "./components/Loaders/Loading";
 
 const CompanyProfile = lazy(() => import("./routes/CompanyProfile"));
 const UserProfile = lazy(() => import("./routes/UserProfile"));
@@ -25,7 +29,13 @@ interface LazyRouteProps {
 }
 
 const LazyRoute = ({ element }: LazyRouteProps) => (
-  <Suspense fallback={<div><Loading /></div>}>
+  <Suspense
+    fallback={
+      <div>
+        <Loading />
+      </div>
+    }
+  >
     {element}
   </Suspense>
 );
@@ -37,43 +47,40 @@ function App() {
     dispatch(fetchUser());
   }, [dispatch]);
 
-  const  {user}= useSelector((state) => state.user);
 
   const router = createBrowserRouter([
     {
       path: "/",
       element: <Layout />,
-      errorElement: <ErrorBoundary/>,
+      errorElement: <ErrorBoundary />,
       children: [
         { path: "/", element: <Navigate to="/find-jobs" replace /> },
         { path: "/find-jobs", element: <FindJobs /> },
         { path: "/companies", element: <Companies /> },
-        { 
-          path: "/user-profile", 
-          element: user?.accountType === "seeker" ? 
-            <LazyRoute element={<UserProfile />} /> : 
-            <Navigate to="/" replace /> 
+        {
+          path: "/user-profile",
+          element: <LazyRoute element={<UserProfile />} />,
         },
-        { 
-          path: "/user-profile/:id", 
-          element: <LazyRoute element={<UserProfile />} /> 
+        {
+          path: "/user-profile/:id",
+          element: <LazyRoute element={<UserProfile />} />,
         },
-        { 
-          path: "/company-profile", 
-          element: <LazyRoute element={<CompanyProfile />} /> 
-        },
-        { 
-          path: "/company-profile/:id", 
+        {
+          path: "/company-profile",
           element: <LazyRoute element={<CompanyProfile />} />,
         },
-        { 
-          path: "/applicants", 
-          element: <LazyRoute element={<Applications />} /> 
+        {
+          path: "/company-profile/:id",
+          element: <LazyRoute element={<CompanyProfile />} />,
+        },
+        {
+          path: "/applicants",
+          element: <LazyRoute element={<Applications />} />,
         },
         { path: "/upload-job", element: <UploadJob /> },
-        { 
-          path: "/job-detail/:id", 
-          element: <LazyRoute element={<JobDetail />} /> 
+        {
+          path: "/job-detail/:id",
+          element: <LazyRoute element={<JobDetail />} />,
         },
         { path: "/about-us", element: <About /> },
       ],
@@ -83,13 +90,8 @@ function App() {
 
   return (
     <>
-      <Toaster 
-        position="top-center"
-        richColors
-        duration={3000}
-      />
-      <RouterProvider router={router} 
-      />
+      <Toaster position="top-center" richColors duration={3000} />
+      <RouterProvider router={router} />
     </>
   );
 }
