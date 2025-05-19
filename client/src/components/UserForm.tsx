@@ -8,12 +8,13 @@ import {
 } from "@headlessui/react";
 import TextInput from "./TextInput";
 import CustomButton from "./CustomButton";
-import { useSelector } from "../redux/store";
+import { dispatch, useSelector } from "../redux/store";
 import { useForm } from "react-hook-form";
 import { UpdateUserDatas } from "../apis/uploads.apis";
 import { toast } from "sonner";
 import { Updateduser } from "../utils/types";
 import Loading from "./Loaders/Loading";
+import { fetchUser } from "../redux/userSlice";
 
 interface ModalProps {
   open: boolean;
@@ -67,9 +68,7 @@ const UserForm = ({ open, setOpen }: ModalProps) => {
         toast.error(res.message);
       } else {
         toast.success(res.message);
-          setTimeout(() => {
-          window.location.reload();
-        }, 1500);
+         dispatch(fetchUser());
       }
       setIsLoading(false)
     } catch (error) {
