@@ -139,7 +139,7 @@ const UserProfile = () => {
                   onClick={() => setOpen(true)}
                 >
                   Edit Profile
-                </button>
+                </button>  
               )}
             </div>
           </div>
