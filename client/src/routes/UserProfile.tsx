@@ -24,12 +24,13 @@ interface UserData {
 }
 
 const UserProfile = () => {
-  const { user: currentUser } = useSelector((state) => state.user);
+  const { user: currentUser,loading: isUserLoading } = useSelector((state) => state.user);
   const { id } = useParams();
   const [userData, setUserData] = useState<UserData>({});
   const [open, setOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  
   const isCurrentUserProfile = !id || id === currentUser?.id;
 
   const fetchUserById = async (signal:AbortSignal) => {
@@ -66,7 +67,7 @@ const UserProfile = () => {
     }
   }, [id, currentUser, isCurrentUserProfile]);
 
-  if (isLoading) {
+  if (isLoading || isUserLoading) {
     return (
       <Loading />
     );
