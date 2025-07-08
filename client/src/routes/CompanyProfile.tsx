@@ -113,9 +113,9 @@ const CompanyProfile = () => {
     </p>
     )}
 
-   <div className='flex flex-wrap gap-3'>
   {info && info?.jobPosts?.length > 0 ? (
-    info.jobPosts.map((job, index) => {
+  <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3'>
+    {info.jobPosts.map((job, index) => {
       const data = {
         ...job,
         name: info?.name,
@@ -123,19 +123,18 @@ const CompanyProfile = () => {
         logo: info?.profileUrl
       };
       return <JobCard job={data} key={index} />;
-    })
-  ) : (
-    <div className="w-full py-10 flex flex-col items-center justify-center">
-      <div className="text-gray-500 text-lg font-medium mb-2">
-        No jobs posted yet
-      </div>
-      <p className="text-gray-400 text-center max-w-md">
-        There are currently no job listings available. Check back later or post a new job opportunity.
-      </p>
-      
-    </div>
-   )}
+    })}
   </div>
+) : (
+  <div className="w-full py-10 flex flex-col items-center justify-center text-center">
+    <div className="text-gray-500 text-lg font-medium mb-2">
+      No jobs posted yet
+    </div>
+    <p className="text-gray-400 max-w-md">
+      There are currently no job listings available. Check back later or post a new job opportunity.
+    </p>
+  </div>
+)}
     </div>
      
     

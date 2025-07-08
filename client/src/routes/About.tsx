@@ -1,4 +1,4 @@
-import JobImg from "../assets/job.jpg";
+import Hero1 from "../assets/hero1.png"
 
 const About = () => {
   return (
@@ -15,7 +15,7 @@ const About = () => {
             its contributors to the Microsoft Corporation
           </p>
         </div>
-        <img src={JobImg} alt='About' className='w-auto h-[300px]' />
+        <img src={Hero1} alt='About' className='w-auto h-[300px]' />
       </div>
 
       <div className='leading-8 px-5 text-justify'>

@@ -12,7 +12,6 @@ const Layout = () => {
     
   return (
     <main className="bg-[#f7fdfd]">
-
       <Navbar />
       <div className="min-h-screen">
       <Outlet />

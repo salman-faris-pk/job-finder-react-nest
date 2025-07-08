@@ -1,4 +1,4 @@
-import { useState, useEffect, useDeferredValue, useTransition } from "react";
+import { useState, useEffect, useDeferredValue } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import CustomButton from "../components/CustomButton";
 import Header from "../components/Header";
@@ -10,8 +10,8 @@ import ListBox from "../components/ListBox";
 import JobCard from "../components/JobCard";
 import { FindsJobs, updateURL } from "../apis/fetching.apis";
 import { Job } from "../utils/types";
-import Loading from "../components/Loaders/Loading";
 import { AxiosError } from "axios";
+import { JobCardsSkeleton } from "../components/Loaders/JobCard";
 
 const FindJobs = () => {
   const [sort, setSort] = useState("Newest");
@@ -19,14 +19,13 @@ const FindJobs = () => {
   const [numPage, setNumPage] = useState(1);
   const [recordCount, setRecordCount] = useState(0);
   const [data, setData] = useState<Job[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [jobLocation, setJobLocation] = useState("");
   const [filterJobTypes, setFilterJobTypes] = useState<string[]>([]);
   const [filterExp, setFilterExp] = useState<string[]>([]);
-  const [isPending, startTransition] = useTransition();
 
-  // Deferred values for search inputs
   const deferredSearchQuery = useDeferredValue(searchQuery);
   const deferredJobLocation = useDeferredValue(jobLocation);
   const deferredFilterJobTypes = useDeferredValue(filterJobTypes);
@@ -54,17 +53,17 @@ const FindJobs = () => {
       const res = await FindsJobs(newURL, signal);
 
       if (!signal.aborted) {
-        startTransition(() => {
           setNumPage(res?.numOfPage);
           setRecordCount(res?.totalJobs);
           setData(res?.data);
-        });
+          setIsLoading(false);
       }
     } catch (error) {
       if ((error as AxiosError).code === "ERR_CANCELED") {
         return;
       }
       console.error((error as AxiosError).message);
+      setIsLoading(false);
     }
   };
 
@@ -83,6 +82,8 @@ const FindJobs = () => {
     } else {
       setFilterJobTypes([...filterJobTypes, val]);
     }
+    setPage(1);
+    setIsLoading(true);
   };
 
   const filterExperience = (value: string) => {
@@ -91,16 +92,20 @@ const FindJobs = () => {
         ? prev.filter((item) => item !== value)
         : [...prev, value]
     );
+    setPage(1);
+    setIsLoading(true);
   };
 
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setPage(1); //reset to 1 page
+    setPage(1);
+    setIsLoading(true);
   };
 
   const handleLoadMore = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setPage((prev) => prev + 1);
+    setIsLoading(true);
   };
 
   return (
@@ -189,20 +194,22 @@ const FindJobs = () => {
             </div>
           </div>
 
-          <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 w-full">
-            {data.length === 0 ? (
-              <div className="col-span-full text-center py-12">
-                <p className="text-gray-500 text-lg font-medium">
-                  {isPending ? "Searching..." : "No jobs available"}
-                </p>
-                {!isPending && (
-                  <p className="mt-2 text-sm text-gray-400">
-                    Check back later for new opportunities
-                  </p>
-                )}
-              </div>
-            ) : (
-              data.map((job) => (
+          {isLoading ? (
+            <div className="py-10 w-full">
+              <JobCardsSkeleton />
+            </div>
+          ) : data.length === 0 ? (
+            <div className="col-span-full text-center py-12">
+              <p className="text-gray-500 text-lg font-medium">
+                No jobs available
+              </p>
+              <p className="mt-2 text-sm text-gray-400">
+                Check back later for new opportunities
+              </p>
+            </div>
+          ) : (
+            <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 w-full">
+              {data.map((job) => (
                 <JobCard
                   key={job.id}
                   job={{
@@ -211,23 +218,20 @@ const FindJobs = () => {
                     logo: job.company?.profileUrl,
                   }}
                 />
-              ))
-            )}
-          </div>
-
-          {isPending && (
-            <div className="py-10">
-              <Loading />
+              ))}
             </div>
           )}
 
-          {numPage > 1 && !isPending && (
+          {numPage > 1 && !isLoading && (
             <div className="w-full flex items-center justify-center pt-16 gap-4">
               {page > 1 && (
                 <CustomButton
                   title="Previous"
                   containerStyles={`text-blue-600 cursor-pointer py-1.5 px-5 focus:outline-none hover:bg-blue-700 hover:text-white rounded-full text-base border border-blue-600`}
-                  onClick={() => setPage((prev) => prev - 1)}
+                  onClick={() => {
+                    setPage((prev) => prev - 1);
+                    setIsLoading(true);
+                  }}
                 />
               )}
 
